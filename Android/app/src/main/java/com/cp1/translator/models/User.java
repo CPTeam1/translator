@@ -1,51 +1,79 @@
 package com.cp1.translator.models;
 
-import java.util.ArrayList;
+import com.parse.ParseClassName;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
 
-public class User {
-    private String uID;
-    private String profilePic;
-    private ArrayList<String> friends;
-    private ArrayList<String> primaryLang;
-    private ArrayList<String> secondaryLang;
+@ParseClassName("_User")
+public class User extends ParseUser {
+    public static final String PROFILE_PIC_KEY = "profilePic";
+    public static final String FRIENDS_KEY = "friends";
+    public static final String SKILLS_KEY = "skills";
+    public static final String QUESTIONS_KEY = "questions";
+    public static final String ANSWERS_KEY = "answers";
 
-    public String getuID() {
-        return uID;
-    }
-
-    public void setuID(String uID) {
-        this.uID = uID;
-    }
 
     public String getProfilePic() {
-        return profilePic;
+        return getString(PROFILE_PIC_KEY);
     }
 
     public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+        put(PROFILE_PIC_KEY, profilePic);
     }
 
-    public ArrayList<String> getFriends() {
-        return friends;
+    public ParseRelation<User> getFriends() {
+        return getRelation(FRIENDS_KEY);
     }
 
-    public void setFriends(ArrayList<String> friends) {
-        this.friends = friends;
+    public void addFriend(User user) {
+        getFriends().add(user);
+        saveInBackground();
     }
 
-    public ArrayList<String> getPrimaryLang() {
-        return primaryLang;
+    public void removeFriend(User user) {
+        getFriends().remove(user);
+        saveInBackground();
     }
 
-    public void setPrimaryLang(ArrayList<String> primaryLang) {
-        this.primaryLang = primaryLang;
+    public ParseRelation<Skill> getSkills() {
+        return getRelation(SKILLS_KEY);
     }
 
-    public ArrayList<String> getSecondaryLang() {
-        return secondaryLang;
+    public void addSkill(Skill skill) {
+        getSkills().add(skill);
+        saveInBackground();
     }
 
-    public void setSecondaryLang(ArrayList<String> secondaryLang) {
-        this.secondaryLang = secondaryLang;
+    public void removeSkill(Skill skill) {
+        getSkills().remove(skill);
+        saveInBackground();
+    }
+
+    public ParseRelation<Entry> getQuestions() {
+        return getRelation(QUESTIONS_KEY);
+    }
+
+    public void addQuestion(Entry question) {
+        getQuestions().add(question);
+        saveInBackground();
+    }
+
+    public void removeQuestion(Entry question) {
+        getQuestions().remove(question);
+        saveInBackground();
+    }
+
+    public ParseRelation<Entry> getAnswers() {
+        return getRelation(ANSWERS_KEY);
+    }
+
+    public void addAnswer(Entry answer) {
+        getAnswers().add(answer);
+        saveInBackground();
+    }
+
+    public void removeAnswer(Entry answer) {
+        getAnswers().remove(answer);
+        saveInBackground();
     }
 }
