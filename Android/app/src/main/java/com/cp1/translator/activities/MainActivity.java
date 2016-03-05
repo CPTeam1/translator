@@ -8,10 +8,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
 import com.cp1.translator.fragments.PageFragment;
+import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 
 import butterknife.ButterKnife;
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Toast.makeText(this, "Logged in as: " + User.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()));

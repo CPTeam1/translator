@@ -1,21 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cp1.translator.activities.LoginActivity" >
+    tools:context="com.cp1.translator.activities.SignupActivity">
 
     <Button
         android:id="@+id/btSignup"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:text="@string/login_label" />
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:text="Create Account" />
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/etConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -24,8 +25,21 @@
         android:layout_alignEnd="@id/btSignup"
         android:layout_alignLeft="@id/btSignup"
         android:layout_alignStart="@id/btSignup"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/etConfirm"
+        android:layout_alignRight="@id/btSignup"
+        android:layout_alignEnd="@id/btSignup"
+        android:layout_alignLeft="@id/btSignup"
+        android:layout_alignStart="@id/btSignup"
         android:hint="Password"
-        android:password="true"/>
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/etEmail"
@@ -38,15 +52,4 @@
         android:layout_alignLeft="@id/btSignup"
         android:layout_alignStart="@id/btSignup"
         android:hint="Email"/>
-
-    <TextView
-        android:id="@+id/tvCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btSignup"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="Create New Account"
-        android:clickable="true" />
-
 </RelativeLayout>
