@@ -1,17 +1,16 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ParseClassName("_User")
 public class User extends ParseUser {
     public static final String PROFILE_PIC_KEY = "profilePic";
     public static final String FRIENDS_KEY = "friends";
     public static final String SKILLS_KEY = "skills";
-    public static final String QUESTIONS_KEY = "questions";
-    public static final String ANSWERS_KEY = "answers";
-
 
     public String getProfilePic() {
         return getString(PROFILE_PIC_KEY);
@@ -21,59 +20,51 @@ public class User extends ParseUser {
         put(PROFILE_PIC_KEY, profilePic);
     }
 
-    public ParseRelation<User> getFriends() {
-        return getRelation(FRIENDS_KEY);
+    public List<User> getFriends() {
+        return getList(FRIENDS_KEY);
     }
 
     public void addFriend(User user) {
-        getFriends().add(user);
-        saveInBackground();
+        List<User> friends = getFriends();
+        if (friends == null) {
+            friends = new ArrayList<>();
+        }
+        friends.add(user);
+        put(FRIENDS_KEY, friends);
     }
 
     public void removeFriend(User user) {
-        getFriends().remove(user);
-        saveInBackground();
+        List<User> friends = getFriends();
+        if (friends != null) {
+            friends.remove(user);
+            put(FRIENDS_KEY, friends);
+        }
     }
 
-    public ParseRelation<Skill> getSkills() {
-        return getRelation(SKILLS_KEY);
+    @Override
+    public boolean equals(Object o) {
+        User otherUser = (User) o;
+        return getObjectId().equals(otherUser.getObjectId());
+    }
+
+    public List<Skill> getSkills() {
+        return getList(SKILLS_KEY);
     }
 
     public void addSkill(Skill skill) {
-        getSkills().add(skill);
-        saveInBackground();
+        List<Skill> skills = getSkills();
+        if (skills == null) {
+            skills = new ArrayList<>();
+        }
+        skills.add(skill);
+        put(SKILLS_KEY, skill);
     }
 
     public void removeSkill(Skill skill) {
-        getSkills().remove(skill);
-        saveInBackground();
-    }
-
-    public ParseRelation<Entry> getQuestions() {
-        return getRelation(QUESTIONS_KEY);
-    }
-
-    public void addQuestion(Entry question) {
-        getQuestions().add(question);
-        saveInBackground();
-    }
-
-    public void removeQuestion(Entry question) {
-        getQuestions().remove(question);
-        saveInBackground();
-    }
-
-    public ParseRelation<Entry> getAnswers() {
-        return getRelation(ANSWERS_KEY);
-    }
-
-    public void addAnswer(Entry answer) {
-        getAnswers().add(answer);
-        saveInBackground();
-    }
-
-    public void removeAnswer(Entry answer) {
-        getAnswers().remove(answer);
-        saveInBackground();
+        List<Skill> skills = getSkills();
+        if (skills != null) {
+            skills.remove(skill);
+            put(SKILLS_KEY, skills);
+        }
     }
 }

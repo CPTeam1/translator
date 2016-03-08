@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/miSearch"
+        android:icon="@drawable/ic_action_search"
+        android:orderInCategory="4"
+        android:title="@string/new_qs"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/miNewQs"
+        android:icon="@drawable/ic_action_new"
+        android:onClick="onNewQuestionClick"
+        android:orderInCategory="5"
+        android:title="@string/new_qs"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/miMe"
+        android:icon="@drawable/ic_action_me"
+        android:onClick="onSettingsClick"
+        android:orderInCategory="6"
+        android:title="@string/me"
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -1,6 +1,7 @@
 package com.cp1.translator.activities;
 
 import android.content.Intent;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,7 +31,6 @@ import com.parse.ParseException;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import java.io.File;
 
@@ -160,14 +161,14 @@ public class AskQuestion extends AppCompatActivity {
 
     private void saveToParse(String question) {
         Entry qsEntry = new Entry();
-        qsEntry.setQuestion();
+//        qsEntry.setQuestion();
         qsEntry.setText(question);
-        qsEntry.setUser((User) User.getCurrentUser());
+//        qsEntry.setUser((User) User.getCurrentUser());
 
         Post qsPost = new Post();
         qsPost.setQuestion(qsEntry);
 
-        qsEntry.setPost(qsPost);
+//        qsEntry.setPost(qsPost);
 
         qsEntry.saveInBackground();
         qsPost.saveInBackground();

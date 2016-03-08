@@ -27,4 +27,10 @@ public class Skill extends ParseObject {
     public void setLevel(int level) {
         put(LEVEL_KEY, level);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Skill otherSkill = (Skill) o;
+        return getObjectId().equals(otherSkill.getObjectId());
+    }
 }

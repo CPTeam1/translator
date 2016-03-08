@@ -18,4 +18,10 @@ public class Lang extends ParseObject {
     public void setName(String name) {
         put(NAME_KEY, name);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Lang otherLang = (Lang) o;
+        return getObjectId().equals(otherLang.getObjectId());
+    }
 }

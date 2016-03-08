@@ -1,4 +1,4 @@
-package com.cp1.translator.activities;
+package com.cp1.translator.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cp1.translator.R;
+import com.cp1.translator.activities.MainActivity;
+import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;

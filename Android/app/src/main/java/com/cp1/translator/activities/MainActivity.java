@@ -1,24 +1,28 @@
 package com.cp1.translator.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
 import com.cp1.translator.fragments.PageFragment;
 import com.cp1.translator.models.User;
-import com.cp1.translator.utils.Constants;
 
 import butterknife.ButterKnife;
 
-import static com.cp1.translator.utils.Constants.*;
+import static com.cp1.translator.utils.Constants.APP_TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +44,47 @@ public class MainActivity extends AppCompatActivity {
         tabsStrip.setViewPager(viewPager);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55acee")));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // set listener of each menu item
+        // Search
+        MenuItem searchItem = menu.findItem(R.id.miSearch);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                searchView.clearFocus();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    public void onNewQuestionClick(MenuItem item) {
+        // start AskQuestion Activity
+        Intent intent = new Intent(this, AskQuestion.class);
+        startActivity(intent);
+    }
+
+    public void onSettingsClick(MenuItem item) {
+        // launch Settings View
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
