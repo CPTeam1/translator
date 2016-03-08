@@ -5,6 +5,9 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ishanpande on 3/4/16.
  */
@@ -22,16 +25,25 @@ public class Post extends ParseObject{
         put(QUESTION_KEY, entry);
     }
 
-    public ParseRelation<Entry> getAnswers() {
-        return getRelation(ANSWERS_KEY);
+    public List<Entry> getAnswers() {
+        return getList(ANSWERS_KEY);
     }
 
     public void addAnswer(Entry answer) {
         answer.remove(Entry.IS_QUESTION_KEY); // Being paranoid.
-        getAnswers().add(answer);
+        List<Entry> answers = getAnswers();
+        if (answers == null) {
+            answers = new ArrayList<>();
+        }
+        answers.add(answer);
+        put(ANSWERS_KEY, answers);
     }
 
     public void removeAnswer(Entry answer) {
-        getAnswers().remove(answer);
+        List<Entry> answers = getAnswers();
+        if (answers != null) {
+            answers.remove(answer);
+            put(ANSWERS_KEY, answers);
+        }
     }
 }

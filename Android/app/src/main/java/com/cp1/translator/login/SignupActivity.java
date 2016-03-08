@@ -1,15 +1,15 @@
-package com.cp1.translator.activities;
+package com.cp1.translator.login;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cp1.translator.R;
+import com.cp1.translator.activities.MainActivity;
 import com.cp1.translator.models.User;
 import com.parse.ParseException;
 import com.parse.SignUpCallback;

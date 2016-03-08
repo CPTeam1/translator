@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cp1.translator.activities.SignupActivity">
+    tools:context=".login.SignupActivity">
 
     <Button
         android:id="@+id/btSignup"
