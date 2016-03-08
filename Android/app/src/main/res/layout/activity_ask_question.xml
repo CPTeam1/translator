@@ -7,14 +7,13 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:text="What&apos;s your Question?"
+        android:layout_height="250dp"
+        android:hint="What&apos;s your Question?"
         android:id="@+id/etQs"
-        android:textColor="@color/accent_material_light"
+        android:textColorHint="@color/accent_material_light"
         android:gravity="top"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_below="@+id/ivQsPic">
 
     </EditText>
 
@@ -46,5 +45,24 @@
         android:layout_toLeftOf="@+id/btAskQs"
         android:layout_toStartOf="@+id/btAskQs"
         android:layout_marginRight="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibClickPic"
+        android:src="@drawable/ic_trans_cam"
+        android:onClick="onLaunchCamera"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivQsPic"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>
