@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.cp1.translator.R;
 import com.cp1.translator.activities.MainActivity;
+import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;

@@ -26,7 +26,7 @@ public class FriendsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvFriends.setLayoutManager(layoutManager);
 
-        friendsAdapter = new FriendsAdapter();
+        friendsAdapter = new FriendsAdapter(this);
         rvFriends.setAdapter(friendsAdapter);
     }
 }

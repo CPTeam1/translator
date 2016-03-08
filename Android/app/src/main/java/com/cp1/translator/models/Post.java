@@ -2,9 +2,7 @@ package com.cp1.translator.models;
 
 
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
 
 import java.util.ArrayList;
 import java.util.List;

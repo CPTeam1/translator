@@ -1,7 +1,6 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
