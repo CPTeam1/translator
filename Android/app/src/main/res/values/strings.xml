@@ -3,5 +3,11 @@
 
     <string name="app_name">Social Translator</string>
     <string name="login_label">Log in</string>
+    <string name="new_qs">New Question</string>
+    <string name="answered_label">Answered:</string>
+    <string name="no_question_label">No Questions</string>
+    <string name="say_something_label">Say something in your first language, \nGet it translated into another language!</string>
+    <string name="me">Me</string>
+    <string name="languages">Languages</string>
 
 </resources>

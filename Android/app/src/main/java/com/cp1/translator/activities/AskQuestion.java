@@ -1,8 +1,8 @@
 package com.cp1.translator.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,11 +15,8 @@ import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
-import com.parse.ParseException;
-import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -73,14 +70,14 @@ public class AskQuestion extends AppCompatActivity {
 
     private void saveToParse(String question) {
         Entry qsEntry = new Entry();
-        qsEntry.setQuestion();
+//        qsEntry.setQuestion();
         qsEntry.setText(question);
-        qsEntry.setUser((User) User.getCurrentUser());
+//        qsEntry.setUser((User) User.getCurrentUser());
 
         Post qsPost = new Post();
         qsPost.setQuestion(qsEntry);
 
-        qsEntry.setPost(qsPost);
+//        qsEntry.setPost(qsPost);
 
         qsEntry.saveInBackground();
         qsPost.saveInBackground();

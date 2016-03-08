@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.cp1.translator.R;
 import com.cp1.translator.activities.AskQuestion;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 // In this case, the fragment displays simple text based on the page
@@ -41,20 +40,26 @@ public class PageFragment extends Fragment {
     // Set the associated text for the title
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_page, container, false);
-        ButterKnife.bind(view);
-        TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-        btAskQs = (Button) view.findViewById(R.id.btQs);
+        View view = null;
 
-        tvTitle.setText("Fragment " + mTitle);
+        if (true) { // here if condition MUST CHANGE!! It must check if the question list is empty
+            view = inflater.inflate(R.layout.fragment_empty, container, false);
+        } else {
+            view = inflater.inflate(R.layout.fragment_page, container, false);
+            ButterKnife.bind(view);
+            TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            btAskQs = (Button) view.findViewById(R.id.btQs);
 
-        btAskQs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent askQsIntent = new Intent(getActivity(),AskQuestion.class);
-                startActivity(askQsIntent);
-            }
-        });
+            tvTitle.setText("Fragment " + mTitle);
+
+            btAskQs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent askQsIntent = new Intent(getActivity(), AskQuestion.class);
+                    startActivity(askQsIntent);
+                }
+            });
+        }
 
         return view;
     }
