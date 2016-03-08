@@ -1,6 +1,7 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
@@ -70,5 +71,11 @@ public class Entry extends ParseObject {
 
     public void setAsQuestion() {
         put(IS_QUESTION_KEY, true);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Entry otherEntry = (Entry) o;
+        return getObjectId().equals(otherEntry.getObjectId());
     }
 }

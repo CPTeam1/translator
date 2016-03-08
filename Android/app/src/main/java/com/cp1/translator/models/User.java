@@ -1,6 +1,7 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
@@ -40,6 +41,12 @@ public class User extends ParseUser {
             friends.remove(user);
             put(FRIENDS_KEY, friends);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        User otherUser = (User) o;
+        return getObjectId().equals(otherUser.getObjectId());
     }
 
     public List<Skill> getSkills() {

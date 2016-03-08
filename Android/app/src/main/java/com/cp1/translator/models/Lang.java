@@ -1,6 +1,7 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
@@ -17,5 +18,11 @@ public class Lang extends ParseObject {
 
     public void setName(String name) {
         put(NAME_KEY, name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Lang otherLang = (Lang) o;
+        return getObjectId().equals(otherLang.getObjectId());
     }
 }

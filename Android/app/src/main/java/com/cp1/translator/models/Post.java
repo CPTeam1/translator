@@ -2,6 +2,7 @@ package com.cp1.translator.models;
 
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 
@@ -45,5 +46,11 @@ public class Post extends ParseObject{
             answers.remove(answer);
             put(ANSWERS_KEY, answers);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Post otherPost = (Post) o;
+        return getObjectId().equals(otherPost.getObjectId());
     }
 }

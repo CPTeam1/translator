@@ -1,6 +1,7 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
@@ -26,5 +27,11 @@ public class Skill extends ParseObject {
 
     public void setLevel(int level) {
         put(LEVEL_KEY, level);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Skill otherSkill = (Skill) o;
+        return getObjectId().equals(otherSkill.getObjectId());
     }
 }
