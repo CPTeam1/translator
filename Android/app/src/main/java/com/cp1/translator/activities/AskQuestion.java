@@ -11,6 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
+import com.cp1.translator.models.Entry;
+import com.cp1.translator.models.Post;
+import com.cp1.translator.models.Question;
+import com.cp1.translator.models.User;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import org.w3c.dom.Text;
 
@@ -43,11 +49,38 @@ public class AskQuestion extends AppCompatActivity {
                 // 1) save qs in DB
                 // 2) pass qs back to main activity
                 // 3) display in adapter
+                if(etQs.getText()!=null) {
 
-                Intent displayQsIntent = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(displayQsIntent);
+                    String question = etQs.getText().toString();
+
+                    saveLocally(question,User.getCurrentUser().getEmail());
+
+                    saveToParse(question);
+
+                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(displayQsIntent);
+                }
             }
         });
+    }
+
+    private void saveLocally(String question, String userName) {
+        Question.toQuestion(question,userName);
+    }
+
+    private void saveToParse(String question) {
+        Entry qsEntry = new Entry();
+        qsEntry.setQuestion();
+        qsEntry.setText(question);
+        qsEntry.setUser((User) User.getCurrentUser());
+
+        Post qsPost = new Post();
+        qsPost.setQuestion(qsEntry);
+
+        qsEntry.setPost(qsPost);
+
+        qsEntry.saveInBackground();
+        qsPost.saveInBackground();
     }
 
     TextWatcher textWatcher = new TextWatcher() {

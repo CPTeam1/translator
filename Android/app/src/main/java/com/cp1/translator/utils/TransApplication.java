@@ -3,6 +3,7 @@ package com.cp1.translator.utils;
 import android.app.Application;
 import android.content.Context;
 
+import com.activeandroid.ActiveAndroid;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.Post;
@@ -35,6 +36,7 @@ public class TransApplication extends Application {
         ParseObject.registerSubclass(Skill.class);
         ParseObject.registerSubclass(User.class);
 
+        ActiveAndroid.initialize(this);
 
 		// set applicationId and server based on the values in the Heroku settings.
 		// any network interceptors must be added with the Configuration Builder given this syntax
