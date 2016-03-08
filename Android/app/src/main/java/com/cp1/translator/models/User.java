@@ -31,6 +31,7 @@ public class User extends ParseUser {
             friends = new ArrayList<>();
         }
         friends.add(user);
+        put(FRIENDS_KEY, friends);
     }
 
     public void removeFriend(User user) {
@@ -51,6 +52,7 @@ public class User extends ParseUser {
             skills = new ArrayList<>();
         }
         skills.add(skill);
+        put(SKILLS_KEY, skill);
     }
 
     public void removeSkill(Skill skill) {
