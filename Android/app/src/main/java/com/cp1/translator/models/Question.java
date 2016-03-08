@@ -10,12 +10,14 @@ import com.cp1.translator.utils.Constants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 
 import java.util.ArrayList;
 
 import static com.cp1.translator.utils.Constants.*;
 
+@Parcel(analyze={Question.class})
 @Table(name = "Questions")
 public class Question extends Model {
     // Define database columns and associated fields
@@ -38,6 +40,16 @@ public class Question extends Model {
     @Column(name = "asked_user")
     String askedByUser;
 
+    @Column(name = "answers")
+    ArrayList<String> answers;
+
+    public ArrayList<String> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(ArrayList<String> answers) {
+        this.answers = answers;
+    }
 
     public String getAskedByUser() {
         return askedByUser;

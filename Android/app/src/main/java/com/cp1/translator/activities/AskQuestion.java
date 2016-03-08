@@ -18,6 +18,7 @@ import com.cp1.translator.models.User;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
+import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import butterknife.Bind;
@@ -53,19 +54,21 @@ public class AskQuestion extends AppCompatActivity {
 
                     String question = etQs.getText().toString();
 
-                    saveLocally(question,User.getCurrentUser().getEmail());
+                    Question qsDB  = saveLocally(question,User.getCurrentUser().getEmail());
 
                     saveToParse(question);
 
+
                     Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
                     startActivity(displayQsIntent);
                 }
             }
         });
     }
 
-    private void saveLocally(String question, String userName) {
-        Question.toQuestion(question,userName);
+    private Question saveLocally(String question, String userName) {
+        return Question.toQuestion(question,userName);
     }
 
     private void saveToParse(String question) {
