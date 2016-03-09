@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
@@ -21,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +49,7 @@ public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.etQs) EditText etQs;
     @Bind(R.id.tvChars) TextView tvCharsLeft;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
+    @Nullable @Bind(R.id.ibRecAudio) ImageButton ibRecAudio;
 
     private int textColor;
     private int currQuesNo;
@@ -57,6 +61,7 @@ public class AskQuestion extends AppCompatActivity {
     private String audioURI;
     private String videoURI;
     private String mAudioFileName;
+    private MediaRecorder mediaRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +95,8 @@ public class AskQuestion extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     @Override
@@ -113,6 +120,33 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
+    public void onReleaseRecorder(View view){
+        if(mediaRecorder!=null){
+            Log.d(APP_TAG,"Stopping recording..");
+            mediaRecorder.stop();
+            mediaRecorder.reset();
+            mediaRecorder.release();
+        }
+
+    }
+
+    public void onPlay(View view){
+        if(mediaRecorder!=null){
+            try {
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setDataSource(mAudioFileName);
+                mediaPlayer.prepare(); // must call prepare first
+                mediaPlayer.start(); // then start
+            }catch(Exception e){
+                Log.e(APP_TAG,"Exception in playing media "+e.getMessage());
+            }
+        }
+        else{
+            Toast.makeText(this, "No playable media found!", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void onLaunchRecorder(View view){
         try {
             // Verify that the device has a mic first
@@ -123,7 +157,7 @@ public class AskQuestion extends AppCompatActivity {
                 mAudioFileName += "/audiorecordtest"+SEPARATOR + Integer.toString(currQuesNo)+AUDIO_EXT;
                 Log.d(APP_TAG,"Audio file for question: "+mAudioFileName);
                 // Create the recorder
-                MediaRecorder mediaRecorder = new MediaRecorder();
+                mediaRecorder = new MediaRecorder();
                 // Set the audio format and encoder
                 mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -131,8 +165,9 @@ public class AskQuestion extends AppCompatActivity {
                 // Setup the output location
                 mediaRecorder.setOutputFile(mAudioFileName);
                 // Start the recording
-//                mediaRecorder.prepare();
-//                mediaRecorder.start();
+                mediaRecorder.prepare();
+                mediaRecorder.start();
+                Log.d(APP_TAG,"Recording in progress..");
             } else { // no mic on device
                 Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
             }

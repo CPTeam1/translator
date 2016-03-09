@@ -68,6 +68,29 @@
         android:layout_toRightOf="@+id/ibClickPic"
         android:paddingLeft="30dp"
          />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibRelAudio"
+        android:src="@drawable/ic_trans_mic_off"
+        android:onClick="onReleaseRecorder"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibRecAudio"
+        android:paddingLeft="30dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibPlayAudio"
+        android:src="@drawable/ic_play"
+        android:onClick="onPlay"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibRelAudio"
+        android:paddingLeft="30dp"
+        />
 
     <ImageView
         android:layout_width="match_parent"
