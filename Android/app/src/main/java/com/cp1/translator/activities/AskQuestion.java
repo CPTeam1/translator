@@ -2,10 +2,14 @@ package com.cp1.translator.activities;
 
 import android.content.Intent;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -26,13 +30,11 @@ import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
-import com.cp1.translator.utils.Constants;
-import com.parse.ParseException;
-import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,14 +47,16 @@ public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.tvChars) TextView tvCharsLeft;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
 
-    int textColor;
+    private int textColor;
+    private int currQuesNo;
+    private SharedPreferences mSettings;
 
     private static int QS_CHAR_LIMIT = 140;
     private static boolean qsPosted = false;
     private String imageURI;
     private String audioURI;
     private String videoURI;
-
+    private String mAudioFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class AskQuestion extends AppCompatActivity {
 
         etQs.addTextChangedListener(textWatcher);
         textColor = tvCharsLeft.getCurrentTextColor();
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
         btAskQs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,10 +92,18 @@ public class AskQuestion extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        currQuesNo = mSettings.getInt(QNO,0);
+        currQuesNo++;
+    }
+
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName)); // set the image file name
+        // set the image file name
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName + SEPARATOR+ Integer.toString(currQuesNo) + PIC_EXT));
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
@@ -100,12 +113,39 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
+    public void onLaunchRecorder(View view){
+        try {
+            // Verify that the device has a mic first
+            PackageManager pmanager = this.getPackageManager();
+            if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+                // Set the file location for the audio
+                mAudioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+                mAudioFileName += "/audiorecordtest"+SEPARATOR + Integer.toString(currQuesNo)+AUDIO_EXT;
+                Log.d(APP_TAG,"Audio file for question: "+mAudioFileName);
+                // Create the recorder
+                MediaRecorder mediaRecorder = new MediaRecorder();
+                // Set the audio format and encoder
+                mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                // Setup the output location
+                mediaRecorder.setOutputFile(mAudioFileName);
+                // Start the recording
+//                mediaRecorder.prepare();
+//                mediaRecorder.start();
+            } else { // no mic on device
+                Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e){
+            Log.e(APP_TAG,"Exception in recording media"+e.getMessage());
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-
+                Uri takenPhotoUri = getPhotoFileUri(photoFileName + SEPARATOR+ Integer.toString(currQuesNo) + PIC_EXT);
                 imageURI = takenPhotoUri.toString();
                 Log.d(APP_TAG,"qs image uri = " + imageURI);
                 // by this point we have the camera photo on disk
@@ -154,6 +194,9 @@ public class AskQuestion extends AppCompatActivity {
 
     private Question saveLocally(String question, String userName) {
         Question q = Question.toQuestion(question,userName);
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putInt(QNO,currQuesNo);
+        editor.commit();
         if(q!=null && imageURI!=null)
             q.setImageURI(imageURI);
         return q;

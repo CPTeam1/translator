@@ -41,13 +41,13 @@ public class Question extends Model {
     String askedByUser;
 
     @Column(name = "answers")
-    ArrayList<String> answers;
+    String answers;
 
-    public ArrayList<String> getAnswers() {
+    public String getAnswers() {
         return answers;
     }
 
-    public void setAnswers(ArrayList<String> answers) {
+    public void setAnswers(String answers) {
         this.answers = answers;
     }
 

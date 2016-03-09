@@ -57,6 +57,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibRecAudio"
+        android:src="@drawable/ic_trans_mic"
+        android:onClick="onLaunchRecorder"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibClickPic"
+        android:paddingLeft="30dp"
+         />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
