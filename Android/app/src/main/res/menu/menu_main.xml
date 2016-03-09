@@ -8,7 +8,7 @@
         android:orderInCategory="1"
         android:title="@string/new_qs"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/miNewQs"

@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +8,11 @@ import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cp1.translator.R;
 
@@ -72,11 +76,30 @@ public class LanguagesActivity extends AppCompatActivity {
 
     private void populateLanguages() {
         languagesList = new ArrayList<>();
+        // add all available languages to the list
         Locale[] availableLocales = Locale.getAvailableLocales();
         for (Locale locale : availableLocales)
             languagesList.add(locale.getDisplayName());
 
+        // initialize adapter
         adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, languagesList);
         lvAllLanguages.setAdapter(adapter);
+        // set ListView item click listener
+        lvAllLanguages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String language = ((TextView) view).getText().toString();
+
+                // Prepare data intent
+                Intent result = new Intent();
+
+                // Pass selected language back as a result
+                result.putExtra("language", language);
+
+                // Activity finished ok, return the data
+                setResult(RESULT_OK, result); // set result code and bundle data for response
+                finish(); // closes the activity, pass data to parent
+            }
+        });
     }
 }

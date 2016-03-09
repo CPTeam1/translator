@@ -3,13 +3,17 @@ package com.cp1.translator.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
+import com.cp1.translator.adapters.LanguagesAdapter;
 import com.cp1.translator.models.Lang;
+import com.cp1.translator.models.Skill;
 import com.cp1.translator.models.User;
 
 import java.util.ArrayList;
@@ -27,7 +31,11 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.tvUserName) TextView tvUserName;
     @Bind(R.id.tvEmptyLanguage) TextView tvEmptyLanguage;
 
-    private List<Lang> languageList;
+    private ArrayAdapter<Skill> adapter;
+    private List<Skill> skillList;
+    private User me;
+
+    private static final int LANG_REQ_CODE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +49,37 @@ public class SettingsActivity extends AppCompatActivity {
         loadUserSettings();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == LANG_REQ_CODE) {
+                Lang lang = new Lang();
+                lang.setName(data.getStringExtra("language"));
+                Skill skill = new Skill();
+                skill.setLang(lang);
+                skillList.add(skill);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
     private void loadUserSettings() {
-        User me = (User) User.getCurrentUser();
+        me = (User) User.getCurrentUser();
         tvUserEmail.setText(me.getEmail());
         tvUserName.setText(me.getNickname());
 
         lvLanguages.setEmptyView(tvEmptyLanguage);
         // load languages
-        languageList = new ArrayList<>();
-        ArrayAdapter<Lang> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, languageList);
+        skillList = new ArrayList<>();
+        if (me.getSkills() != null)
+            skillList.addAll(me.getSkills());
+        adapter = new LanguagesAdapter(this, skillList);
         lvLanguages.setAdapter(adapter);
     }
 
@@ -57,6 +87,14 @@ public class SettingsActivity extends AppCompatActivity {
     public void onClickAddLanguage() {
         // launch Languages View
         Intent intent = new Intent(this, LanguagesActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LANG_REQ_CODE);
+    }
+
+    // TODO
+    public void onSaveSettings(MenuItem item) {
+        for (Skill skill : skillList)
+            me.addSkill(skill);
+
+        me.saveInBackground();
     }
 }

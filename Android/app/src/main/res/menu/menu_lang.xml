@@ -8,6 +8,6 @@
         android:orderInCategory="4"
         android:title="@string/new_qs"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>
