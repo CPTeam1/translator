@@ -53,6 +53,7 @@
         <activity android:name=".login.SignupActivity" />
         <activity android:name=".friends.FriendsActivity" />
         <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.LanguagesActivity"></activity>
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/miNewQs"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/ic_add_42dp_fff"
         android:onClick="onNewQuestionClick"
         android:orderInCategory="5"
         android:title="@string/new_qs"

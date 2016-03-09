@@ -11,6 +11,7 @@ public class User extends ParseUser {
     public static final String PROFILE_PIC_KEY = "profilePic";
     public static final String FRIENDS_KEY = "friends";
     public static final String SKILLS_KEY = "skills";
+    public static final String NICKNAME_KEY = "nickname";
 
     public String getProfilePic() {
         return getString(PROFILE_PIC_KEY);
@@ -66,5 +67,13 @@ public class User extends ParseUser {
             skills.remove(skill);
             put(SKILLS_KEY, skills);
         }
+    }
+
+    public String getNickname() {
+        return getString(NICKNAME_KEY);
+    }
+
+    public void setNickname(String nickname) {
+        put(NICKNAME_KEY, nickname);
     }
 }

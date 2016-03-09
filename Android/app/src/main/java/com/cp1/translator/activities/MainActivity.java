@@ -1,8 +1,6 @@
 package com.cp1.translator.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -43,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
 
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55acee")));
+        // from Hyunji: commented below as AppTheme color is set
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55acee")));
     }
 
     @Override

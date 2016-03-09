@@ -9,5 +9,7 @@
     <string name="say_something_label">Say something in your first language, \nGet it translated into another language!</string>
     <string name="me">Me</string>
     <string name="languages">Languages</string>
+    <string name="settings">Settings</string>
+    <string name="empty_language_label">No Language Added</string>
 
 </resources>
