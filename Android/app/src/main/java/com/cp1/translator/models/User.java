@@ -8,6 +8,7 @@ import java.util.List;
 
 @ParseClassName("_User")
 public class User extends ParseUser {
+    public static final String USERNAME_KEY = "username";
     public static final String PROFILE_PIC_KEY = "profilePic";
     public static final String FRIENDS_KEY = "friends";
     public static final String SKILLS_KEY = "skills";

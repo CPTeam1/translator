@@ -16,9 +16,11 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
 import com.cp1.translator.fragments.PageFragment;
+import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.models.User;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
 
@@ -83,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
     public void onSettingsClick(MenuItem item) {
         // launch Settings View
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void onFriendsClick(MenuItem item) {
+        Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);
     }
 
