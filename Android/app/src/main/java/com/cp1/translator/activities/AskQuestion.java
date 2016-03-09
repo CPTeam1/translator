@@ -120,14 +120,25 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mediaRecorder!=null){
+            Log.d(APP_TAG,"On Pause called. Stopping recording..");
+            mediaRecorder.stop();
+            mediaRecorder.reset();
+            mediaRecorder.release();
+        }
+    }
+
     public void onReleaseRecorder(View view){
         if(mediaRecorder!=null){
             Log.d(APP_TAG,"Stopping recording..");
             mediaRecorder.stop();
             mediaRecorder.reset();
             mediaRecorder.release();
+            audioURI = mAudioFileName;
         }
-
     }
 
     public void onPlay(View view){
@@ -230,10 +241,14 @@ public class AskQuestion extends AppCompatActivity {
     private Question saveLocally(String question, String userName) {
         Question q = Question.toQuestion(question,userName);
         SharedPreferences.Editor editor = mSettings.edit();
-        editor.putInt(QNO,currQuesNo);
+        editor.putInt(QNO, currQuesNo);
         editor.commit();
-        if(q!=null && imageURI!=null)
-            q.setImageURI(imageURI);
+        if(q!=null) {
+            if (imageURI != null)
+                q.setImageURI(imageURI);
+            if (audioURI!=null)
+                q.setAudioURI(audioURI);
+        }
         return q;
     }
 
