@@ -37,7 +37,10 @@ public class QuestionsAdapter extends ArrayAdapter<Question> {
 
 
         tvQuestions.setText(question.getQuestion());
-        tvReplies.setText(question.getAnswers().length());
+        if(question.getAnswers()!=null)
+            tvReplies.setText(question.getAnswers().length());
+        else
+            tvReplies.setText("0");
 
 //        ivProfileImage.setImageResource(android.R.color.transparent); // clear out an old image for recycled view
 //        Picasso.with(getContext()).load(question.getProfileImage()).fit().into(ivProfileImage);

@@ -43,8 +43,6 @@ public class PageFragment extends Fragment implements AskQuestionFragment.AskQue
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        questionsAdapter = new QuestionsAdapter(getActivity(),questions);
-        questions = new ArrayList<>(10);
 
 //        mTitle = getArguments().getString(ARG_PAGE);
     }
@@ -61,6 +59,9 @@ public class PageFragment extends Fragment implements AskQuestionFragment.AskQue
         ButterKnife.bind(this, view);
 
         lvQuestions = (ListView) view.findViewById(R.id.lvQuestions);
+        questions = new ArrayList<>(10);
+        questionsAdapter = new QuestionsAdapter(getActivity(),questions);
+        lvQuestions.setAdapter(questionsAdapter);
 
         // TODO
         /********************** ListView with Adapter **********************/

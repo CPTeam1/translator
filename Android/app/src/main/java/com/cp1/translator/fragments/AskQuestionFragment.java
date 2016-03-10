@@ -118,7 +118,7 @@ public class AskQuestionFragment extends DialogFragment {
 
                     AskQuestionDialogListener listener = (AskQuestionDialogListener) getTargetFragment();
                     if(listener!=null) {
-                        listener.onFinishAsking(qsDB);
+                            listener.onFinishAsking(qsDB);
                         dismiss();
                     }
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
