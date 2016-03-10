@@ -1,8 +1,6 @@
-# Group Project
+# Group Project - *Social Translator*
 
-TBD - App name and description
-
-**Name of your app** is an android app.
+**Social Translator** is an android app.
 
 Time spent: **X** hours spent in total
 
@@ -10,12 +8,13 @@ Time spent: **X** hours spent in total
 
 The following stories are completed:
 
-* [ ] User can login with facebook.
+* [x] User can create a new account to Parse
+* [x] User can log in with the Parse account
 * [ ] User can create a friend list by importing the user's friend list on facebook.
-* [ ] User can set a first and secound language.
-* [ ] User can ask other users to translate word(s) or sentence(s) in the first language into the second language.
-  * [ ] User sends simple texts.
-  * [ ] User takes a picture and post it.
+* [x] User can add the languages to the user profile (=Settings)
+* [x] User can ask other users to translate word(s) or sentence(s) in the first language into the second language.
+  * [x] User sends simple texts.
+  * [x] User takes a picture and post it.
   * [ ] User records voice and upload it.
   * [ ] If Location Services is turned **on**, the question is broadcasted to all the people in nearby location.
   * [ ] If Location Services is turned **off**, the question is sent to the user's friends only.
@@ -24,7 +23,9 @@ The following stories are completed:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![Video Walkthrough](demo_play_1.gif)
+
+![Video Walkthrough](demo_play_2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
