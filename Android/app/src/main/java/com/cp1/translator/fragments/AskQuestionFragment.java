@@ -1,7 +1,7 @@
-package com.cp1.translator.activities;
+package com.cp1.translator.fragments;
+
 
 import android.content.Intent;
-
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,17 +10,19 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,22 +36,28 @@ import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
 
-import org.parceler.Parcels;
-
 import java.io.File;
-import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.cp1.translator.utils.Constants.*;
+import static com.cp1.translator.utils.Constants.APP_TAG;
+import static com.cp1.translator.utils.Constants.AUDIO_EXT;
+import static com.cp1.translator.utils.Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
+import static com.cp1.translator.utils.Constants.PIC_EXT;
+import static com.cp1.translator.utils.Constants.QNO;
+import static com.cp1.translator.utils.Constants.SEPARATOR;
+import static com.cp1.translator.utils.Constants.photoFileName;
 
-public class AskQuestion extends AppCompatActivity {
+public class AskQuestionFragment extends DialogFragment {
     @Bind(R.id.btAskQs) Button btAskQs;
     @Bind(R.id.etQs) EditText etQs;
     @Bind(R.id.tvChars) TextView tvCharsLeft;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
     @Nullable @Bind(R.id.ibRecAudio) ImageButton ibRecAudio;
+    @Nullable @Bind(R.id.ibRelAudio) ImageButton ibRelAudio;
+    @Nullable @Bind(R.id.ibClickPic) ImageButton ibClickPic;
+    @Nullable @Bind(R.id.ibPlayAudio) ImageButton ibPlayAudio;
 
     private int textColor;
     private int currQuesNo;
@@ -63,20 +71,34 @@ public class AskQuestion extends AppCompatActivity {
     private String mAudioFileName;
     private MediaRecorder mediaRecorder;
 
-//    // Defines the listener interface
-//    public interface AskQuestionDialogListener {
-//        void onFinishAsking(Question newQuestion);
-//    }
+    // Defines the listener interface
+    public interface AskQuestionDialogListener {
+        void onFinishAsking(Question newQuestion);
+    }
+
+
+    public AskQuestionFragment() {
+        // Required empty public constructor
+    }
+
+    public static AskQuestionFragment newInstance() {
+        Bundle args = new Bundle();
+        AskQuestionFragment fragment = new AskQuestionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ask_question);
-        ButterKnife.bind(this);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         etQs.addTextChangedListener(textWatcher);
         textColor = tvCharsLeft.getCurrentTextColor();
-        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         btAskQs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,17 +107,20 @@ public class AskQuestion extends AppCompatActivity {
                 // 1) save qs in DB
                 // 2) pass qs back to main activity
                 // 3) display in adapter
-                if(etQs.getText()!=null) {
+                if (etQs.getText() != null) {
 
                     String question = etQs.getText().toString();
 
-                    Question qsDB  = saveLocally(question,User.getCurrentUser().getEmail());
+                    Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
 
                     // TODO uncomment once model is fixed
                     //saveToParse(question);
 
-//                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
-
+                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getTargetFragment();
+                    if(listener!=null) {
+                        listener.onFinishAsking(qsDB);
+                        dismiss();
+                    }
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
 //                    displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
 //                    startActivity(displayQsIntent);
@@ -103,17 +128,50 @@ public class AskQuestion extends AppCompatActivity {
             }
         });
 
+        ibClickPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLaunchCamera(v);
+            }
+        });
+
+        ibRecAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLaunchRecorder(v);
+            }
+        });
+
+        ibRelAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onReleaseRecorder(v);
+            }
+        });
+
+        ibPlayAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPlay(v);
+            }
+        });
 
     }
 
     @Override
-    protected void onResume() {
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
         currQuesNo = mSettings.getInt(QNO,0);
         currQuesNo++;
     }
 
-    /*public void onLaunchCamera(View view) {
+    public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // set the image file name
@@ -121,24 +179,24 @@ public class AskQuestion extends AppCompatActivity {
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
-    }*/
+    }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         if(mediaRecorder!=null){
-            Log.d(APP_TAG,"On Pause called. Stopping recording..");
+            Log.d(APP_TAG, "On Pause called. Stopping recording..");
             mediaRecorder.stop();
             mediaRecorder.reset();
             mediaRecorder.release();
         }
     }
 
-    /*public void onReleaseRecorder(View view){
+    public void onReleaseRecorder(View view){
         if(mediaRecorder!=null){
             Log.d(APP_TAG,"Stopping recording..");
             mediaRecorder.stop();
@@ -161,14 +219,14 @@ public class AskQuestion extends AppCompatActivity {
             }
         }
         else{
-            Toast.makeText(this, "No playable media found!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "No playable media found!", Toast.LENGTH_LONG).show();
         }
     }
 
     public void onLaunchRecorder(View view){
         try {
             // Verify that the device has a mic first
-            PackageManager pmanager = this.getPackageManager();
+            PackageManager pmanager = getActivity().getPackageManager();
             if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
                 // Set the file location for the audio
                 mAudioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -187,7 +245,7 @@ public class AskQuestion extends AppCompatActivity {
                 mediaRecorder.start();
                 Log.d(APP_TAG,"Recording in progress..");
             } else { // no mic on device
-                Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
             }
         }catch (Exception e){
             Log.e(APP_TAG,"Exception in recording media"+e.getMessage());
@@ -197,7 +255,7 @@ public class AskQuestion extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == getActivity().RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName + SEPARATOR+ Integer.toString(currQuesNo) + PIC_EXT);
                 imageURI = takenPhotoUri.toString();
                 Log.d(APP_TAG,"qs image uri = " + imageURI);
@@ -208,7 +266,7 @@ public class AskQuestion extends AppCompatActivity {
                 ivQsPic.setImageBitmap(takenImage);
 
             } else { // Result was a failure
-                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -223,8 +281,7 @@ public class AskQuestion extends AppCompatActivity {
             // Get safe storage directory for photos
             // Use `getExternalFilesDir` on Context to access package-specific directories.
             // This way, we don't need to request external read/write runtime permissions.
-            File mediaStorageDir = new File(
-                    getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+            File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
 
             // Create the storage directory if it does not exist
             if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
@@ -241,7 +298,7 @@ public class AskQuestion extends AppCompatActivity {
     private boolean isExternalStorageAvailable() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
-    }*/
+    }
 
 
 
@@ -274,6 +331,7 @@ public class AskQuestion extends AppCompatActivity {
         qsPost.saveInBackground();
     }
 
+
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -299,4 +357,14 @@ public class AskQuestion extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_ask_question, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
 }

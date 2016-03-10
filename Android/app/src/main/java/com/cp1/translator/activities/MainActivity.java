@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +16,14 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
+import com.cp1.translator.adapters.QuestionsAdapter;
+import com.cp1.translator.fragments.AskQuestionFragment;
 import com.cp1.translator.fragments.PageFragment;
 import com.cp1.translator.friends.FriendsActivity;
+import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
 
         // from Hyunji: commented below as AppTheme color is set
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55acee")));
@@ -78,8 +85,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void onNewQuestionClick(MenuItem item) {
         // start AskQuestion Activity
-        Intent intent = new Intent(this, AskQuestion.class);
-        startActivity(intent);
+
+        FragmentManager fm = getSupportFragmentManager();
+        AskQuestionFragment askQuestionFragment = AskQuestionFragment.newInstance();
+        askQuestionFragment.setTargetFragment(new PageFragment(),300);
+        askQuestionFragment.show(fm,"AskQuestion");
+
+
+//        Intent intent = new Intent(this, AskQuestion.class);
+//        startActivity(intent);
     }
 
     public void onSettingsClick(MenuItem item) {
@@ -108,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Log.d(APP_TAG,"position: "+position);
-
             switch(position){
                 case 0: {
                     return PageFragment.newInstance(tabTitles[0]);

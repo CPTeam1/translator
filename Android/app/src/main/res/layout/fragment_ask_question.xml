@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.cp1.translator.fragments.AskQuestionFragment">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:hint="What&apos;s your Question?"
+        android:id="@+id/etQs"
+        android:textColorHint="@color/accent_material_light"
+        android:gravity="top"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/ivQsPic">
+
+    </EditText>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/transparent"
+        android:layout_marginBottom="112dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/divLine" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Translate!"
+        android:id="@+id/btAskQs"
+        android:layout_below="@+id/etQs"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="140"
+        android:paddingRight="30dp"
+        android:id="@+id/tvChars"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_alignBottom="@+id/btAskQs"
+        android:layout_toLeftOf="@+id/btAskQs"
+        android:layout_toStartOf="@+id/btAskQs"
+        android:layout_marginRight="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibClickPic"
+        android:src="@drawable/ic_trans_cam"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibRecAudio"
+        android:src="@drawable/ic_trans_mic"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibClickPic"
+        android:paddingLeft="30dp"
+        />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibRelAudio"
+        android:src="@drawable/ic_trans_mic_off"
+        android:onClick="onReleaseRecorder"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibRecAudio"
+        android:paddingLeft="30dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ibPlayAudio"
+        android:src="@drawable/ic_play"
+        android:onClick="onPlay"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibRelAudio"
+        android:paddingLeft="30dp"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivQsPic"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>
