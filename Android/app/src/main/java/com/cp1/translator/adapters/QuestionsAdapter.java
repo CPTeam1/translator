@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.Question;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
  */
 public class QuestionsAdapter extends ArrayAdapter<Question> {
     public QuestionsAdapter(Context context, List<Question> questions) {
-        super(context, 0, questions);
+        super(context, R.layout.item_question, questions);
     }
 
     @Override

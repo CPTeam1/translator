@@ -10,7 +10,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
-import com.cp1.translator.activities.AskQuestion;
 import com.cp1.translator.adapters.QuestionsAdapter;
 import com.cp1.translator.models.Question;
 
@@ -60,7 +59,7 @@ public class PageFragment extends Fragment implements AskQuestionFragment.AskQue
 
         lvQuestions = (ListView) view.findViewById(R.id.lvQuestions);
         questions = new ArrayList<>(10);
-        questionsAdapter = new QuestionsAdapter(getActivity(),questions);
+        questionsAdapter = new QuestionsAdapter(getContext(), questions);
         lvQuestions.setAdapter(questionsAdapter);
 
         // TODO
@@ -80,6 +79,8 @@ public class PageFragment extends Fragment implements AskQuestionFragment.AskQue
             questions = new ArrayList<>();
         questions.add(q);
         questionsAdapter.notifyDataSetChanged();
+
+//        Toast.makeText(, "Successfully posted your question!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

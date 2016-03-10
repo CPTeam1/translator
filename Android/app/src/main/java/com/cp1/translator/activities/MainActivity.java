@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +15,12 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
-import com.cp1.translator.adapters.QuestionsAdapter;
 import com.cp1.translator.fragments.AskQuestionFragment;
 import com.cp1.translator.fragments.PageFragment;
 import com.cp1.translator.friends.FriendsActivity;
-import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
 
-import java.util.ArrayList;
-
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
 
@@ -88,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
         AskQuestionFragment askQuestionFragment = AskQuestionFragment.newInstance();
-        askQuestionFragment.setTargetFragment(new PageFragment(),300);
+//        askQuestionFragment.setTargetFragment(new PageFragment(),300);
         askQuestionFragment.show(fm,"AskQuestion");
 
 

@@ -1,22 +1,11 @@
 package com.cp1.translator.activities;
 
-import android.content.Intent;
-
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Environment;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
@@ -34,15 +22,11 @@ import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
 
-import org.parceler.Parcels;
-
-import java.io.File;
-import java.io.IOException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.cp1.translator.utils.Constants.*;
+import static com.cp1.translator.utils.Constants.APP_TAG;
+import static com.cp1.translator.utils.Constants.QNO;
 
 public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.btAskQs) Button btAskQs;
