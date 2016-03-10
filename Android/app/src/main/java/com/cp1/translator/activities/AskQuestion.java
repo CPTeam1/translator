@@ -1,9 +1,18 @@
 package com.cp1.translator.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -15,18 +24,26 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.Constants;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.cp1.translator.utils.Constants.*;
 import static com.cp1.translator.utils.Constants.APP_TAG;
 import static com.cp1.translator.utils.Constants.QNO;
+import static com.cp1.translator.utils.Constants.photoFileName;
 
 public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.btAskQs) Button btAskQs;
@@ -36,8 +53,6 @@ public class AskQuestion extends AppCompatActivity {
     @Nullable @Bind(R.id.ibRecAudio) ImageButton ibRecAudio;
 
     private int textColor;
-    private int currQuesNo;
-    private SharedPreferences mSettings;
 
     private static int QS_CHAR_LIMIT = 140;
     private static boolean qsPosted = false;
@@ -47,10 +62,10 @@ public class AskQuestion extends AppCompatActivity {
     private String mAudioFileName;
     private MediaRecorder mediaRecorder;
 
-//    // Defines the listener interface
-//    public interface AskQuestionDialogListener {
-//        void onFinishAsking(Question newQuestion);
-//    }
+    // Defines the listener interface
+    public interface AskQuestionDialogListener {
+        void onFinishAsking(Question newQuestion);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +75,6 @@ public class AskQuestion extends AppCompatActivity {
 
         etQs.addTextChangedListener(textWatcher);
         textColor = tvCharsLeft.getCurrentTextColor();
-        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
         btAskQs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +90,7 @@ public class AskQuestion extends AppCompatActivity {
                     Question qsDB  = saveLocally(question,User.getCurrentUser().getEmail());
 
                     // TODO uncomment once model is fixed
-                    //saveToParse(question);
+                    saveToParse(question);
 
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
 
@@ -93,15 +107,13 @@ public class AskQuestion extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        currQuesNo = mSettings.getInt(QNO,0);
-        currQuesNo++;
     }
 
-    /*public void onLaunchCamera(View view) {
+    public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // set the image file name
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName + SEPARATOR+ Integer.toString(currQuesNo) + PIC_EXT));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName + SEPARATOR+ Long.toString(System.currentTimeMillis()) + PIC_EXT));
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
@@ -109,7 +121,7 @@ public class AskQuestion extends AppCompatActivity {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
-    }*/
+    }
 
     @Override
     protected void onPause() {
@@ -122,7 +134,7 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
-    /*public void onReleaseRecorder(View view){
+    public void onReleaseRecorder(View view){
         if(mediaRecorder!=null){
             Log.d(APP_TAG,"Stopping recording..");
             mediaRecorder.stop();
@@ -156,7 +168,7 @@ public class AskQuestion extends AppCompatActivity {
             if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
                 // Set the file location for the audio
                 mAudioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-                mAudioFileName += "/audiorecordtest"+SEPARATOR + Integer.toString(currQuesNo)+AUDIO_EXT;
+                mAudioFileName += "/audiorecordtest"+SEPARATOR + Long.toString(System.currentTimeMillis())+AUDIO_EXT;
                 Log.d(APP_TAG,"Audio file for question: "+mAudioFileName);
                 // Create the recorder
                 mediaRecorder = new MediaRecorder();
@@ -182,7 +194,7 @@ public class AskQuestion extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Uri takenPhotoUri = getPhotoFileUri(photoFileName + SEPARATOR+ Integer.toString(currQuesNo) + PIC_EXT);
+                Uri takenPhotoUri = getPhotoFileUri(photoFileName + SEPARATOR+ Long.toString(System.currentTimeMillis()) + PIC_EXT);
                 imageURI = takenPhotoUri.toString();
                 Log.d(APP_TAG,"qs image uri = " + imageURI);
                 // by this point we have the camera photo on disk
@@ -225,15 +237,12 @@ public class AskQuestion extends AppCompatActivity {
     private boolean isExternalStorageAvailable() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
-    }*/
+    }
 
 
 
     private Question saveLocally(String question, String userName) {
         Question q = Question.toQuestion(question,userName);
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putInt(QNO, currQuesNo);
-        editor.commit();
         if(q!=null) {
             if (imageURI != null)
                 q.setImageURI(imageURI);
@@ -245,16 +254,22 @@ public class AskQuestion extends AppCompatActivity {
 
     private void saveToParse(String question) {
         Entry qsEntry = new Entry();
-//        qsEntry.setQuestion();
         qsEntry.setText(question);
-//        qsEntry.setUser((User) User.getCurrentUser());
+        qsEntry.setAsQuestion();
 
         Post qsPost = new Post();
         qsPost.setQuestion(qsEntry);
 
-//        qsEntry.setPost(qsPost);
-
-        qsEntry.saveInBackground();
+        qsEntry.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e!=null){
+                    Log.e(APP_TAG,"Error in saving to parse backend"+e.getMessage());
+                }
+                else
+                    Log.d(APP_TAG,"Saved successfully");
+            }
+        });
         qsPost.saveInBackground();
     }
 

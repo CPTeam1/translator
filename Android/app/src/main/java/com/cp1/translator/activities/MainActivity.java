@@ -79,15 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onNewQuestionClick(MenuItem item) {
         // start AskQuestion Activity
-
-        FragmentManager fm = getSupportFragmentManager();
-        AskQuestionFragment askQuestionFragment = AskQuestionFragment.newInstance();
-//        askQuestionFragment.setTargetFragment(new PageFragment(),300);
-        askQuestionFragment.show(fm,"AskQuestion");
-
-
-//        Intent intent = new Intent(this, AskQuestion.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, AskQuestion.class);
+        startActivity(intent);
     }
 
     public void onSettingsClick(MenuItem item) {
