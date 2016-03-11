@@ -11,5 +11,8 @@ public class Constants {
     public static final String PIC_EXT = ".jpg";
     public static final String QNO = "questionNo";
     public static final String AUDIO_EXT = ".3gp";
+    public static final String IMG = "image";
+    public static final String AUDIO = "audio";
+    public static final String VIDEO = "audio";
 
 }

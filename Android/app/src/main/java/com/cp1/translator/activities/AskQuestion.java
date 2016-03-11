@@ -33,9 +33,15 @@ import com.cp1.translator.models.Question;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -90,7 +96,7 @@ public class AskQuestion extends AppCompatActivity {
                     Question qsDB  = saveLocally(question,User.getCurrentUser().getEmail());
 
                     // TODO uncomment once model is fixed
-                    saveToParse(question);
+                    saveToParse(qsDB);
 
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
 
@@ -112,8 +118,9 @@ public class AskQuestion extends AppCompatActivity {
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         // set the image file name
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName + SEPARATOR+ Long.toString(System.currentTimeMillis()) + PIC_EXT));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName + PIC_EXT));
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
@@ -194,9 +201,9 @@ public class AskQuestion extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Uri takenPhotoUri = getPhotoFileUri(photoFileName + SEPARATOR+ Long.toString(System.currentTimeMillis()) + PIC_EXT);
-                imageURI = takenPhotoUri.toString();
-                Log.d(APP_TAG,"qs image uri = " + imageURI);
+                Uri takenPhotoUri = getPhotoFileUri(photoFileName + PIC_EXT);
+                imageURI = takenPhotoUri.getPath();
+                Log.d(APP_TAG,"qs image uri = " + imageURI + "Bitmap: "+takenPhotoUri.getPath());
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
 
@@ -252,13 +259,20 @@ public class AskQuestion extends AppCompatActivity {
         return q;
     }
 
-    private void saveToParse(String question) {
-        Entry qsEntry = new Entry();
-        qsEntry.setText(question);
-        qsEntry.setAsQuestion();
+    private void saveToParse(Question question) {
+        //1. Save the multimedia as file objects to Parse
+        Map<String,ParseFile> multiMediaMap = saveMultimedia(question);
 
+        Entry qsEntry = new Entry();
+        qsEntry.setText(question.getQuestion());
+        qsEntry.setAsQuestion();
         Post qsPost = new Post();
         qsPost.setQuestion(qsEntry);
+
+        if(multiMediaMap!=null && multiMediaMap.size()>0) {
+            if(multiMediaMap.containsKey(IMG))
+            qsEntry.setImageUrl(multiMediaMap.get(IMG));
+        }
 
         qsEntry.saveInBackground(new SaveCallback() {
             @Override
@@ -271,6 +285,40 @@ public class AskQuestion extends AppCompatActivity {
             }
         });
         qsPost.saveInBackground();
+    }
+
+    private Map<String,ParseFile> saveMultimedia(Question question) {
+        Map<String,ParseFile> multiMediaMap = new HashMap<>();
+        if(question!=null){
+            if(question.getImageURI()!=null){
+                ParseFile file = null;
+
+                Bitmap bitmap = BitmapFactory.decodeFile(question.getImageURI());
+                // Convert it to byte
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Compress image to lower quality scale 1 - 100
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] image = stream.toByteArray();
+                // Create the ParseFile
+                String picName = "question_"+Long.toString(System.currentTimeMillis());
+                file = new ParseFile(picName,image);
+                // Upload the image into Parse Cloud
+                file.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e!=null){
+                            Log.e(APP_TAG,"Problem in saving images to parse backend: "+e.getMessage());
+                        }
+                        else
+                            Log.d(APP_TAG,"Image upload successful");
+                    }
+                });
+
+                if(file!=null)
+                    multiMediaMap.put(IMG,file);
+            }
+        }
+        return multiMediaMap;
     }
 
     TextWatcher textWatcher = new TextWatcher() {

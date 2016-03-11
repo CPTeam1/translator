@@ -1,6 +1,7 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 /**
@@ -24,27 +25,27 @@ public class Entry extends ParseObject {
         put(TEXT_KEY, text);
     }
 
-    public String getImageUrl() {
-        return getString(IMAGE_URL_KEY);
+    public ParseFile getImageUrl() {
+        return getParseFile(IMAGE_URL_KEY);
     }
 
-    public void setImageUrl(String url) {
+    public void setImageUrl(ParseFile url) {
         put(IMAGE_URL_KEY, url);
     }
 
-    public String getAudioUrl() {
-        return getString(AUDIO_URL_KEY);
+    public ParseFile getAudioUrl() {
+        return getParseFile(AUDIO_URL_KEY);
     }
 
-    public void setAudioUrl(String url) {
+    public void setAudioUrl(ParseFile url) {
         put(AUDIO_URL_KEY, url);
     }
 
-    public String getVideoUrl() {
-        return getString(VIDEO_URL_KEY);
+    public ParseFile getVideoUrl() {
+        return getParseFile(VIDEO_URL_KEY);
     }
 
-    public void setVideoUrl(String url) {
+    public void setVideoUrl(ParseFile url) {
         put(VIDEO_URL_KEY, url);
     }
 
