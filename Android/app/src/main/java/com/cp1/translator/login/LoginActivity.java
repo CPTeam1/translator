@@ -35,6 +35,13 @@ public class LoginActivity extends AppCompatActivity{
 		setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+
+        ParseUser user = ParseUser.getCurrentUser();
+        if(user!=null){
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
 	}
 
 
@@ -56,6 +63,7 @@ public class LoginActivity extends AppCompatActivity{
                 if (user != null) {
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -67,6 +75,7 @@ public class LoginActivity extends AppCompatActivity{
     public void createAccount(View view) {
         Intent i = new Intent(LoginActivity.this, SignupActivity.class);
         startActivity(i);
+        finish();
     }
 
 }
