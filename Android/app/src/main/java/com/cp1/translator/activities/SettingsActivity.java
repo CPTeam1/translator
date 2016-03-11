@@ -3,6 +3,7 @@ package com.cp1.translator.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,9 @@ import com.cp1.translator.adapters.LanguagesAdapter;
 import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.Skill;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.Constants;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +99,15 @@ public class SettingsActivity extends AppCompatActivity {
         for (Skill skill : skillList)
             me.addSkill(skill);
 
-        me.saveInBackground();
+        me.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e!=null){
+                    Log.e(Constants.APP_TAG,"Error in uploading skills"+e.getMessage());
+                }
+                else
+                    Log.d(Constants.APP_TAG,"skills uploaded successfully");
+            }
+        });
     }
 }
