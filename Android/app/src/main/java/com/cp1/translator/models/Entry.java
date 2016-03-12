@@ -9,13 +9,18 @@ import com.parse.ParseObject;
  */
 @ParseClassName("Entry")
 public class Entry extends ParseObject {
-    public static final String TEXT_KEY = "text";
-    public static final String IMAGE_URL_KEY = "image";
-    public static final String AUDIO_URL_KEY = "audio";
-    public static final String VIDEO_URL_KEY = "video";
-    public static final String UPVOTE_KEY = "upvote";
-    public static final String DOWNVOTE_KEY = "downvote";
-    public static final String IS_QUESTION_KEY = "isQuestion";
+    public static final String TEXT_KEY         = "text";
+    public static final String IMAGE_URL_KEY    = "image";
+    public static final String AUDIO_URL_KEY    = "audio";
+    public static final String VIDEO_URL_KEY    = "video";
+    public static final String UPVOTE_KEY       = "upvote";
+    public static final String DOWNVOTE_KEY     = "downvote";
+    public static final String IS_QUESTION_KEY  = "isQuestion";
+    public static final String USER_KEY         = "user";
+
+    public void setUser(User user){
+        put(USER_KEY,user);
+    }
 
     public String getText() {
         return getString(TEXT_KEY);

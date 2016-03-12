@@ -34,7 +34,10 @@ import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,14 +98,15 @@ public class AskQuestion extends AppCompatActivity {
 
                     Question qsDB  = saveLocally(question,User.getCurrentUser().getEmail());
 
-                    // TODO uncomment once model is fixed
                     saveToParse(qsDB);
-
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
 
-//                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
-//                    displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
-//                    startActivity(displayQsIntent);
+                    // In order to test how to retrieve all questions by current user look at TestActivity
+//                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class);
+
+                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
+                    startActivity(displayQsIntent);
                 }
             }
         });
@@ -262,17 +266,20 @@ public class AskQuestion extends AppCompatActivity {
     private void saveToParse(Question question) {
         //1. Save the multimedia as file objects to Parse
         Map<String,ParseFile> multiMediaMap = saveMultimedia(question);
+        User currUser = (User) User.getCurrentUser();
 
         Entry qsEntry = new Entry();
         qsEntry.setText(question.getQuestion());
         qsEntry.setAsQuestion();
-        Post qsPost = new Post();
-        qsPost.setQuestion(qsEntry);
-
+        qsEntry.setUser(currUser);
         if(multiMediaMap!=null && multiMediaMap.size()>0) {
             if(multiMediaMap.containsKey(IMG))
-            qsEntry.setImageUrl(multiMediaMap.get(IMG));
+                qsEntry.setImageUrl(multiMediaMap.get(IMG));
         }
+
+
+        Post qsPost = new Post();
+        qsPost.setQuestion(qsEntry);
 
         qsEntry.saveInBackground(new SaveCallback() {
             @Override
@@ -285,6 +292,22 @@ public class AskQuestion extends AppCompatActivity {
             }
         });
         qsPost.saveInBackground();
+
+        if(currUser!=null){
+            currUser.addEntry(qsEntry);
+            currUser.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e!=null){
+                        Log.e(APP_TAG,"Error in saving curr user to parse backend"+e.getMessage());
+                    }
+                    else
+                        Log.d(APP_TAG,"Saved successfully");
+                }
+            });
+        }
+        else
+            Log.e(APP_TAG,"curr user is null");
     }
 
     private Map<String,ParseFile> saveMultimedia(Question question) {
