@@ -1,7 +1,11 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 /**
  * Created by eelango on 3/5/16.
@@ -12,11 +16,22 @@ public class Skill extends ParseObject {
     public static final String LANG_KEY = "lang";
     public static final String LEVEL_KEY = "level";
 
-    public Lang getLang() {
-        return (Lang) getParseObject(LANG_KEY);
+    public Lang getLang(String createdBy) {
+        List<Lang> langList = null;
+
+        ParseQuery<Lang> langParseQuery = ParseQuery.getQuery("Lang");
+        try {
+            List<Lang> queryResults = langParseQuery.whereEqualTo("createdBy", createdBy).find();
+            langList.addAll(queryResults);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return langList.get(0);
     }
 
-    public void setLang(Lang lang) {
+    public void setLang(Lang lang, String createdBy) {
+        put("createdBy", createdBy);
         put(LANG_KEY, lang);
     }
 

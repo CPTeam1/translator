@@ -36,8 +36,8 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.tvUserName) TextView tvUserName;
     @Bind(R.id.tvEmptyLanguage) TextView tvEmptyLanguage;
 
-    private ArrayAdapter<Skill> adapter;
-    private List<Skill> skillList;
+    private ArrayAdapter<Skill> mAdapter;
+    private List<Skill> mSkillList;
     private User me;
 
     private static final int LANG_REQ_CODE = 10;
@@ -62,9 +62,9 @@ public class SettingsActivity extends AppCompatActivity {
                 Lang lang = new Lang();
                 lang.setName(data.getStringExtra("language"));
                 Skill skill = new Skill();
-                skill.setLang(lang);
-                skillList.add(skill);
-                adapter.notifyDataSetChanged();
+                skill.setLang(lang, me.getUsername());
+                mSkillList.add(skill);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -82,11 +82,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         lvLanguages.setEmptyView(tvEmptyLanguage);
         // load languages
-        skillList = new ArrayList<>();
+        mSkillList = new ArrayList<>();
         if (me.getSkills() != null)
-            skillList.addAll(me.getSkills());
-        adapter = new LanguagesAdapter(this, skillList);
-        lvLanguages.setAdapter(adapter);
+            mSkillList.addAll(me.getSkills());
+        mAdapter = new LanguagesAdapter(this, mSkillList);
+        lvLanguages.setAdapter(mAdapter);
     }
 
     @OnClick(R.id.ibAddLanguage)
@@ -98,7 +98,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     // TODO
     public void onSaveSettings(MenuItem item) {
-        for (Skill skill : skillList)
+        for (Skill skill : mSkillList)
             me.addSkill(skill);
 
         me.saveInBackground(new SaveCallback() {
