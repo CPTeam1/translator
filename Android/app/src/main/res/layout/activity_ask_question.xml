@@ -57,17 +57,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ImageButton
+    <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ibRecAudio"
-        android:src="@drawable/ic_trans_mic"
         android:onClick="onLaunchRecorder"
-        android:background="@android:color/transparent"
+        android:background="@drawable/ic_toggle_mic_bg"
         android:layout_below="@+id/etQs"
         android:layout_toRightOf="@+id/ibClickPic"
-        android:paddingLeft="30dp"
-         />
+        style="@style/toggleButton"
+        android:paddingLeft="30dp" />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

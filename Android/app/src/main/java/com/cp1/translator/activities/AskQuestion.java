@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
@@ -59,7 +60,7 @@ public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.etQs) EditText etQs;
     @Bind(R.id.tvChars) TextView tvCharsLeft;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
-    @Nullable @Bind(R.id.ibRecAudio) ImageButton ibRecAudio;
+    @Nullable @Bind(R.id.ibRecAudio) ToggleButton ibRecAudio;
 
     private int textColor;
 
