@@ -21,9 +21,9 @@
     <item
         android:id="@+id/miFriends"
         android:icon="@drawable/ic_friends"
-        android:title="Friends"
-        android:orderInCategory="3"
         android:onClick="onFriendsClick"
+        android:orderInCategory="3"
+        android:title="Friends"
         app:showAsAction="ifRoom" />
 
     <item
@@ -32,6 +32,14 @@
         android:onClick="onSettingsClick"
         android:orderInCategory="4"
         android:title="@string/me"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/miLogout"
+        android:icon="@drawable/ic_logout"
+        android:onClick="onLogoutClick"
+        android:orderInCategory="5"
+        android:title="Logout"
         app:showAsAction="ifRoom" />
 
 </menu>

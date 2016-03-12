@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
+import com.cp1.translator.login.LoginUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class LanguagesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_languages);
 
