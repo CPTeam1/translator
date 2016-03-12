@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -75,6 +76,7 @@ public class AskQuestion extends AppCompatActivity {
     @Nullable @Bind(R.id.rvMediaView) RelativeLayout rvMediaView;
     @Nullable @Bind(R.id.vvQsVideo) VideoView vvQsVideo;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
+    @Nullable @Bind(R.id.fabCancel) FloatingActionButton fabCancel;
 
 
 
@@ -203,6 +205,11 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
+    public void onCancelMedia(View view){
+        showMediaRecButtons();
+        rvMediaView.setVisibility(View.GONE);
+    }
+
     public void onLaunchAudioRecorder(View view){
         try {
             // Verify that the device has a mic first
@@ -243,6 +250,9 @@ public class AskQuestion extends AppCompatActivity {
         ibRecAudio.setVisibility(View.VISIBLE);
         ibRecVideo.setVisibility(View.VISIBLE);
     }
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
