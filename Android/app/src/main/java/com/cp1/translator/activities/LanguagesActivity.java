@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.cp1.translator.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,14 +75,10 @@ public class LanguagesActivity extends AppCompatActivity {
     }
 
     private void populateLanguages() {
-        languagesList = new ArrayList<>();
-        // add all available languages to the list
-        Locale[] availableLocales = Locale.getAvailableLocales();
-        for (Locale locale : availableLocales)
-            languagesList.add(locale.getDisplayName());
+        languagesList = Languages.getLanguages();
 
         // initialize adapter
-        adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, languagesList);
+        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, languagesList);
         lvAllLanguages.setAdapter(adapter);
         // set ListView item click listener
         lvAllLanguages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,5 +97,24 @@ public class LanguagesActivity extends AppCompatActivity {
                 finish(); // closes the activity, pass data to parent
             }
         });
+    }
+
+    public static class Languages {
+
+        private static final List<String> languagesList;
+
+        static {
+            String[] arr = new String[] { "Arabic", "Catalan", "Chinese", "Croatian", "Czech",
+            "Danish", "Dutch", "English", "Finnish", "French", "German", "Greek", "Hebrew",
+            "Hindi", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Malay",
+            "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Spanish", "Swedish",
+            "Thai", "Turkish", "Ukrainian", "Vietnamese" };
+
+            languagesList = new ArrayList(Arrays.asList(arr));
+        }
+
+        public static List<String> getLanguages() {
+            return languagesList;
+        }
     }
 }

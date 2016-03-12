@@ -1,6 +1,8 @@
 package com.cp1.translator.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -50,10 +52,20 @@ public class User extends ParseUser {
     }
 
     public List<Skill> getSkills() {
+        ParseQuery<Skill> skillParseQuery = ParseQuery.getQuery("Skill");
+        try {
+            List<Skill> skillList = skillParseQuery.whereEqualTo("createdBy", getUsername()).find();
+            for (Skill skill : skillList) {
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return getList(SKILLS_KEY);
     }
 
     public void addSkill(Skill skill) {
+        skill.put("createdBy", getUsername());
         List<Skill> skills = getSkills();
         if (skills == null) {
             skills = new ArrayList<>();
