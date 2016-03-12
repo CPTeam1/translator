@@ -31,7 +31,10 @@ public class User extends ParseUser {
     }
 
     public List<User> getFriends() {
-        return getList(FRIENDS_KEY);
+        List<User> friends = getList(FRIENDS_KEY);
+        if (friends == null)
+            friends = new ArrayList<>();
+        return friends;
     }
 
     public List<Entry> getEntries(){
@@ -39,7 +42,7 @@ public class User extends ParseUser {
     }
 
 
-    public void addEntry(Entry entry){
+    public void addEntry(Entry entry) {
         List<Entry> currEntries = getEntries();
         if (currEntries == null) {
             Log.d(APP_TAG, "curr Entries are null, creating new entry list");
