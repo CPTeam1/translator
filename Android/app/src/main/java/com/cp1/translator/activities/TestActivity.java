@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
+import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
@@ -30,6 +31,7 @@ public class TestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         tv = (TextView) findViewById(R.id.tvTestQs);

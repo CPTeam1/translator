@@ -28,6 +28,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.cp1.translator.R;
+import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
@@ -79,6 +80,7 @@ public class AskQuestion extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask_question);
         ButterKnife.bind(this);

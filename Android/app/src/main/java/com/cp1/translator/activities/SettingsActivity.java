@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.adapters.LanguagesAdapter;
+import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.Skill;
 import com.cp1.translator.models.User;
@@ -43,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);

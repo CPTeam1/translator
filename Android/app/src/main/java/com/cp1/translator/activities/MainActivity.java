@@ -18,7 +18,10 @@ import com.cp1.translator.R;
 import com.cp1.translator.fragments.AskQuestionFragment;
 import com.cp1.translator.fragments.PageFragment;
 import com.cp1.translator.friends.FriendsActivity;
+import com.cp1.translator.login.LoginActivity;
+import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.User;
+import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
 
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -92,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
     public void onFriendsClick(MenuItem item) {
         Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);
+    }
+
+    public void onLogoutClick(MenuItem item) {
+        LoginUtils.logout(this);
     }
 
     public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
