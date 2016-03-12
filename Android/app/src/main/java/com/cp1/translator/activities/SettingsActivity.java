@@ -62,7 +62,8 @@ public class SettingsActivity extends AppCompatActivity {
                 Lang lang = new Lang();
                 lang.setName(data.getStringExtra("language"));
                 Skill skill = new Skill();
-                skill.setLang(lang, me.getUsername());
+                skill.setLang(lang);
+                skill.setLangCode(lang.getName());
                 mSkillList.add(skill);
                 mAdapter.notifyDataSetChanged();
             }
@@ -83,8 +84,21 @@ public class SettingsActivity extends AppCompatActivity {
         lvLanguages.setEmptyView(tvEmptyLanguage);
         // load languages
         mSkillList = new ArrayList<>();
-        if (me.getSkills() != null)
-            mSkillList.addAll(me.getSkills());
+        List<Skill> skillList = me.getSkills(); // load List< ParseObject<Skill> > from remote
+        if (skillList != null && !skillList.isEmpty()) {
+            for (Skill skill : skillList) {
+                try {
+                    skill = skill.fetchIfNeeded();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                skill.doneSave(); // mark is 'saved' so that we don't save it again.
+                String langCode = skill.getLangCode();
+                Lang lang = skill.loadLangFromRemote(langCode); // load ParseObject<Lang> from remote
+                skill.setLang(lang);
+            }
+            mSkillList.addAll(skillList);
+        }
         mAdapter = new LanguagesAdapter(this, mSkillList);
         lvLanguages.setAdapter(mAdapter);
     }
@@ -98,17 +112,38 @@ public class SettingsActivity extends AppCompatActivity {
 
     // TODO
     public void onSaveSettings(MenuItem item) {
-        for (Skill skill : mSkillList)
-            me.addSkill(skill);
+        saveSkill();
+    }
 
+    private void saveSkill() {
+        for (final Skill skill : mSkillList) {
+            if (!skill.isSavedRemotely()) {
+                // save ParseObject<Skill> BEFORE updating the user profile!!
+                skill.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(Constants.APP_TAG, "Error in saving the Skill " + skill.getLangCode() + " : " + e.getMessage());
+                        } else {
+                            Log.d(Constants.APP_TAG, "Successfully saved the Skill: " + skill.getLangCode());
+                            updateMySkills(skill);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void updateMySkills(final Skill skill) {
+        me.addSkill(skill);
         me.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e!=null){
-                    Log.e(Constants.APP_TAG,"Error in uploading skills"+e.getMessage());
+                if (e != null) {
+                    Log.e(Constants.APP_TAG, "Error in updating the Skill " + skill.getLangCode() + " : " + e.getMessage());
+                } else {
+                    Log.d(Constants.APP_TAG, "Successfully added the Skill: " + skill.getLangCode());
                 }
-                else
-                    Log.d(Constants.APP_TAG,"skills uploaded successfully");
             }
         });
     }

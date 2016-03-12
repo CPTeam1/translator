@@ -2,16 +2,13 @@ package com.cp1.translator.models;
 
 import android.util.Log;
 
-import com.cp1.translator.utils.Constants;
 import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cp1.translator.utils.Constants.*;
+import static com.cp1.translator.utils.Constants.APP_TAG;
 
 @ParseClassName("_User")
 public class User extends ParseUser {
@@ -87,26 +84,19 @@ public class User extends ParseUser {
     }
 
     public List<Skill> getSkills() {
-        ParseQuery<Skill> skillParseQuery = ParseQuery.getQuery("Skill");
-        try {
-            List<Skill> skillList = skillParseQuery.whereEqualTo("createdBy", getUsername()).find();
-            for (Skill skill : skillList) {
-
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return getList(SKILLS_KEY);
+        List<Skill> skillList = getList(SKILLS_KEY);
+        if (skillList == null)
+            skillList = new ArrayList<>();
+        return skillList;
     }
 
     public void addSkill(Skill skill) {
-        skill.put("createdBy", getUsername());
         List<Skill> skills = getSkills();
         if (skills == null) {
             skills = new ArrayList<>();
         }
         skills.add(skill);
-        put(SKILLS_KEY, skill);
+        put(SKILLS_KEY, skills);
     }
 
     public void removeSkill(Skill skill) {

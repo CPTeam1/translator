@@ -15,23 +15,29 @@ import java.util.List;
 public class Skill extends ParseObject {
     public static final String LANG_KEY = "lang";
     public static final String LEVEL_KEY = "level";
+    public static final String LANG_CODE_KEY = "langcode";
 
-    public Lang getLang(String createdBy) {
-        List<Lang> langList = null;
+    private boolean isSavedRemotely = false;
+
+    public Lang loadLangFromRemote(String langCode) {
+        Lang lang = null;
 
         ParseQuery<Lang> langParseQuery = ParseQuery.getQuery("Lang");
         try {
-            List<Lang> queryResults = langParseQuery.whereEqualTo("createdBy", createdBy).find();
-            langList.addAll(queryResults);
+            List<Lang> queryResults = langParseQuery.whereEqualTo("name", langCode).find();
+            lang = queryResults.get(0);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return langList.get(0);
+        return lang;
     }
 
-    public void setLang(Lang lang, String createdBy) {
-        put("createdBy", createdBy);
+    public Lang getLang() {
+        return (Lang) getParseObject(LANG_KEY);
+    }
+
+    public void setLang(Lang lang) {
         put(LANG_KEY, lang);
     }
 
@@ -41,6 +47,22 @@ public class Skill extends ParseObject {
 
     public void setLevel(int level) {
         put(LEVEL_KEY, level);
+    }
+
+    public String getLangCode() {
+        return getString(LANG_CODE_KEY);
+    }
+
+    public void setLangCode(String langCode) {
+        put(LANG_CODE_KEY, langCode);
+    }
+
+    public boolean isSavedRemotely() {
+        return isSavedRemotely;
+    }
+
+    public void doneSave() {
+        isSavedRemotely = true;
     }
 
     @Override
