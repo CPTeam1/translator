@@ -8,12 +8,14 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,9 +25,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.VideoView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.login.LoginUtils;
@@ -57,11 +62,23 @@ import static com.cp1.translator.utils.Constants.QNO;
 import static com.cp1.translator.utils.Constants.photoFileName;
 
 public class AskQuestion extends AppCompatActivity {
+    // Question views
     @Bind(R.id.btAskQs) Button btAskQs;
     @Bind(R.id.etQs) EditText etQs;
     @Bind(R.id.tvChars) TextView tvCharsLeft;
+
+    // Media recording buttons
+    @Bind(R.id.ibClickPic) ImageButton ibClickPic;
+    @Bind(R.id.ibRecAudio) ToggleButton ibRecAudio;
+    @Bind(R.id.ibRecVideo) ImageButton ibRecVideo;
+
+    // Media Views
+    @Nullable @Bind(R.id.rvMediaView) RelativeLayout rvMediaView;
+    @Nullable @Bind(R.id.vvQsVideo) VideoView vvQsVideo;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
-    @Nullable @Bind(R.id.ibRecAudio) ToggleButton ibRecAudio;
+    @Nullable @Bind(R.id.fabCancel) FloatingActionButton fabCancel;
+
+
 
     private int textColor;
 
@@ -69,9 +86,10 @@ public class AskQuestion extends AppCompatActivity {
     private static boolean qsPosted = false;
     private String imageURI;
     private String audioURI;
-    private String videoURI;
+    private Uri videoURI;
     private String mAudioFileName;
     private MediaRecorder mediaRecorder;
+    private boolean isMediaCaptured = false;
 
     // Defines the listener interface
     public interface AskQuestionDialogListener {
@@ -91,7 +109,6 @@ public class AskQuestion extends AppCompatActivity {
         btAskQs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
                 // 1) save qs in DB
                 // 2) pass qs back to main activity
                 // 3) display in adapter
@@ -103,7 +120,6 @@ public class AskQuestion extends AppCompatActivity {
 
                     saveToParse(qsDB);
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
-
                     // In order to test how to retrieve all questions by current user look at TestActivity
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class);
 
@@ -113,8 +129,6 @@ public class AskQuestion extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     @Override
@@ -175,7 +189,28 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
-    public void onLaunchRecorder(View view){
+    public void onLaunchVideoRecorder(View view){
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            rvMediaView.setVisibility(View.VISIBLE);
+            vvQsVideo.setVisibility(View.VISIBLE);
+//            playbackRecordedVideo();
+            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            File mediaFile = new File(
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+            videoURI = Uri.fromFile(mediaFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
+            startActivityForResult(intent, Constants.VIDEO_CAPTURE);
+        } else {
+            Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onCancelMedia(View view){
+        showMediaRecButtons();
+        rvMediaView.setVisibility(View.GONE);
+    }
+
+    public void onLaunchAudioRecorder(View view){
         try {
             // Verify that the device has a mic first
             PackageManager pmanager = this.getPackageManager();
@@ -204,10 +239,27 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
+    public void hideMediaRecButtons(){
+        ibClickPic.setVisibility(View.GONE);
+        ibRecAudio.setVisibility(View.GONE);
+        ibRecVideo.setVisibility(View.GONE);
+    }
+
+    public void showMediaRecButtons(){
+        ibClickPic.setVisibility(View.VISIBLE);
+        ibRecAudio.setVisibility(View.VISIBLE);
+        ibRecVideo.setVisibility(View.VISIBLE);
+    }
+
+
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                hideMediaRecButtons();
+                rvMediaView.setVisibility(View.VISIBLE);
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName + PIC_EXT);
                 imageURI = takenPhotoUri.getPath();
                 Log.d(APP_TAG,"qs image uri = " + imageURI + "Bitmap: "+takenPhotoUri.getPath());
@@ -218,9 +270,39 @@ public class AskQuestion extends AppCompatActivity {
                 ivQsPic.setImageBitmap(takenImage);
 
             } else { // Result was a failure
+                showMediaRecButtons();
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
+
+        if(requestCode == VIDEO_CAPTURE){
+            if (resultCode == RESULT_OK) {
+                hideMediaRecButtons();
+
+                rvMediaView.setVisibility(View.VISIBLE);
+                vvQsVideo.setVisibility(View.VISIBLE);
+                Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
+                playbackRecordedVideo();
+            } else if (resultCode == RESULT_CANCELED) {
+                showMediaRecButtons();
+                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_SHORT).show();
+            } else {
+                showMediaRecButtons();
+                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void playbackRecordedVideo() {
+        Log.d(APP_TAG,"Video should play now!");
+        Toast.makeText(this, "Video should play now",  Toast.LENGTH_SHORT).show();
+        //vvQsVideo.setVideoURI(videoURI);
+        // TODO: remove this, its just a test video
+        vvQsVideo.setVideoURI(Uri.parse("android.resource://" + getPackageName() +"/"+R.raw.small_video));
+
+        vvQsVideo.setMediaController(new MediaController(this));
+        vvQsVideo.requestFocus();
+        vvQsVideo.start();
     }
 
 

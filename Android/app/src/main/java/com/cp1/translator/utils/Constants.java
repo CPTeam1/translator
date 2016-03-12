@@ -6,6 +6,7 @@ package com.cp1.translator.utils;
 public class Constants {
     public static final String APP_TAG = "socialtranslator";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public static final int VIDEO_CAPTURE = 101;
     public static final String photoFileName = "photo";
     public static final String SEPARATOR = "_";
     public static final String PIC_EXT = ".jpg";

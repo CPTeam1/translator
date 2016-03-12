@@ -3,18 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.cp1.translator.activities.AskQuestion">
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:hint="What&apos;s your Question?"
         android:id="@+id/etQs"
         android:textColorHint="@color/accent_material_light"
         android:gravity="top"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ivQsPic">
-
+        android:layout_below="@+id/rvMediaView">
     </EditText>
 
     <View
@@ -24,6 +24,7 @@
         android:layout_marginBottom="112dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/divLine" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
         android:layout_toStartOf="@+id/btAskQs"
         android:layout_marginRight="15dp" />
 
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,42 +63,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ibRecAudio"
-        android:onClick="onLaunchRecorder"
+        android:onClick="onLaunchAudioRecorder"
         android:background="@drawable/ic_toggle_mic_bg"
         android:layout_below="@+id/etQs"
         android:layout_toRightOf="@+id/ibClickPic"
         style="@style/toggleButton"
         android:paddingLeft="30dp" />
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ibRelAudio"
-        android:src="@drawable/ic_trans_mic_off"
-        android:onClick="onReleaseRecorder"
+        android:src="@drawable/ic_video"
+        android:id="@+id/ibRecVideo"
+        android:onClick="onLaunchVideoRecorder"
         android:background="@android:color/transparent"
         android:layout_below="@+id/etQs"
         android:layout_toRightOf="@+id/ibRecAudio"
         android:paddingLeft="30dp"
         />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ibPlayAudio"
-        android:src="@drawable/ic_play"
-        android:onClick="onPlay"
-        android:background="@android:color/transparent"
-        android:layout_below="@+id/etQs"
-        android:layout_toRightOf="@+id/ibRelAudio"
-        android:paddingLeft="30dp"
-        />
 
-    <ImageView
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ivQsPic"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:visibility="gone"
+        android:id="@+id/rvMediaView">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivQsPic"
+            android:layout_below="@+id/vvQsVideo"
+            android:layout_centerHorizontal="true"
+            />
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            android:id="@+id/vvQsVideo"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCancel"
+            android:src="@drawable/ic_cancel"
+            android:onClick="onCancelMedia"
+            app:fabSize="mini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"/>
+    </RelativeLayout>
 
 </RelativeLayout>

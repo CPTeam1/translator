@@ -49,4 +49,6 @@ dependencies {
     compile 'com.parse:parse-android:1.13.0'
     compile 'com.parse:parseinterceptors:0.0.2'
     compile 'org.parceler:parceler-api:1.0.4'
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
 }
