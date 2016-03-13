@@ -9,6 +9,7 @@
     </style>
 
     <!-- Application theme. -->
+    <color name="bg_gray">#B6B6B6</color>
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <!-- Customize your theme here. -->
@@ -17,6 +18,7 @@
         <item name="colorAccent">#FF4081</item>
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#727272</item>
+        <item name="background">@color/bg_gray</item>
     </style>
 
     <!-- our custom styles -->

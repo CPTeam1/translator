@@ -5,17 +5,10 @@ import android.util.Log;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.cp1.translator.utils.Constants;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.parceler.Parcel;
 
-
-import java.util.ArrayList;
-
-import static com.cp1.translator.utils.Constants.*;
+import static com.cp1.translator.utils.Constants.APP_TAG;
 
 @Parcel(analyze={Question.class})
 @Table(name = "Questions")
@@ -42,6 +35,10 @@ public class Question extends Model {
 
     @Column(name = "answers")
     String answers;
+
+    // added by Hyunji; to be used by QuestionsAdapter to display the icon of the question type
+    @Column(name = "type")
+    String type = Types.TEXT; // by default
 
     public String getAnswers() {
         return answers;
@@ -97,6 +94,14 @@ public class Question extends Model {
 
     public void setAnswered(Boolean answered) {
         this.answered = answered;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     // Make sure to always define this constructor with no arguments

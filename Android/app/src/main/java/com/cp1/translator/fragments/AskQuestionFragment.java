@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -73,7 +72,7 @@ public class AskQuestionFragment extends DialogFragment {
 
     // Defines the listener interface
     public interface AskQuestionDialogListener {
-        void onFinishAsking(Question newQuestion);
+        void onFinishAsking(Entry newQuestion);
     }
 
 
@@ -113,12 +112,15 @@ public class AskQuestionFragment extends DialogFragment {
 
                     Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
 
+                    // build new Entry object for qsDB
+                    Entry qsEntry = buildQuestionEntry(qsDB);
+
                     // TODO uncomment once model is fixed
                     //saveToParse(question);
 
                     AskQuestionDialogListener listener = (AskQuestionDialogListener) getTargetFragment();
                     if(listener!=null) {
-                            listener.onFinishAsking(qsDB);
+                            listener.onFinishAsking(qsEntry);
                         dismiss();
                     }
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -367,4 +369,14 @@ public class AskQuestionFragment extends DialogFragment {
         return view;
     }
 
+    public Entry buildQuestionEntry(Question question) {
+        Entry qsEntry = new Entry();
+        qsEntry.setAsQuestion();
+        qsEntry.setType(question.getType());
+
+        if (question.getQuestion() != null)
+            qsEntry.setText(question.getQuestion());
+
+        return qsEntry;
+    }
 }
