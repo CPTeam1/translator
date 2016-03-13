@@ -57,6 +57,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
+import static com.cp1.translator.utils.Constants.AUDIO;
 import static com.cp1.translator.utils.Constants.AUDIO_EXT;
 import static com.cp1.translator.utils.Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
 import static com.cp1.translator.utils.Constants.IMG;
@@ -349,9 +350,9 @@ public class AskQuestion extends AppCompatActivity  {
     private void playbackRecordedVideo() {
         Log.d(APP_TAG,"Video should play now!");
         Toast.makeText(this, "Video should play now",  Toast.LENGTH_SHORT).show();
-        //vvQsVideo.setVideoURI(videoURI);
+        vvQsVideo.setVideoURI(videoURI);
         // TODO: remove this, its just a test video
-        vvQsVideo.setVideoURI(Uri.parse("android.resource://" + getPackageName() +"/"+R.raw.small_video));
+//        vvQsVideo.setVideoURI(Uri.parse("android.resource://" + getPackageName() +"/"+R.raw.small_video));
 
         vvQsVideo.setMediaController(new MediaController(this));
         vvQsVideo.requestFocus();
@@ -418,6 +419,8 @@ public class AskQuestion extends AppCompatActivity  {
                 qsEntry.setImageUrl(multiMediaMap.get(IMG));
             if(multiMediaMap.containsKey(VIDEO))
                 qsEntry.setVideoUrl(multiMediaMap.get(VIDEO));
+            if(multiMediaMap.containsKey(AUDIO))
+                qsEntry.setAudioUrl(multiMediaMap.get(AUDIO));
         }
 
 
@@ -437,7 +440,7 @@ public class AskQuestion extends AppCompatActivity  {
         qsPost.saveInBackground();
     }
 
-    public ParseFile convertURIToParseFile(String path){
+    private ParseFile convertURIToParseFile(String path){
         ParseFile file = null   ;
         if(path!=null){
            try {
@@ -452,6 +455,22 @@ public class AskQuestion extends AppCompatActivity  {
            }
         }
         return file;
+    }
+
+    private void saveFileInBackground(final ParseFile pfile){
+        if(pfile!=null){
+            // Upload the image into Parse Cloud
+            pfile.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e!=null){
+                        Log.e(APP_TAG,"Problem in saving File to parse backend: "+pfile.getName());
+                    }
+                    else
+                        Log.d(APP_TAG,"File upload successful: "+pfile.getName());
+                }
+            });
+        }
     }
 
     private Map<String,ParseFile> saveMultimedia(Question question) {
@@ -469,35 +488,24 @@ public class AskQuestion extends AppCompatActivity  {
                 // Create the ParseFile
                 String picName = "question_"+Long.toString(System.currentTimeMillis());
                 file = new ParseFile(picName,image);
-                // Upload the image into Parse Cloud
-                file.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e!=null){
-                            Log.e(APP_TAG,"Problem in saving images to parse backend: "+e.getMessage());
-                        }
-                        else
-                            Log.d(APP_TAG,"Image upload successful");
-                    }
-                });
-
+                Log.d(APP_TAG,"Saving image question: "+file.getName());
+                saveFileInBackground(file);
                 if(file!=null)
                     multiMediaMap.put(IMG,file);
             }
             if(question.getVideoURI()!=null){
                 ParseFile file = convertURIToParseFile(question.getVideoURI());
-                file.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e!=null){
-                            Log.e(APP_TAG,"Problem in saving video to parse backend: "+e.getMessage());
-                        }
-                        else
-                            Log.d(APP_TAG,"Video upload successful");
-                    }
-                });
+                Log.d(APP_TAG,"Saving video question: "+file.getName());
+                saveFileInBackground(file);
                 if(file!=null)
                     multiMediaMap.put(VIDEO,file);
+            }
+            if(question.getAudioURI()!=null){
+                ParseFile file = convertURIToParseFile(question.getAudioURI());
+                Log.d(APP_TAG,"Saving audio question: "+file.getName());
+                saveFileInBackground(file);
+                if(file!=null)
+                    multiMediaMap.put(AUDIO,file);
             }
         }
         return multiMediaMap;
