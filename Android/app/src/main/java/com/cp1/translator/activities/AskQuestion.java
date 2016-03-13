@@ -22,10 +22,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,12 +46,14 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.apache.commons.io.IOUtils;
 import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,12 +75,14 @@ public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.ibClickPic) ImageButton ibClickPic;
     @Bind(R.id.ibRecAudio) ToggleButton ibRecAudio;
     @Bind(R.id.ibRecVideo) ImageButton ibRecVideo;
+    @Nullable @Bind(R.id.pbRecording) ProgressBar pbRecording;
 
     // Media Views
     @Nullable @Bind(R.id.rvMediaView) RelativeLayout rvMediaView;
     @Nullable @Bind(R.id.vvQsVideo) VideoView vvQsVideo;
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
     @Nullable @Bind(R.id.fabCancel) FloatingActionButton fabCancel;
+
 
 
 
@@ -129,6 +135,20 @@ public class AskQuestion extends AppCompatActivity {
                 }
             }
         });
+
+        ibRecAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    pbRecording.setVisibility(ProgressBar.VISIBLE);
+                    onLaunchAudioRecorder();
+                }
+                else{
+                    pbRecording.setVisibility(ProgressBar.INVISIBLE);
+                    onReleaseRecorder();
+                }
+            }
+        });
     }
 
     @Override
@@ -162,7 +182,7 @@ public class AskQuestion extends AppCompatActivity {
         }
     }
 
-    public void onReleaseRecorder(View view){
+    public void onReleaseRecorder(){
         if(mediaRecorder!=null){
             Log.d(APP_TAG,"Stopping recording..");
             mediaRecorder.stop();
@@ -210,7 +230,9 @@ public class AskQuestion extends AppCompatActivity {
         rvMediaView.setVisibility(View.GONE);
     }
 
-    public void onLaunchAudioRecorder(View view){
+
+    public void onLaunchAudioRecorder(){
+
         try {
             // Verify that the device has a mic first
             PackageManager pmanager = this.getPackageManager();
@@ -281,6 +303,8 @@ public class AskQuestion extends AppCompatActivity {
 
                 rvMediaView.setVisibility(View.VISIBLE);
                 vvQsVideo.setVisibility(View.VISIBLE);
+                Log.d(APP_TAG,"Video saved at: "+data.getData().toString());
+
                 Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
                 playbackRecordedVideo();
             } else if (resultCode == RESULT_CANCELED) {
@@ -344,6 +368,11 @@ public class AskQuestion extends AppCompatActivity {
                 q.setImageURI(imageURI);
             if (audioURI!=null)
                 q.setAudioURI(audioURI);
+            if(videoURI!=null) {
+                Log.d(APP_TAG,"URI: "+videoURI);
+                Log.d(APP_TAG,"Path: "+videoURI.getPath());
+                q.setVideoURI(videoURI.getPath());
+            }
         }
         return q;
     }
@@ -360,6 +389,8 @@ public class AskQuestion extends AppCompatActivity {
         if(multiMediaMap!=null && multiMediaMap.size()>0) {
             if(multiMediaMap.containsKey(IMG))
                 qsEntry.setImageUrl(multiMediaMap.get(IMG));
+            if(multiMediaMap.containsKey(VIDEO))
+                qsEntry.setVideoUrl(multiMediaMap.get(VIDEO));
         }
 
 
@@ -377,6 +408,23 @@ public class AskQuestion extends AppCompatActivity {
             }
         });
         qsPost.saveInBackground();
+    }
+
+    public ParseFile convertURIToParseFile(String path){
+        ParseFile file = null;
+        if(path!=null){
+           try {
+               FileInputStream fis = new FileInputStream(new File(path));
+               byte[] byteArray   = IOUtils.toByteArray(fis);
+               String fileName  = "question_"+Long.toString(System.currentTimeMillis());
+               file = new ParseFile(fileName,byteArray);
+           }catch (FileNotFoundException e) {
+               Log.e(APP_TAG,"Exception while opening file "+ e.getMessage());
+           } catch (IOException e) {
+               Log.e(APP_TAG,"Exception while opening file "+ e.getMessage());
+           }
+        }
+        return file;
     }
 
     private Map<String,ParseFile> saveMultimedia(Question question) {
@@ -408,6 +456,21 @@ public class AskQuestion extends AppCompatActivity {
 
                 if(file!=null)
                     multiMediaMap.put(IMG,file);
+            }
+            if(question.getVideoURI()!=null){
+                ParseFile file = convertURIToParseFile(question.getVideoURI());
+                file.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e!=null){
+                            Log.e(APP_TAG,"Problem in saving video to parse backend: "+e.getMessage());
+                        }
+                        else
+                            Log.d(APP_TAG,"Video upload successful");
+                    }
+                });
+                if(file!=null)
+                    multiMediaMap.put(VIDEO,file);
             }
         }
         return multiMediaMap;

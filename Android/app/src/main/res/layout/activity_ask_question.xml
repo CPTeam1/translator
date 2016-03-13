@@ -59,11 +59,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ibRecAudio"
-        android:onClick="onLaunchAudioRecorder"
         android:background="@drawable/ic_toggle_mic_bg"
         android:layout_below="@+id/etQs"
         android:layout_toRightOf="@+id/ibClickPic"
@@ -115,5 +115,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"/>
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/pbRecording"
+        android:visibility="invisible"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

@@ -51,4 +51,6 @@ dependencies {
     compile 'org.parceler:parceler-api:1.0.4'
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
+    compile "commons-io:commons-io:+"
+
 }
