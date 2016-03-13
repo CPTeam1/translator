@@ -15,19 +15,20 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
-import com.cp1.translator.fragments.AskQuestionFragment;
-import com.cp1.translator.fragments.PageFragment;
+import com.cp1.translator.fragments.MyPageFragment;
+import com.cp1.translator.fragments.OthersPageFragment;
+import com.cp1.translator.fragments.UsersFragment;
 import com.cp1.translator.friends.FriendsActivity;
-import com.cp1.translator.login.LoginActivity;
 import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.User;
-import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
 
 public class MainActivity extends AppCompatActivity {
+
+    private User me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Toast.makeText(this, "Logged in as: " + User.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+        me = (User) User.getCurrentUser();
+        Toast.makeText(this, "Logged in as: " + me.getUsername(), Toast.LENGTH_SHORT).show();
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -116,16 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            String myUserName = me.getUsername();
             Log.d(APP_TAG,"position: "+position);
             switch(position){
                 case 0: {
-                    return PageFragment.newInstance(tabTitles[0]);
+                    return MyPageFragment.newInstance(tabTitles[0], myUserName);
                 }
                 case 1: {
-                    return PageFragment.newInstance(tabTitles[1]);
+                    return OthersPageFragment.newInstance(tabTitles[1], myUserName);
                 }
                 case 2: {
-                    return PageFragment.newInstance(tabTitles[2]);
+                    return UsersFragment.newInstance(tabTitles[2]);
                 }
                 default: return null;
             }

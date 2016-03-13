@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llOthersQsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_qs_container"
+    android:orientation="horizontal"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/tvOthersQsUser"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/custom_qs_margin"
+        android:layout_marginLeft="@dimen/custom_qs_margin"
+        android:layout_marginRight="@dimen/custom_qs_margin"
+        android:layout_marginTop="2dp"
+        android:layout_weight="10"
+        android:background="@drawable/shape_circle_gray"
+        android:gravity="center"
+        android:text="@string/user"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/ivOthersQsType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/custom_qs_margin"
+        android:layout_marginBottom="@dimen/custom_qs_margin"
+        android:layout_marginLeft="@dimen/custom_qs_margin"
+        android:layout_marginRight="@dimen/custom_qs_margin"
+        android:layout_marginTop="@dimen/custom_qs_margin"
+        android:layout_weight="10"
+        android:contentDescription="@string/desc_ivQsType"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tvOthersQsTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/custom_qs_margin"
+        android:layout_marginBottom="@dimen/custom_qs_margin"
+        android:layout_marginLeft="@dimen/custom_qs_margin"
+        android:layout_marginRight="@dimen/custom_qs_margin"
+        android:layout_marginTop="@dimen/custom_qs_margin"
+        android:layout_weight="70"
+        android:lines="3"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/tvOthersRplCnt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/custom_qs_margin"
+        android:layout_marginBottom="@dimen/custom_qs_margin"
+        android:layout_marginLeft="@dimen/custom_qs_margin"
+        android:layout_marginRight="@dimen/custom_qs_margin"
+        android:layout_marginTop="@dimen/custom_qs_margin"
+        android:layout_weight="10" />
+</LinearLayout>
