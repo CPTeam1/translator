@@ -411,7 +411,7 @@ public class AskQuestion extends AppCompatActivity {
     }
 
     public ParseFile convertURIToParseFile(String path){
-        ParseFile file = null;
+        ParseFile file = null   ;
         if(path!=null){
            try {
                FileInputStream fis = new FileInputStream(new File(path));
