@@ -161,4 +161,23 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"/>
 
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:entries="@array/lang_array"
+        android:id="@+id/fromLang"
+        android:layout_below="@+id/ibClickPic"
+        android:layout_alignParentLeft="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:entries="@array/lang_array"
+        android:id="@+id/toLang"
+        android:layout_below="@+id/ibClickPic"
+        android:layout_alignParentRight="true" />
+
+
 </RelativeLayout>

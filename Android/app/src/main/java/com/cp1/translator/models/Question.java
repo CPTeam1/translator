@@ -29,6 +29,11 @@ public class Question extends Model {
     @Column(name = "answered")
     Boolean answered;
 
+    @Column(name = "fromLanguage")
+    String fromLang;
+
+    @Column(name = "toLanguage")
+    String toLang;
 
     @Column(name = "asked_user")
     String askedByUser;
@@ -39,6 +44,22 @@ public class Question extends Model {
     // added by Hyunji; to be used by QuestionsAdapter to display the icon of the question type
     @Column(name = "type")
     String type = Types.TEXT; // by default
+
+    public String getFromLang() {
+        return fromLang;
+    }
+
+    public void setFromLang(String fromLang) {
+        this.fromLang = fromLang;
+    }
+
+    public String getToLang() {
+        return toLang;
+    }
+
+    public void setToLang(String toLang) {
+        this.toLang = toLang;
+    }
 
     public String getAnswers() {
         return answers;

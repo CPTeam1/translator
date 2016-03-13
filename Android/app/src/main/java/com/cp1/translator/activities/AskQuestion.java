@@ -19,16 +19,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.widget.VideoView;
 
 import com.cp1.translator.R;
@@ -89,8 +88,9 @@ public class AskQuestion extends AppCompatActivity  {
     @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
     @Nullable @Bind(R.id.fabCancel) FloatingActionButton fabCancel;
 
-
-
+    // Spinners
+    @Bind(R.id.fromLang) Spinner spinFromLang;
+    @Bind(R.id.toLang) Spinner spinToLang;
 
     private int textColor;
 
@@ -102,6 +102,8 @@ public class AskQuestion extends AppCompatActivity  {
     private String mAudioFileName;
     private MediaRecorder mediaRecorder;
     private MediaPlayer   mediaPlayer = null;
+    private String fromLang = null;
+    private String toLang = null;
 
     private boolean isMediaCaptured = false;
 
@@ -130,17 +132,26 @@ public class AskQuestion extends AppCompatActivity  {
                 if(etQs.getText()!=null) {
 
                     String question = etQs.getText().toString();
+                    fromLang = spinFromLang.getSelectedItem().toString();
+                    toLang = spinToLang.getSelectedItem().toString();
 
-                    Question qsDB  = saveLocally(question,User.getCurrentUser().getEmail());
+                    if(toLang!=null && fromLang != null) {
 
-                    saveToParse(qsDB);
+
+                        Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
+
+                        saveToParse(qsDB);
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
-                    // In order to test how to retrieve all questions by current user look at TestActivity
+                        // In order to test how to retrieve all questions by current user look at TestActivity
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class);
 
-                    Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
-                    startActivity(displayQsIntent);
+                        Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
+                        startActivity(displayQsIntent);
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"Please choose which Language you want to translate to!",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -231,7 +242,6 @@ public class AskQuestion extends AppCompatActivity  {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             rvMediaView.setVisibility(View.VISIBLE);
             vvQsVideo.setVisibility(View.VISIBLE);
-//            playbackRecordedVideo();
             Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             File mediaFile = new File(
                     Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
@@ -388,11 +398,21 @@ public class AskQuestion extends AppCompatActivity  {
                 q.setImageURI(imageURI);
             if (audioURI!=null)
                 q.setAudioURI(audioURI);
+
+            Log.d(APP_TAG,"Translate from: "+fromLang +" to: "+toLang);
+
+            if(fromLang!=null)
+                q.setFromLang(fromLang);
+            if(toLang!=null)
+                q.setToLang(toLang);
+
             if(videoURI!=null) {
                 Log.d(APP_TAG,"URI: "+videoURI);
                 Log.d(APP_TAG,"Path: "+videoURI.getPath());
                 q.setVideoURI(videoURI.getPath());
             }
+
+            q.save();
         }
         return q;
     }
@@ -406,6 +426,10 @@ public class AskQuestion extends AppCompatActivity  {
         qsEntry.setText(question.getQuestion());
         qsEntry.setAsQuestion();
         qsEntry.setUser(currUser);
+
+        qsEntry.setFromLang(question.getFromLang());
+        qsEntry.setToLang(question.getToLang());
+
         if(multiMediaMap!=null && multiMediaMap.size()>0) {
             if(multiMediaMap.containsKey(IMG))
                 qsEntry.setImageUrl(multiMediaMap.get(IMG));
@@ -414,7 +438,6 @@ public class AskQuestion extends AppCompatActivity  {
             if(multiMediaMap.containsKey(AUDIO))
                 qsEntry.setAudioUrl(multiMediaMap.get(AUDIO));
         }
-
 
         Post qsPost = new Post();
         qsPost.setQuestion(qsEntry);

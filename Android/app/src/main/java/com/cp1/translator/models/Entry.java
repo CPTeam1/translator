@@ -22,6 +22,9 @@ public class Entry extends ParseObject {
     public static final String VIDEO_URL_KEY    = "video";
     public static final String IS_QUESTION_KEY  = "isQuestion";
     public static final String USER_KEY         = "user";
+    public static final String FROM_LANG_KEY    = "fromLang";
+    public static final String TO_LANG_KEY      = "toLang";
+
 
     // added by Hyunji; to be used by QuestionsAdapter to display the icon of the type
     String type = Types.TEXT; // by default
@@ -40,6 +43,22 @@ public class Entry extends ParseObject {
 
     public void setText(String text) {
         put(TEXT_KEY, text);
+    }
+
+    public void setFromLang(String fromLang){
+        put(FROM_LANG_KEY,fromLang);
+    }
+
+    public void setToLang(String toLang){
+        put(TO_LANG_KEY,toLang);
+    }
+
+    public String getFromLang(){
+        return getString(FROM_LANG_KEY);
+    }
+
+    public String getToLang(){
+        return getString(TO_LANG_KEY);
     }
 
     public ParseFile getImageUrl() {
