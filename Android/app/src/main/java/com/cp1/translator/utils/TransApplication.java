@@ -7,7 +7,6 @@ import com.activeandroid.ActiveAndroid;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.Post;
-import com.cp1.translator.models.Skill;
 import com.cp1.translator.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -33,7 +32,6 @@ public class TransApplication extends Application {
         ParseObject.registerSubclass(Entry.class);
         ParseObject.registerSubclass(Lang.class);
         ParseObject.registerSubclass(Post.class);
-        ParseObject.registerSubclass(Skill.class);
         ParseObject.registerSubclass(User.class);
 
         ActiveAndroid.initialize(this);

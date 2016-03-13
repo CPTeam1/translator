@@ -1,24 +1,25 @@
 package com.cp1.translator.models;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
+import com.cp1.translator.utils.ModelListener;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.cp1.translator.utils.Constants.APP_TAG;
 
 @ParseClassName("_User")
 public class User extends ParseUser {
-    public static final String USERNAME_KEY     = "username";
-    public static final String PROFILE_PIC_KEY  = "profilePic";
-    public static final String FRIENDS_KEY      = "friends";
-    public static final String SKILLS_KEY       = "skills";
-    public static final String ENTRIES_KEY      = "entries";
-    public static final String NICKNAME_KEY     = "nickname";
+    public interface UsersListener extends ModelListener {
+        void onUsers(List<User> users);
+    }
 
+    public static final String USERNAME_KEY = "username";
+    public static final String NICKNAME_KEY = "nickname";
+    public static final String PROFILE_PIC_KEY = "profilePic";
+    public static final String FRIENDS_KEY = "friends";
+    public static final String LANGS_KEY = "langs";
 
 
     public String getProfilePic() {
@@ -29,82 +30,90 @@ public class User extends ParseUser {
         put(PROFILE_PIC_KEY, profilePic);
     }
 
-    public List<User> getFriends() {
-        List<User> friends = getList(FRIENDS_KEY);
-        if (friends == null)
-            friends = new ArrayList<>();
-        return friends;
-    }
-
-    public List<Entry> getEntries(){
-        return getList(ENTRIES_KEY);
-    }
-
-
-    public void addEntry(Entry entry) {
-        List<Entry> currEntries = getEntries();
-        if (currEntries == null) {
-            Log.d(APP_TAG, "curr Entries are null, creating new entry list");
-            currEntries = new ArrayList<>();
-        }
-        currEntries.add(entry);
-        put(ENTRIES_KEY, currEntries);
-    }
-
-    public void removeEntry(Entry entry) {
-        List<Entry> entries = getEntries();
-        if (entries != null) {
-            Log.d(APP_TAG,"removing entry "+entry);
-            entries.remove(entry);
-            put(FRIENDS_KEY, entries);
-        }
+    public void getFriends(final UsersListener listener) {
+        ParseRelation<User> friends = getRelation(FRIENDS_KEY);
+        ParseQuery<User> query = friends.getQuery();
+        query.findInBackground(new FindCallback<User>() {
+            @Override
+            public void done(List<User> objects, ParseException e) {
+                if (e == null)
+                    listener.onUsers(objects);
+                else
+                    listener.onError(e);
+            }
+        });
     }
 
     public void addFriend(User user) {
-        List<User> friends = getFriends();
-        if (friends == null) {
-            friends = new ArrayList<>();
-        }
-        friends.add(user);
-        put(FRIENDS_KEY, friends);
+        ParseRelation<User> friendsRelation = getRelation(FRIENDS_KEY);
+        friendsRelation.add(user);
     }
 
     public void removeFriend(User user) {
-        List<User> friends = getFriends();
-        if (friends != null) {
-            friends.remove(user);
-            put(FRIENDS_KEY, friends);
-        }
+        ParseRelation<User> friendsRelaiton = getRelation(FRIENDS_KEY);
+        friendsRelaiton.remove(user);
+    }
+
+    public void getQuestions(final Entry.EntriesListener listener) {
+        ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
+        query.whereEqualTo(Entry.USER_KEY, this);
+        query.whereEqualTo(Entry.IS_QUESTION_KEY, true);
+        query.findInBackground(new FindCallback<Entry>() {
+            @Override
+            public void done(List<Entry> objects, ParseException e) {
+                if (e == null) {
+                    listener.onEntries(objects);
+                } else {
+                    listener.onError(e);
+                }
+            }
+        });
+    }
+
+    public void getAnswers(final Entry.EntriesListener listener) {
+        ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
+        query.whereEqualTo(Entry.USER_KEY, this);
+        query.whereEqualTo(Entry.IS_QUESTION_KEY, false);
+        query.findInBackground(new FindCallback<Entry>() {
+            @Override
+            public void done(List<Entry> objects, ParseException e) {
+                if (e == null) {
+                    listener.onEntries(objects);
+                } else {
+                    listener.onError(e);
+                }
+            }
+        });
+    }
+
+    public void getLangs(final Lang.LangsListener listener) {
+        ParseRelation<Lang> langs = getRelation(LANGS_KEY);
+        ParseQuery<Lang> query = langs.getQuery();
+        query.findInBackground(new FindCallback<Lang>() {
+            @Override
+            public void done(List<Lang> objects, ParseException e) {
+                if (e == null)
+                    listener.onLangs(objects);
+                else
+                    listener.onError(e);
+            }
+        });
+    }
+
+    public void addLang(Lang lang) {
+        ParseRelation<Lang> langs = getRelation(LANGS_KEY);
+        langs.add(lang);
+    }
+
+    public void removeLang(Lang lang) {
+        ParseRelation<Lang> langs = getRelation(LANGS_KEY);
+        langs.remove(lang);
     }
 
     @Override
     public boolean equals(Object o) {
         User otherUser = (User) o;
         return getObjectId().equals(otherUser.getObjectId());
-    }
-
-    public List<Skill> getSkills() {
-        List<Skill> skillList = getList(SKILLS_KEY);
-        if (skillList == null)
-            skillList = new ArrayList<>();
-        return skillList;
-    }
-
-    public void addSkill(Skill skill) {
-        List<Skill> skills = getSkills();
-        if (skills == null) {
-            skills = new ArrayList<>();
-        }
-        skills.add(skill);
-        put(SKILLS_KEY, skills);
-    }
-
-    public void removeSkill(Skill skill) {
-        List<Skill> skills = getSkills();
-        if (skills != null) {
-            skills.remove(skill);
-            put(SKILLS_KEY, skills);
-        }
     }
 
     public String getNickname() {

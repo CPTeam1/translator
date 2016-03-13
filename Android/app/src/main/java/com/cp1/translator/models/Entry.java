@@ -1,22 +1,31 @@
 package com.cp1.translator.models;
 
+import com.cp1.translator.utils.ModelListener;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+
+import java.util.List;
 
 /**
  * Created by ishanpande on 3/4/16.
  */
 @ParseClassName("Entry")
 public class Entry extends ParseObject {
+    public interface EntriesListener extends ModelListener {
+        void onEntries(List<Entry> questions);
+    }
+
     public static final String TEXT_KEY         = "text";
     public static final String IMAGE_URL_KEY    = "image";
     public static final String AUDIO_URL_KEY    = "audio";
     public static final String VIDEO_URL_KEY    = "video";
-    public static final String UPVOTE_KEY       = "upvote";
-    public static final String DOWNVOTE_KEY     = "downvote";
     public static final String IS_QUESTION_KEY  = "isQuestion";
     public static final String USER_KEY         = "user";
+
+    public User getUser() {
+        return (User) getParseObject(USER_KEY);
+    }
 
     public void setUser(User user){
         put(USER_KEY,user);
@@ -52,22 +61,6 @@ public class Entry extends ParseObject {
 
     public void setVideoUrl(ParseFile url) {
         put(VIDEO_URL_KEY, url);
-    }
-
-    public int getUpvote() {
-        return getInt(UPVOTE_KEY);
-    }
-
-    public void upvote() {
-        increment(UPVOTE_KEY);
-    }
-
-    public int getDownvote() {
-        return getInt(DOWNVOTE_KEY);
-    }
-
-    public void downvote() {
-        increment(DOWNVOTE_KEY);
     }
 
     public boolean isQuestion() {

@@ -3,9 +3,7 @@ package com.cp1.translator.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -15,11 +13,8 @@ import com.cp1.translator.R;
 import com.cp1.translator.adapters.LanguagesAdapter;
 import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Lang;
-import com.cp1.translator.models.Skill;
 import com.cp1.translator.models.User;
-import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
     @Bind(R.id.tvUserName) TextView tvUserName;
     @Bind(R.id.tvEmptyLanguage) TextView tvEmptyLanguage;
 
-    private ArrayAdapter<Skill> mAdapter;
-    private List<Skill> mSkillList;
+    private ArrayAdapter<Lang> mAdapter;
+    private List<Lang> mLangList;
     private User me;
 
     private static final int LANG_REQ_CODE = 10;
@@ -59,13 +54,16 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == LANG_REQ_CODE) {
-                Lang lang = new Lang();
-                lang.setName(data.getStringExtra("language"));
-                Skill skill = new Skill();
-                skill.setLang(lang);
-                skill.setLangCode(lang.getName());
-                mSkillList.add(skill);
-                mAdapter.notifyDataSetChanged();
+                String langName = data.getStringExtra("language");
+                Lang lang = Lang.getOrCreate(langName);
+                me.addLang(lang);
+                try {
+                    me.save();
+                    mLangList.add(lang);
+                    mAdapter.notifyDataSetChanged();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -82,25 +80,24 @@ public class SettingsActivity extends AppCompatActivity {
         tvUserName.setText(me.getNickname());
 
         lvLanguages.setEmptyView(tvEmptyLanguage);
+
         // load languages
-        mSkillList = new ArrayList<>();
-        List<Skill> skillList = me.getSkills(); // load List< ParseObject<Skill> > from remote
-        if (skillList != null && !skillList.isEmpty()) {
-            for (Skill skill : skillList) {
-                try {
-                    skill = skill.fetchIfNeeded();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                skill.doneSave(); // mark is 'saved' so that we don't save it again.
-                String langCode = skill.getLangCode();
-                Lang lang = skill.loadLangFromRemote(langCode); // load ParseObject<Lang> from remote
-                skill.setLang(lang);
-            }
-            mSkillList.addAll(skillList);
-        }
-        mAdapter = new LanguagesAdapter(this, mSkillList);
+        mLangList = new ArrayList<>();
+        mAdapter = new LanguagesAdapter(this, mLangList);
         lvLanguages.setAdapter(mAdapter);
+
+        me.getLangs(new Lang.LangsListener() {
+            @Override
+            public void onLangs(List<Lang> langs) {
+                mLangList.addAll(langs);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(ParseException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @OnClick(R.id.ibAddLanguage)
@@ -111,40 +108,40 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     // TODO
-    public void onSaveSettings(MenuItem item) {
-        saveSkill();
-    }
-
-    private void saveSkill() {
-        for (final Skill skill : mSkillList) {
-            if (!skill.isSavedRemotely()) {
-                // save ParseObject<Skill> BEFORE updating the user profile!!
-                skill.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            Log.e(Constants.APP_TAG, "Error in saving the Skill " + skill.getLangCode() + " : " + e.getMessage());
-                        } else {
-                            Log.d(Constants.APP_TAG, "Successfully saved the Skill: " + skill.getLangCode());
-                            updateMySkills(skill);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    private void updateMySkills(final Skill skill) {
-        me.addSkill(skill);
-        me.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(Constants.APP_TAG, "Error in updating the Skill " + skill.getLangCode() + " : " + e.getMessage());
-                } else {
-                    Log.d(Constants.APP_TAG, "Successfully added the Skill: " + skill.getLangCode());
-                }
-            }
-        });
-    }
+//    public void onSaveSettings(MenuItem item) {
+//        saveLangs();
+//    }
+//
+//    private void saveLangs() {
+//        for (final Lang skill : mLangList) {
+//            if (!skill.isSavedRemotely()) {
+//                // save ParseObject<Skill> BEFORE updating the user profile!!
+//                skill.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        if (e != null) {
+//                            Log.e(Constants.APP_TAG, "Error in saving the Skill " + skill.getLangCode() + " : " + e.getMessage());
+//                        } else {
+//                            Log.d(Constants.APP_TAG, "Successfully saved the Skill: " + skill.getLangCode());
+//                            updateMySkills(skill);
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//    }
+//
+//    private void updateMySkills(final Skill skill) {
+//        me.addSkill(skill);
+//        me.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e != null) {
+//                    Log.e(Constants.APP_TAG, "Error in updating the Skill " + skill.getLangCode() + " : " + e.getMessage());
+//                } else {
+//                    Log.d(Constants.APP_TAG, "Successfully added the Skill: " + skill.getLangCode());
+//                }
+//            }
+//        });
+//    }
 }

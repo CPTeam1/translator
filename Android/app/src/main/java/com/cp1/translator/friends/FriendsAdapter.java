@@ -117,29 +117,36 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         users.clear();
         isFriends.clear();
 
-        ArrayList<ParseQuery<ParseUser>> userQueries = new ArrayList<>();
+        ArrayList<ParseQuery<User>> userQueries = new ArrayList<>();
         for(String email: emails) {
-            ParseQuery<ParseUser> query = ParseUser.getQuery().whereEqualTo(User.USERNAME_KEY, email);
+            ParseQuery<User> query = ParseQuery.getQuery(User.class).whereEqualTo(User.USERNAME_KEY, email);
             userQueries.add(query);
         }
 
-        ParseQuery<ParseUser> mainQuery = ParseQuery.or(userQueries);
-        mainQuery.findInBackground(new FindCallback<ParseUser>() {
+        ParseQuery<User> mainQuery = ParseQuery.or(userQueries);
+        mainQuery.findInBackground(new FindCallback<User>() {
             @Override
-            public void done(List<ParseUser> objects, ParseException e) {
+            public void done(final List<User> contacts, ParseException e) {
                 Log.e("ELANLOG", "Queried all users in contacts");
                 User currentUser = (User) ParseUser.getCurrentUser();
-                List<User> friends = currentUser.getFriends();
-                for (ParseUser u : objects) {
-                    User user = (User) u;
-                    users.add(user);
-                    if (friends.contains(user)) {
-                        isFriends.add(true);
-                    } else {
-                        isFriends.add(false);
+                currentUser.getFriends(new User.UsersListener() {
+                    @Override
+                    public void onUsers(List<User> friends) {
+                        for (User user : contacts) {
+                            users.add(user);
+                            if (friends.contains(user))
+                                isFriends.add(true);
+                            else
+                                isFriends.add(false);
+                        }
+                        notifyItemRangeChanged(0, users.size());
                     }
-                }
-                notifyItemRangeChanged(0, users.size());
+
+                    @Override
+                    public void onError(ParseException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         });
     }

@@ -25,7 +25,10 @@ public class Post extends ParseObject{
     }
 
     public List<Entry> getAnswers() {
-        return getList(ANSWERS_KEY);
+        List<Entry> answers = getList(ANSWERS_KEY);
+        if (answers == null)
+            answers = new ArrayList<>();
+        return answers;
     }
 
     public void addAnswer(Entry answer) {

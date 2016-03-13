@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
-import com.cp1.translator.models.Skill;
+import com.cp1.translator.models.Lang;
 
 import java.util.List;
 
@@ -18,15 +18,15 @@ import butterknife.ButterKnife;
 /**
  * Created by kimhy08 on 3/9/2016.
  */
-public class LanguagesAdapter extends ArrayAdapter<Skill> {
+public class LanguagesAdapter extends ArrayAdapter<Lang> {
 
-    public LanguagesAdapter(Context context, List<Skill> skillList) {
+    public LanguagesAdapter(Context context, List<Lang> skillList) {
         super(context, R.layout.item_skill, skillList);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Skill skill = getItem(position);
+        Lang lang = getItem(position);
 
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -38,15 +38,12 @@ public class LanguagesAdapter extends ArrayAdapter<Skill> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.tvSkillLang.setText(skill.getLang().getName());
-        viewHolder.tvSkillLevel.setText(String.valueOf(skill.getLevel()));
-
+        viewHolder.tvSkillLang.setText(lang.getName());
         return convertView;
     }
 
     class ViewHolder {
         @Bind(R.id.tvSkillLang) TextView tvSkillLang;
-        @Bind(R.id.tvSkillLevel) TextView tvSkillLevel;
 
         public ViewHolder(View itemView) {
             ButterKnife.bind(this, itemView);

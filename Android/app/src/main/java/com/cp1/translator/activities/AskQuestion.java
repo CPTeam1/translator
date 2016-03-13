@@ -377,22 +377,6 @@ public class AskQuestion extends AppCompatActivity {
             }
         });
         qsPost.saveInBackground();
-
-        if(currUser!=null){
-            currUser.addEntry(qsEntry);
-            currUser.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if(e!=null){
-                        Log.e(APP_TAG,"Error in saving curr user to parse backend"+e.getMessage());
-                    }
-                    else
-                        Log.d(APP_TAG,"Saved successfully");
-                }
-            });
-        }
-        else
-            Log.e(APP_TAG,"curr user is null");
     }
 
     private Map<String,ParseFile> saveMultimedia(Question question) {
