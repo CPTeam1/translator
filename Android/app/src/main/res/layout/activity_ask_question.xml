@@ -73,6 +73,32 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_play"
+        android:id="@+id/ibPlayAudio"
+        android:onClick="onPlay"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibClickPic"
+        android:visibility="gone"
+        android:paddingLeft="30dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_stop"
+        android:id="@+id/ibStopAudio"
+        android:onClick="stopPlaying"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibPlayAudio"
+        android:visibility="gone"
+        android:paddingLeft="30dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_video"
         android:id="@+id/ibRecVideo"
         android:onClick="onLaunchVideoRecorder"
@@ -81,6 +107,8 @@
         android:layout_toRightOf="@+id/ibRecAudio"
         android:paddingLeft="30dp"
         />
+
+
 
 
 

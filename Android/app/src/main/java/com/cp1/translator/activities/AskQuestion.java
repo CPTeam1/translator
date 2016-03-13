@@ -1,18 +1,15 @@
 package com.cp1.translator.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -43,7 +40,6 @@ import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.apache.commons.io.IOUtils;
@@ -60,12 +56,17 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.cp1.translator.utils.Constants.*;
 import static com.cp1.translator.utils.Constants.APP_TAG;
-import static com.cp1.translator.utils.Constants.QNO;
+import static com.cp1.translator.utils.Constants.AUDIO_EXT;
+import static com.cp1.translator.utils.Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
+import static com.cp1.translator.utils.Constants.IMG;
+import static com.cp1.translator.utils.Constants.PIC_EXT;
+import static com.cp1.translator.utils.Constants.SEPARATOR;
+import static com.cp1.translator.utils.Constants.VIDEO;
+import static com.cp1.translator.utils.Constants.VIDEO_CAPTURE;
 import static com.cp1.translator.utils.Constants.photoFileName;
 
-public class AskQuestion extends AppCompatActivity {
+public class AskQuestion extends AppCompatActivity  {
     // Question views
     @Bind(R.id.btAskQs) Button btAskQs;
     @Bind(R.id.etQs) EditText etQs;
@@ -75,7 +76,10 @@ public class AskQuestion extends AppCompatActivity {
     @Bind(R.id.ibClickPic) ImageButton ibClickPic;
     @Bind(R.id.ibRecAudio) ToggleButton ibRecAudio;
     @Bind(R.id.ibRecVideo) ImageButton ibRecVideo;
+
     @Nullable @Bind(R.id.pbRecording) ProgressBar pbRecording;
+    @Nullable @Bind(R.id.ibPlayAudio) ImageButton ibPlayAudio;
+    @Nullable @Bind(R.id.ibStopAudio) ImageButton ibStopAudio;
 
     // Media Views
     @Nullable @Bind(R.id.rvMediaView) RelativeLayout rvMediaView;
@@ -89,12 +93,14 @@ public class AskQuestion extends AppCompatActivity {
     private int textColor;
 
     private static int QS_CHAR_LIMIT = 140;
-    private static boolean qsPosted = false;
+    private static boolean isRecReleased = false;
     private String imageURI;
     private String audioURI;
     private Uri videoURI;
     private String mAudioFileName;
     private MediaRecorder mediaRecorder;
+    private MediaPlayer   mediaPlayer = null;
+
     private boolean isMediaCaptured = false;
 
     // Defines the listener interface
@@ -106,6 +112,7 @@ public class AskQuestion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_ask_question);
         ButterKnife.bind(this);
 
@@ -174,33 +181,54 @@ public class AskQuestion extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(mediaRecorder!=null){
+        if(mediaRecorder!=null && !isRecReleased){
             Log.d(APP_TAG,"On Pause called. Stopping recording..");
+            stopRecording();
+        }
+
+        if(mediaPlayer!=null){
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    private void stopRecording() {
+        if(mediaRecorder!=null) {
             mediaRecorder.stop();
             mediaRecorder.reset();
             mediaRecorder.release();
+            isRecReleased = true;
+            Toast.makeText(getApplicationContext(),"Stopping recording..",Toast.LENGTH_SHORT).show();
         }
     }
 
     public void onReleaseRecorder(){
         if(mediaRecorder!=null){
             Log.d(APP_TAG,"Stopping recording..");
-            mediaRecorder.stop();
-            mediaRecorder.reset();
-            mediaRecorder.release();
+            stopRecording();
+            //mediaRecorder = null;
             audioURI = mAudioFileName;
+            hideMediaRecButtons();
+            ibPlayAudio.setVisibility(View.VISIBLE);
+            ibStopAudio.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void stopPlaying(View v) {
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 
     public void onPlay(View view){
         if(mediaRecorder!=null){
             try {
-                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
                 mediaPlayer.setDataSource(mAudioFileName);
                 mediaPlayer.prepare(); // must call prepare first
                 mediaPlayer.start(); // then start
-            }catch(Exception e){
+            }catch(IOException e){
                 Log.e(APP_TAG,"Exception in playing media "+e.getMessage());
             }
         }
@@ -241,6 +269,7 @@ public class AskQuestion extends AppCompatActivity {
                 mAudioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
                 mAudioFileName += "/audiorecordtest"+SEPARATOR + Long.toString(System.currentTimeMillis())+AUDIO_EXT;
                 Log.d(APP_TAG,"Audio file for question: "+mAudioFileName);
+                isRecReleased = false;
                 // Create the recorder
                 mediaRecorder = new MediaRecorder();
                 // Set the audio format and encoder
@@ -328,8 +357,6 @@ public class AskQuestion extends AppCompatActivity {
         vvQsVideo.requestFocus();
         vvQsVideo.start();
     }
-
-
 
 
     // Returns the Uri for a photo stored on disk given the fileName
@@ -497,7 +524,7 @@ public class AskQuestion extends AppCompatActivity {
                 btAskQs.setEnabled(false);
                 if (charsRemaining < 0)
                     tvCharsLeft.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-                qsPosted = false;
+                isRecReleased = false;
             }
         }
     };
