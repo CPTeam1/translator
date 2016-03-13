@@ -63,10 +63,6 @@
         android:background="@null"
         android:src="@drawable/ic_add_24dp_ff4081" />
 
-    <View
-        style="@style/Divider"
-        android:layout_below="@+id/tvLanguagesLabel" />
-
     <ListView
         android:id="@+id/lvLanguages"
         android:layout_width="match_parent"

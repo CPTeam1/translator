@@ -68,12 +68,6 @@ public class NicknameDialogFragment extends DialogFragment {
                 dialog.dismiss();
             }
         });
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
 
         return alertDialogBuilder.create();
     }
