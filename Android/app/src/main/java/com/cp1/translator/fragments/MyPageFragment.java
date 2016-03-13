@@ -37,7 +37,7 @@ public class MyPageFragment extends PageFragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // TODO
+                refreshQuestions();
             }
         });
         /********************** end of SwipeRefreshLayout **********************/
@@ -75,5 +75,16 @@ public class MyPageFragment extends PageFragment {
                 mQuestionsAdapter.addAll(questions);
             }
         });
+    }
+
+    // TODO
+    @Override
+    protected void refreshQuestions() {
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeContainer.setRefreshing(false);
+            }
+        }, 1000);
     }
 }
