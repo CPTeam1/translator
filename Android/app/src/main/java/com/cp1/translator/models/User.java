@@ -1,5 +1,6 @@
 package com.cp1.translator.models;
 
+import com.cp1.translator.utils.SaveListener;
 import com.parse.ParseClassName;
 import com.cp1.translator.utils.ModelListener;
 import com.parse.FindCallback;
@@ -7,12 +8,18 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import java.util.List;
 
 @ParseClassName("_User")
 public class User extends ParseUser {
     public interface UsersListener extends ModelListener {
         void onUsers(List<User> users);
+    }
+
+    public interface FriendshipListener {
+        void changedFriendship(User user, boolean isFriend);
     }
 
     public static final String USERNAME_KEY = "username";
@@ -44,14 +51,34 @@ public class User extends ParseUser {
         });
     }
 
-    public void addFriend(User user) {
+    public void addFriend(User user, final SaveListener listener) {
         ParseRelation<User> friendsRelation = getRelation(FRIENDS_KEY);
         friendsRelation.add(user);
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    listener.saved();
+                } else {
+                    listener.onError(e);
+                }
+            }
+        });
     }
 
-    public void removeFriend(User user) {
-        ParseRelation<User> friendsRelaiton = getRelation(FRIENDS_KEY);
-        friendsRelaiton.remove(user);
+    public void removeFriend(User user, final SaveListener listener) {
+        ParseRelation<User> friendsRelation = getRelation(FRIENDS_KEY);
+        friendsRelation.remove(user);
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    listener.saved();
+                } else {
+                    listener.onError(e);
+                }
+            }
+        });
     }
 
     public void getQuestions(final Entry.EntriesListener listener) {

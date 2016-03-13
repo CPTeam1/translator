@@ -1,14 +1,8 @@
 package com.cp1.translator.friends;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +13,7 @@ import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.SaveListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -34,10 +29,23 @@ import butterknife.OnClick;
 /**
  * Created by eelango on 3/7/16.
  */
-public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements User.FriendshipListener {
 
-    private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<Boolean> isFriends = new ArrayList<>();
+    private ArrayList<User> mUsers = new ArrayList<>();
+    private ArrayList<User> mFriends = new ArrayList<>();
+
+    @Override
+    public void changedFriendship(User user, boolean isFriend) {
+        if (isFriend) {
+            if(!mFriends.contains(user)) {
+                mFriends.add(user);
+            }
+        } else {
+            if(mFriends.contains(user)) {
+                mFriends.remove(user);
+            }
+        }
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -51,13 +59,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Button btAdd;
 
         private boolean isFriend;
+        private User user;
+        private User.FriendshipListener friendshipListener;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void setUser(User user, boolean isFriend) {
+        public void setUser(User user, boolean isFriend, User.FriendshipListener listener) {
+            this.user = user;
             this.isFriend = isFriend;
+            friendshipListener = listener;
 
             tvEmail.setText(user.getUsername());
             if (isFriend) {
@@ -81,12 +93,35 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @OnClick(R.id.btAdd)
         public void addRemoveFriend(View v) {
+            User currUser = (User) ParseUser.getCurrentUser();
             if (isFriend) {
-                ViewHolder.addFriendStyle(btAdd);
-                isFriend = false;
+                currUser.removeFriend(user, new SaveListener() {
+                    @Override
+                    public void saved() {
+                        isFriend = false;
+                        ViewHolder.addFriendStyle(btAdd);
+                        friendshipListener.changedFriendship(user, false);
+                    }
+
+                    @Override
+                    public void onError(ParseException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else {
-                ViewHolder.removeFriendStyle(btAdd);
-                isFriend = true;
+                currUser.addFriend(user, new SaveListener() {
+                    @Override
+                    public void saved() {
+                        isFriend = true;
+                        ViewHolder.removeFriendStyle(btAdd);
+                        friendshipListener.changedFriendship(user, true);
+                    }
+
+                    @Override
+                    public void onError(ParseException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
     }
@@ -97,12 +132,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return mUsers.size();
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((FriendsAdapter.ViewHolder) holder).setUser(users.get(position), isFriends.get(position));
+        User user = mUsers.get(position);
+        ((FriendsAdapter.ViewHolder) holder).setUser(user, mFriends.contains(user), this);
     }
 
     @Override
@@ -114,13 +150,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void loadFriendsInContacts(ArrayList<String> emails) {
-        users.clear();
-        isFriends.clear();
+        mUsers.clear();
 
         ArrayList<ParseQuery<User>> userQueries = new ArrayList<>();
         for(String email: emails) {
-            ParseQuery<User> query = ParseQuery.getQuery(User.class).whereEqualTo(User.USERNAME_KEY, email);
-            userQueries.add(query);
+            if(!email.equals(ParseUser.getCurrentUser().getEmail())) {
+                ParseQuery<User> query = ParseQuery.getQuery(User.class).whereEqualTo(User.USERNAME_KEY, email);
+                userQueries.add(query);
+            }
         }
 
         ParseQuery<User> mainQuery = ParseQuery.or(userQueries);
@@ -128,18 +165,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void done(final List<User> contacts, ParseException e) {
                 Log.e("ELANLOG", "Queried all users in contacts");
+                mUsers.addAll(contacts);
                 User currentUser = (User) ParseUser.getCurrentUser();
                 currentUser.getFriends(new User.UsersListener() {
                     @Override
                     public void onUsers(List<User> friends) {
-                        for (User user : contacts) {
-                            users.add(user);
-                            if (friends.contains(user))
-                                isFriends.add(true);
-                            else
-                                isFriends.add(false);
+                        mFriends.addAll(friends);
+                        for (User friend: friends) {
+                            if (!mUsers.contains(friend))
+                                mUsers.add(friend);
                         }
-                        notifyItemRangeChanged(0, users.size());
+                        notifyItemRangeChanged(0, mUsers.size());
                     }
 
                     @Override
