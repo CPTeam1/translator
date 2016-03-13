@@ -60,14 +60,27 @@
         android:layout_alignParentStart="true" />
 
 
-    <ToggleButton
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_mic"
         android:id="@+id/ibRecAudio"
-        android:background="@drawable/ic_toggle_mic_bg"
+        android:onClick="onLaunchAudioRecorder"
+        android:background="@android:color/transparent"
         android:layout_below="@+id/etQs"
         android:layout_toRightOf="@+id/ibClickPic"
-        style="@style/toggleButton"
+        android:paddingLeft="30dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mic_off"
+        android:id="@+id/ibRelAudio"
+        android:visibility="gone"
+        android:onClick="onReleaseRecorder"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/etQs"
+        android:layout_toRightOf="@+id/ibClickPic"
         android:paddingLeft="30dp" />
 
     <ImageButton
@@ -107,10 +120,6 @@
         android:layout_toRightOf="@+id/ibRecAudio"
         android:paddingLeft="30dp"
         />
-
-
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"

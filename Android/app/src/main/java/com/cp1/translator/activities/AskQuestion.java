@@ -75,7 +75,8 @@ public class AskQuestion extends AppCompatActivity  {
 
     // Media recording buttons
     @Bind(R.id.ibClickPic) ImageButton ibClickPic;
-    @Bind(R.id.ibRecAudio) ToggleButton ibRecAudio;
+    @Bind(R.id.ibRecAudio) ImageButton ibRecAudio;
+    @Bind(R.id.ibRelAudio) ImageButton ibRelAudio;
     @Bind(R.id.ibRecVideo) ImageButton ibRecVideo;
 
     @Nullable @Bind(R.id.pbRecording) ProgressBar pbRecording;
@@ -143,20 +144,6 @@ public class AskQuestion extends AppCompatActivity  {
                 }
             }
         });
-
-        ibRecAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    pbRecording.setVisibility(ProgressBar.VISIBLE);
-                    onLaunchAudioRecorder();
-                }
-                else{
-                    pbRecording.setVisibility(ProgressBar.INVISIBLE);
-                    onReleaseRecorder();
-                }
-            }
-        });
     }
 
     @Override
@@ -203,8 +190,10 @@ public class AskQuestion extends AppCompatActivity  {
         }
     }
 
-    public void onReleaseRecorder(){
+    public void onReleaseRecorder(View v){
         if(mediaRecorder!=null){
+            ibRelAudio.setVisibility(View.GONE);
+            pbRecording.setVisibility(ProgressBar.INVISIBLE);
             Log.d(APP_TAG,"Stopping recording..");
             stopRecording();
             //mediaRecorder = null;
@@ -260,12 +249,15 @@ public class AskQuestion extends AppCompatActivity  {
     }
 
 
-    public void onLaunchAudioRecorder(){
+    public void onLaunchAudioRecorder(View v){
 
         try {
             // Verify that the device has a mic first
             PackageManager pmanager = this.getPackageManager();
             if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+                ibRecAudio.setVisibility(View.INVISIBLE);
+                ibRelAudio.setVisibility(View.VISIBLE);
+                pbRecording.setVisibility(ProgressBar.VISIBLE);
                 // Set the file location for the audio
                 mAudioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
                 mAudioFileName += "/audiorecordtest"+SEPARATOR + Long.toString(System.currentTimeMillis())+AUDIO_EXT;
