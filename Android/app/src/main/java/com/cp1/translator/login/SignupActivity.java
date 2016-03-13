@@ -49,6 +49,7 @@ public class SignupActivity extends AppCompatActivity {
             user.setUsername(email);
             user.setPassword(password);
             user.setEmail(email);
+            user.setNickname(email);
 
             user.signUpInBackground(new SignUpCallback() {
                 @Override

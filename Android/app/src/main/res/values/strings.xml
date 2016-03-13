@@ -17,5 +17,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="desc_ivQsType">Displying a question type (ex. T=text, P=picture)</string>
     <string name="user">User</string>
+    <string name="desc_ivUserProfilePic">Placeholder of user profile picture</string>
 
 </resources>

@@ -2,7 +2,9 @@ package com.cp1.translator.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -11,10 +13,12 @@ import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.adapters.LanguagesAdapter;
+import com.cp1.translator.fragments.NicknameDialogFragment;
 import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.User;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +27,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements NicknameDialogFragment.NicknameDialogListener {
 
     @Bind(R.id.ibAddLanguage) ImageButton ibAddLanguage;
     @Bind(R.id.lvLanguages) ListView lvLanguages;
     @Bind(R.id.tvUserEmail) TextView tvUserEmail;
-    @Bind(R.id.tvUserName) TextView tvUserName;
+    @Bind(R.id.tvUserNickname) TextView tvUserNickname;
     @Bind(R.id.tvEmptyLanguage) TextView tvEmptyLanguage;
 
     private ArrayAdapter<Lang> mAdapter;
@@ -77,7 +81,11 @@ public class SettingsActivity extends AppCompatActivity {
     private void loadUserSettings() {
         me = (User) User.getCurrentUser();
         tvUserEmail.setText(me.getEmail());
-        tvUserName.setText(me.getNickname());
+
+        String nickname = me.getNickname();
+        if (nickname == null || nickname.isEmpty())
+            nickname = me.getEmail();
+        tvUserNickname.setText(nickname);
 
         lvLanguages.setEmptyView(tvEmptyLanguage);
 
@@ -105,6 +113,33 @@ public class SettingsActivity extends AppCompatActivity {
         // launch Languages View
         Intent intent = new Intent(this, LanguagesActivity.class);
         startActivityForResult(intent, LANG_REQ_CODE);
+    }
+
+    @OnClick(R.id.tvUserNickname)
+    public void onClickSetNickname() {
+        FragmentManager fm = getSupportFragmentManager();
+        NicknameDialogFragment editNameDialog = NicknameDialogFragment.newInstance(tvUserNickname.getText().toString());
+        editNameDialog.show(fm, "fragment_nickname");
+    }
+
+    @Override
+    public void onFinishEditDialog(String newNickName) {
+        tvUserNickname.setText(newNickName);
+
+        // update user
+        me.setNickname(newNickName);
+        me.saveInBackground(new SaveCallback() {
+
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    // There was an error
+                    Log.d("Settings", "Failed to update the nickname");
+                } else {
+                    Log.i("Settings", "Successfully updated the nickname");
+                }
+            }
+        });
     }
 
     // TODO
