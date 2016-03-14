@@ -9,6 +9,7 @@ import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.User;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
 
@@ -43,6 +44,8 @@ public class TransApplication extends Application {
 				.clientKey(null)
 				.addNetworkInterceptor(new ParseLogInterceptor())
 				.server("https://cp1-translator.herokuapp.com/parse/").build());
+
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
 	public static RestClient getRestClient() {

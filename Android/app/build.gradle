@@ -7,7 +7,7 @@ android {
     buildToolsVersion "23.0.0"
 
     defaultConfig {
-        applicationId "com.codepath.apps.restclienttemplate"
+        applicationId "com.cp1.translator"
         minSdkVersion 16
         targetSdkVersion 21
     }

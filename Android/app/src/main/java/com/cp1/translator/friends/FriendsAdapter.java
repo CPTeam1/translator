@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.User;
+import com.cp1.translator.push.EntryPusher;
 import com.cp1.translator.utils.SaveListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -123,6 +124,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 });
             }
+            EntryPusher.pushTestToEveryone();
         }
     }
 
