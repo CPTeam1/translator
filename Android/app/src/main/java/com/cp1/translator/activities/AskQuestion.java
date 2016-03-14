@@ -35,6 +35,7 @@ import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
+import com.cp1.translator.models.Types;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
@@ -393,11 +394,18 @@ public class AskQuestion extends AppCompatActivity  {
 
     private Question saveLocally(String question, String userName) {
         Question q = Question.toQuestion(question,userName);
+
         if(q!=null) {
-            if (imageURI != null)
+            q.setType(Types.TEXT);
+
+            if (imageURI != null) {
                 q.setImageURI(imageURI);
-            if (audioURI!=null)
+                q.setType(Types.PICTURE);
+            }
+            if (audioURI!=null) {
                 q.setAudioURI(audioURI);
+                q.setType(Types.AUDIO);
+            }
 
             Log.d(APP_TAG,"Translate from: "+fromLang +" to: "+toLang);
 
@@ -410,6 +418,7 @@ public class AskQuestion extends AppCompatActivity  {
                 Log.d(APP_TAG,"URI: "+videoURI);
                 Log.d(APP_TAG,"Path: "+videoURI.getPath());
                 q.setVideoURI(videoURI.getPath());
+                q.setType(Types.VIDEO);
             }
 
             q.save();
@@ -426,6 +435,8 @@ public class AskQuestion extends AppCompatActivity  {
         qsEntry.setText(question.getQuestion());
         qsEntry.setAsQuestion();
         qsEntry.setUser(currUser);
+
+        qsEntry.setType(question.getType());
 
         qsEntry.setFromLang(question.getFromLang());
         qsEntry.setToLang(question.getToLang());

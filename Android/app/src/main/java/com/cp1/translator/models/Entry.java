@@ -24,10 +24,8 @@ public class Entry extends ParseObject {
     public static final String USER_KEY         = "user";
     public static final String FROM_LANG_KEY    = "fromLang";
     public static final String TO_LANG_KEY      = "toLang";
+    public static final String QS_TYPE_KEY      = "type";
 
-
-    // added by Hyunji; to be used by QuestionsAdapter to display the icon of the type
-    String type = Types.TEXT; // by default
 
     public User getUser() {
         return (User) getParseObject(USER_KEY);
@@ -94,11 +92,11 @@ public class Entry extends ParseObject {
     }
 
     public String getType() {
-        return type;
+        return getString(QS_TYPE_KEY);
     }
 
     public void setType(String type) {
-        this.type = type;
+        put(QS_TYPE_KEY,type);
     }
 
     @Override
