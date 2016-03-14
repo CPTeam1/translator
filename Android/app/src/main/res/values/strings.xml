@@ -18,5 +18,6 @@
     <string name="desc_ivQsType">Displying a question type (ex. T=text, P=picture)</string>
     <string name="user">User</string>
     <string name="desc_ivUserProfilePic">Placeholder of user profile picture</string>
+    <string name="desc_ivQsContentImg">Placeholder of the image of the question if exists</string>
 
 </resources>

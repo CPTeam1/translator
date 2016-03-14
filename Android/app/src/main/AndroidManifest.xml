@@ -95,7 +95,8 @@
         <activity android:name=".friends.FriendsActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.LanguagesActivity" />
-        <activity android:name=".activities.TestActivity"></activity>
+        <activity android:name=".activities.TestActivity" />
+        <activity android:name=".activities.PostActivity"></activity>
     </application>
 
 </manifest>

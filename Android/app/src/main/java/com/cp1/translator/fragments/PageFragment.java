@@ -1,5 +1,6 @@
 package com.cp1.translator.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cp1.translator.R;
+import com.cp1.translator.activities.PostActivity;
 import com.cp1.translator.adapters.QuestionsAdapter;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.utils.SpaceItemDecoration;
@@ -54,7 +56,21 @@ public abstract class PageFragment extends Fragment {
         /********************** RecyclerView **********************/
         mQuestions = new ArrayList<>();
         mQuestionsAdapter = new QuestionsAdapter(mQuestions, mMyUserName);
-//        mQuestionsAdapter.setOnItemClickListener();
+        // listener for the event of clicking an item in RecyclerView
+        mQuestionsAdapter.setOnItemClickListener(new QuestionsAdapter.OnItemClickListener() {
+
+            @Override
+            public void onQuestionClick(View itemView, int position) {
+                // create an intent to display the article
+                Intent i = new Intent(getContext(), PostActivity.class);
+                // get the article to display
+                Entry question = mQuestions.get(position);
+                // pass objects to the target activity
+                i.putExtra(QsContentFragment.QS_TYPE, question.getType());
+                // launch the activity
+                startActivity(i);
+            }
+        });
         // Attach the adapter to the RecyclerView to populate items
         rvQuestions.setAdapter(mQuestionsAdapter);
         // add ItemDecoration
