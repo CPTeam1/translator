@@ -39,9 +39,11 @@ public class TransApplication extends Application {
 
 		// set applicationId and server based on the values in the Heroku settings.
 		// any network interceptors must be added with the Configuration Builder given this syntax
+        Parse.enableLocalDatastore(this);
 		Parse.initialize(new Parse.Configuration.Builder(this)
 				.applicationId("Cp1TranslatorId")
 				.clientKey(null)
+                .enableLocalDataStore()
 				.addNetworkInterceptor(new ParseLogInterceptor())
 				.server("https://cp1-translator.herokuapp.com/parse/").build());
 

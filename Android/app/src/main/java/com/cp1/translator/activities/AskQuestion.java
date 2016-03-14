@@ -130,13 +130,13 @@ public class AskQuestion extends AppCompatActivity  {
                 // 1) save qs in DB
                 // 2) pass qs back to main activity
                 // 3) display in adapter
-                if(etQs.getText()!=null) {
+                if (etQs.getText() != null) {
 
                     String question = etQs.getText().toString();
                     fromLang = spinFromLang.getSelectedItem().toString();
                     toLang = spinToLang.getSelectedItem().toString();
 
-                    if(toLang!=null && fromLang != null) {
+                    if (toLang != null && fromLang != null) {
 
 
                         Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
@@ -146,15 +146,14 @@ public class AskQuestion extends AppCompatActivity  {
                         // In order to test how to retrieve all questions by current user look at TestActivity
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class)
 
-                        Log.d(APP_TAG,"Adding question here");
+                        Log.d(APP_TAG, "Adding question here");
 
                         Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
                         displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
-                        setResult(RESULT_OK,displayQsIntent);
+                        setResult(RESULT_OK, displayQsIntent);
                         finish();
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(),"Please choose which Language you want to translate to!",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please choose which Language you want to translate to!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -459,13 +458,13 @@ public class AskQuestion extends AppCompatActivity  {
         qsEntry.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e!=null){
-                    Log.e(APP_TAG,"Error in saving to parse backend"+e.getMessage());
-                }
-                else
-                    Log.d(APP_TAG,"Saved successfully");
+                if (e != null) {
+                    Log.e(APP_TAG, "Error in saving to parse backend" + e.getMessage());
+                } else
+                    Log.d(APP_TAG, "Saved successfully");
             }
         });
+
         qsPost.saveInBackground();
         return qsEntry;
     }

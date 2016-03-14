@@ -25,6 +25,9 @@ import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import org.parceler.Parcels;
 
@@ -116,16 +119,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK && requestCode ==  Constants.REQ_CODE){
-            Log.d(APP_TAG,"On Activity result called");
+            Log.d(APP_TAG, "On Activity result called");
             Entry qsEntry = (Entry) Parcels.unwrap(data.getParcelableExtra("question"));
-
-            int index = viewPager.getCurrentItem();
-            FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
-            PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
-            if(fragment!=null){
-                Log.d(APP_TAG,"Fragment reference is here");
-                fragment.addQuestion(qsEntry);
-            }
+            qsEntry.fetchIfNeededInBackground(new GetCallback<Entry>() {
+                @Override
+                public void done(Entry entry, ParseException e) {
+                    Log.d(APP_TAG,"Callback from fetchIfNeeded complete!");
+                    if(e!=null){
+                        Log.e(APP_TAG,"Error in fetching entry from backend!");
+                    }
+                    else{
+                        Log.d(APP_TAG,"Adding qs to adapter");
+                        // Only add the entry once the object has been completely fetched!
+                        int index = viewPager.getCurrentItem();
+                        FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
+                        PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
+                        if(fragment!=null){
+                            Log.d(APP_TAG,"Fragment reference is here");
+                            fragment.addQuestion(entry);
+                        }
+                    }
+                }
+            });
         }
     }
 
