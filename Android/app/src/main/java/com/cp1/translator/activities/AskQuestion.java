@@ -141,13 +141,13 @@ public class AskQuestion extends AppCompatActivity  {
 
                         Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
 
-                        saveToParse(qsDB);
+                        Entry qsEntry = saveToParse(qsDB);
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
                         // In order to test how to retrieve all questions by current user look at TestActivity
 //                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class);
 
                         Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        displayQsIntent.putExtra("question", Parcels.wrap(qsDB));
+                        displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
                         startActivity(displayQsIntent);
                     }
                     else{
@@ -426,7 +426,7 @@ public class AskQuestion extends AppCompatActivity  {
         return q;
     }
 
-    private void saveToParse(Question question) {
+    private Entry saveToParse(Question question) {
         //1. Save the multimedia as file objects to Parse
         Map<String,ParseFile> multiMediaMap = saveMultimedia(question);
         User currUser = (User) User.getCurrentUser();
@@ -464,6 +464,7 @@ public class AskQuestion extends AppCompatActivity  {
             }
         });
         qsPost.saveInBackground();
+        return qsEntry;
     }
 
     private ParseFile convertURIToParseFile(String path){

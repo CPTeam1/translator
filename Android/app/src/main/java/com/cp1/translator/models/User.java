@@ -10,8 +10,11 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
+@Parcel(analyze={User.class})
 @ParseClassName("_User")
 public class User extends ParseUser {
     public interface UsersListener extends ModelListener {

@@ -7,12 +7,15 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 /**
  * Created by eelango on 3/5/16.
  */
 
+@Parcel(analyze={Lang.class})
 @ParseClassName("Lang")
 public class Lang extends ParseObject {
     public interface LangsListener extends ModelListener {

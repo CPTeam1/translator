@@ -5,11 +5,14 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 /**
  * Created by ishanpande on 3/4/16.
  */
+@Parcel(analyze={Entry.class})
 @ParseClassName("Entry")
 public class Entry extends ParseObject {
     public interface EntriesListener extends ModelListener {

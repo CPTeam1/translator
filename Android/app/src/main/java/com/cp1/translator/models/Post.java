@@ -4,12 +4,15 @@ package com.cp1.translator.models;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ishanpande on 3/4/16.
  */
+@Parcel(analyze={Post.class})
 @ParseClassName("Post")
 public class Post extends ParseObject{
     public static final String QUESTION_KEY = "question";
