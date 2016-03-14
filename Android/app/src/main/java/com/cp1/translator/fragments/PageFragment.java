@@ -16,6 +16,8 @@ import com.cp1.translator.adapters.QuestionsAdapter;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.utils.SpaceItemDecoration;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public abstract class PageFragment extends Fragment {
                 // get the article to display
                 Entry question = mQuestions.get(position);
                 // pass objects to the target activity
-                i.putExtra(QsContentFragment.QS_TYPE, question.getType());
+                i.putExtra(QsContentFragment.ENTRY, Parcels.wrap(question));
                 // launch the activity
                 startActivity(i);
             }
