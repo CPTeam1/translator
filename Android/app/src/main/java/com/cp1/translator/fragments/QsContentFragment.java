@@ -50,11 +50,14 @@ public class QsContentFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         Entry question = Parcels.unwrap(getArguments().getParcelable("entry"));
+        question.fetchIfNeededInBackground();
         String qsType = question.getType();
+        if(qsType == null)
+            qsType = Types.TEXT;
         switch(qsType) {
             default:
                 tvQsContentTxt.setText(question.getText());
-
+                break;
             case Types.PICTURE:
                 // load img onto ivQsMediaImg
 

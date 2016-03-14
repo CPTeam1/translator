@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.cp1.translator.R;
+import com.cp1.translator.adapters.SmartFragmentStatePagerAdapter;
 import com.cp1.translator.fragments.MyPageFragment;
 import com.cp1.translator.fragments.OthersPageFragment;
+import com.cp1.translator.fragments.PageFragment;
 import com.cp1.translator.fragments.UsersFragment;
 import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.login.LoginUtils;
@@ -116,18 +118,18 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK && requestCode ==  Constants.REQ_CODE){
             Log.d(APP_TAG,"On Activity result called");
             Entry qsEntry = (Entry) Parcels.unwrap(data.getParcelableExtra("question"));
-            // TODO how to call
-            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
 
-            // based on the current position you can then cast the page to the correct Fragment class and call some method inside that fragment to reload the data:
-            if (viewPager.getCurrentItem() == 0 && page != null) {
-                //((TabFragment1)page).reloadFragmentData();
-                Log.d(APP_TAG,"This is the fragment");
+            int index = viewPager.getCurrentItem();
+            FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
+            PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
+            if(fragment!=null){
+                Log.d(APP_TAG,"Fragment reference is here");
+                fragment.addQuestion(qsEntry);
             }
         }
     }
 
-    public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
+    public class FragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
         private String tabTitles[] = new String[] { "Ask Qs", "Answer Qs","Top Users" };
 
         public FragmentPagerAdapter(FragmentManager fm) {

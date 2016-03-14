@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,15 @@ import android.widget.TextView;
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
+import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.cp1.translator.utils.Constants.APP_TAG;
 
 /**
  * Created by pandeis on 3/9/16.
@@ -104,6 +108,9 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemViewType(int position) {
         Entry question = mQuestionList.get(position);
         try {
+            question.fetchIfNeeded();
+            Log.d(APP_TAG,"Position: "+position + "Entry: "+question);
+            Log.d(APP_TAG,"user: "+question.getUser());
             String askedBy = question.getUser().fetchIfNeeded().getUsername();
             if (mMyUserName.equals(askedBy)) {
                 return MY_QS;
@@ -202,7 +209,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     // Add a question to the list
     public void add(Entry question) {
-        add(mQuestionList.size() - 1, question);
+        add(0, question);
     }
 
     // Add a question to the list at specific position
