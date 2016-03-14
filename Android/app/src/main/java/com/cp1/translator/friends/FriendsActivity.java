@@ -60,7 +60,7 @@ public class FriendsActivity extends AppCompatActivity {
                     emails.add(data.getString(0));
                     data.moveToNext();
                 }
-                friendsAdapter.loadFriendsInContacts(emails);
+               // friendsAdapter.loadFriendsInContacts(emails);
             }
 
             @Override

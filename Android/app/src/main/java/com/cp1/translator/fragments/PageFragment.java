@@ -25,7 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 // In this case, the fragment displays simple text based on the page
-public abstract class PageFragment extends Fragment {
+public abstract class PageFragment extends Fragment{
 
     private static final int ITEM_SPACE = 24;
     public static final String ARG_PAGE = "ARG_PAGE";
@@ -104,4 +104,5 @@ public abstract class PageFragment extends Fragment {
     }
 
     protected abstract void refreshQuestions();
+
 }

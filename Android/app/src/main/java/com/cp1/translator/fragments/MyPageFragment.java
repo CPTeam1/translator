@@ -24,6 +24,7 @@ public class MyPageFragment extends PageFragment {
         args.putString(ARG_PAGE, title);
         args.putString(MY_USER_NAME, myUserName);
         MyPageFragment fragment = new MyPageFragment();
+
         fragment.setArguments(args);
         return fragment;
     }

@@ -155,6 +155,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mUsers.clear();
 
         ArrayList<ParseQuery<User>> userQueries = new ArrayList<>();
+
         for(String email: emails) {
             if(!email.equals(ParseUser.getCurrentUser().getEmail())) {
                 ParseQuery<User> query = ParseQuery.getQuery(User.class).whereEqualTo(User.USERNAME_KEY, email);

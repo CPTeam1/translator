@@ -110,7 +110,7 @@ public class AskQuestion extends AppCompatActivity  {
 
     // Defines the listener interface
     public interface AskQuestionDialogListener {
-        void onFinishAsking(Question newQuestion);
+        void onFinishAsking(Entry newQuestion);
     }
 
     @Override
@@ -144,11 +144,14 @@ public class AskQuestion extends AppCompatActivity  {
                         Entry qsEntry = saveToParse(qsDB);
 //                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
                         // In order to test how to retrieve all questions by current user look at TestActivity
-//                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class);
+//                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class)
+
+                        Log.d(APP_TAG,"Adding question here");
 
                         Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
                         displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
-                        startActivity(displayQsIntent);
+                        setResult(RESULT_OK,displayQsIntent);
+                        finish();
                     }
                     else{
                         Toast.makeText(getApplicationContext(),"Please choose which Language you want to translate to!",Toast.LENGTH_SHORT).show();

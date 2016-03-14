@@ -15,5 +15,6 @@ public class Constants {
     public static final String IMG = "image";
     public static final String AUDIO = "audio";
     public static final String VIDEO = "audio";
+    public static final int REQ_CODE = 500;
 
 }

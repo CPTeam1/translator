@@ -60,7 +60,7 @@ public class QsContentFragment extends Fragment {
 
                 // set visible
                 break;
-            case Types.VOICE:
+            case Types.AUDIO:
                 // load voice file
 
                 // set visible

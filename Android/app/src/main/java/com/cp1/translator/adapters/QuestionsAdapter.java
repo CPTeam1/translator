@@ -158,7 +158,14 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         // type of the question
         Drawable typeDrawble = ContextCompat.getDrawable(context, R.drawable.shape_qs_txt);
-        switch (question.getType()) {
+        // Asssume its a Text Question by default
+        // As we dont want the switch case to crash :)
+        String type = Types.TEXT;
+
+        if(question.getType() != null)
+            type = question.getType();
+
+        switch (type) {
             case Types.PICTURE:
                 typeDrawble = ContextCompat.getDrawable(context, R.drawable.shape_qs_pic);
                 break;

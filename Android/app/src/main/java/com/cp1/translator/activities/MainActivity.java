@@ -20,7 +20,11 @@ import com.cp1.translator.fragments.OthersPageFragment;
 import com.cp1.translator.fragments.UsersFragment;
 import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.login.LoginUtils;
+import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.Constants;
+
+import org.parceler.Parcels;
 
 import butterknife.ButterKnife;
 
@@ -29,12 +33,15 @@ import static com.cp1.translator.utils.Constants.APP_TAG;
 public class MainActivity extends AppCompatActivity {
 
     private User me;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         ButterKnife.bind(this);
 
         me = (User) User.getCurrentUser();
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     public void onNewQuestionClick(MenuItem item) {
         // start AskQuestion Activity
         Intent intent = new Intent(this, AskQuestion.class);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.REQ_CODE);
     }
 
     public void onSettingsClick(MenuItem item) {
@@ -102,6 +109,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void onLogoutClick(MenuItem item) {
         LoginUtils.logout(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK && requestCode ==  Constants.REQ_CODE){
+            Log.d(APP_TAG,"On Activity result called");
+            Entry qsEntry = (Entry) Parcels.unwrap(data.getParcelableExtra("question"));
+            // TODO how to call
+            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+
+            // based on the current position you can then cast the page to the correct Fragment class and call some method inside that fragment to reload the data:
+            if (viewPager.getCurrentItem() == 0 && page != null) {
+                //((TabFragment1)page).reloadFragmentData();
+                Log.d(APP_TAG,"This is the fragment");
+            }
+        }
     }
 
     public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {

@@ -19,6 +19,8 @@ public class Entry extends ParseObject {
         void onEntries(List<Entry> questions);
     }
 
+    public Entry(){}
+
     public static final String TEXT_KEY         = "text";
     public static final String IMAGE_URL_KEY    = "image";
     public static final String AUDIO_URL_KEY    = "audio";
