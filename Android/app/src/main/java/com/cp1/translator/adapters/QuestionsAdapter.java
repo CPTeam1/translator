@@ -85,21 +85,14 @@ public class QuestionsAdapter extends EntriesAdapter {
     @Override
     public int getItemViewType(int position) {
         Entry question = mEntriesList.get(position);
-        try {
-            question.fetchIfNeeded();
-            Log.d(APP_TAG,"Position: "+position + "Entry: "+question);
-            question.getUser().fetchIfNeeded();
-            Log.d(APP_TAG,"user: "+question.getUser());
-            String askedBy = question.getUser().fetchIfNeeded().getUsername();
-            if (mMyUserName.equals(askedBy)) {
-                return MY_QS;
-            }
-            else {
-                return OTHERS_QS;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        Log.d(APP_TAG,"Position: "+position + "Entry: "+question);
+        Log.d(APP_TAG,"user: "+question.getUser());
+        String askedBy = question.getUserID();
+        if (mMyUserName.equals(askedBy)) {
             return MY_QS;
+        }
+        else {
+            return OTHERS_QS;
         }
     }
 
@@ -128,7 +121,7 @@ public class QuestionsAdapter extends EntriesAdapter {
         holder.ivQuestionType.setBackground(typeDrawble);
 
         // question title (=text)
-        holder.tvQuestionTitle.setText(question.getText());
+        holder.tvQuestionTitle.setText(question.getQuestionText());
 
         // the number of replies to this question
         holder.tvRepliesCount.setText("[0]");

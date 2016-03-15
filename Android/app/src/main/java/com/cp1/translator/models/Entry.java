@@ -43,6 +43,8 @@ public class Entry extends ParseObject implements Parcelable {
     private String type;
     private String isQuestion = "false";
 
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -60,6 +62,10 @@ public class Entry extends ParseObject implements Parcelable {
         this.userID = in.readString();
     }
 
+    public String getUserID() {
+        return userID;
+    }
+
     @Override
     public void writeToParcel(android.os.Parcel dest, int flags) {
         dest.writeString(this.text);
@@ -71,6 +77,27 @@ public class Entry extends ParseObject implements Parcelable {
         dest.writeString(this.type);
         dest.writeString(this.isQuestion);
         dest.writeString(this.userID);
+    }
+
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public String getVideoURL() {
+        return videoURL;
+    }
+
+    public String getAudioURL() {
+        return audioURL;
+    }
+
+    public String getIsQuestion() {
+        return isQuestion;
+    }
+
+    public String getQuestionText() {
+        return this.text;
     }
 
     // After implementing the `Parcelable` interface, we need to create the
