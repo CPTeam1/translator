@@ -1,6 +1,7 @@
 package com.cp1.translator.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.VideoView;
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
+import com.cp1.translator.utils.Constants;
 
 import org.parceler.Parcels;
 
@@ -25,8 +27,6 @@ import butterknife.ButterKnife;
  */
 public class QsContentFragment extends Fragment {
 
-    public static final String ENTRY = "entry";
-
     // this always shows up on the screen regardless of the question type
     @Bind(R.id.tvQsContentTxt) TextView tvQsContentTxt;
 
@@ -35,9 +35,9 @@ public class QsContentFragment extends Fragment {
     @Bind(R.id.mcQsMediaVoice) MediaController mcQsMediaVoice;
     @Bind(R.id.vvQsMediaVideo) VideoView vvQsMediaVideo;
 
-    public static QsContentFragment newInstance(Entry question) {
+    public static QsContentFragment newInstance(Parcelable qsParcelable) {
         Bundle args = new Bundle();
-        args.putParcelable(ENTRY, Parcels.wrap(question));
+        args.putParcelable(Constants.ENTRY_KEY, qsParcelable);
         QsContentFragment fragment = new QsContentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -49,15 +49,14 @@ public class QsContentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_qs_content, container, false);
         ButterKnife.bind(this, view);
 
-        Entry question = Parcels.unwrap(getArguments().getParcelable("entry"));
+        Entry question = Parcels.unwrap(getArguments().getParcelable(Constants.ENTRY_KEY));
         question.fetchIfNeededInBackground();
         String qsType = question.getType();
-        if(qsType == null)
+        if (qsType == null)
             qsType = Types.TEXT;
-        switch(qsType) {
+        switch (qsType) {
             default:
                 tvQsContentTxt.setText(question.getText());
-                break;
             case Types.PICTURE:
                 // load img onto ivQsMediaImg
 

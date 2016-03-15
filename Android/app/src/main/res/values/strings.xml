@@ -19,5 +19,7 @@
     <string name="user">User</string>
     <string name="desc_ivUserProfilePic">Placeholder of user profile picture</string>
     <string name="desc_ivQsContentImg">Placeholder of the image of the question if exists</string>
+    <string name="zero">0</string>
+    <string name="desc_ivAnswerLike">Toggle to like this answer</string>
 
 </resources>

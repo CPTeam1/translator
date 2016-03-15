@@ -1,6 +1,5 @@
 package com.cp1.translator.adapters;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
-import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 
 import java.util.List;
@@ -29,30 +27,15 @@ import static com.cp1.translator.utils.Constants.APP_TAG;
  * Created by pandeis on 3/9/16.
  * Changed ArrayAdapter to RecyclerView.Adapter by erioness1125(Hyunji Kim) on 03/12/16.
  */
-public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class QuestionsAdapter extends EntriesAdapter {
 
     private final int MY_QS = 1;
     private final int OTHERS_QS = 2;
 
     private String mMyUserName;
 
-    private Context context;
-    private List<Entry> mQuestionList;
-
-    // Define listener member variable
-    private OnItemClickListener listener;
-
-    // Define the listener interface
-    public interface OnItemClickListener {
-        void onQuestionClick(View itemView, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
     public QuestionsAdapter(List<Entry> questionList, String myUserName) {
-        mQuestionList = questionList;
+        mEntriesList = questionList;
         mMyUserName = myUserName;
     }
 
@@ -87,7 +70,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         // Get the data model based on position
-        Entry question = mQuestionList.get(position);
+        Entry question = mEntriesList.get(position);
 
         switch (holder.getItemViewType()) {
             case MY_QS:
@@ -100,13 +83,8 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public int getItemCount() {
-        return mQuestionList.size();
-    }
-
-    @Override
     public int getItemViewType(int position) {
-        Entry question = mQuestionList.get(position);
+        Entry question = mEntriesList.get(position);
         try {
             question.fetchIfNeeded();
             Log.d(APP_TAG,"Position: "+position + "Entry: "+question);
@@ -192,36 +170,6 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.tvOthersRplCnt.setText("[0]");
     }
 
-    // Clean all elements of the recycler
-    public void clear() {
-        int sizeOfListBeforeClearing = mQuestionList.size();
-        mQuestionList.clear();
-        notifyItemRangeRemoved(0, sizeOfListBeforeClearing);
-    }
-
-    // Add a list of questions
-    public void addAll(List<Entry> questionList) {
-//        int sizeOfListBeforeAdding = mQuestionList.size();
-        mQuestionList.addAll(questionList);
-        notifyDataSetChanged();
-//        notifyItemRangeInserted(sizeOfListBeforeAdding, questionList.size());
-    }
-
-    // Add a question to the list
-    public void add(Entry question) {
-        add(0, question);
-    }
-
-    // Add a question to the list at specific position
-    public void add(int idx, Entry question) {
-        mQuestionList.add(idx, question);
-        notifyItemInserted(idx);
-    }
-
-    public void setQuestionList(List<Entry> questionList) {
-        mQuestionList = questionList;
-    }
-
     // ViewHolder for ASK QS tab
     public class MyQuestionViewHolder extends RecyclerView.ViewHolder {
 
@@ -240,7 +188,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
                     if (listener != null)
-                        listener.onQuestionClick(itemView, getLayoutPosition());
+                        listener.onClickItem(itemView, getLayoutPosition());
                 }
             });
         }
@@ -265,7 +213,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click
                     if (listener != null)
-                        listener.onQuestionClick(itemView, getLayoutPosition());
+                        listener.onClickItem(itemView, getLayoutPosition());
                 }
             });
         }

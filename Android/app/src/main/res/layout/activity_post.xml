@@ -12,9 +12,10 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/flQsContainer"></FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvReplies"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/flAsContainer"></FrameLayout>
+
 </LinearLayout>

@@ -37,7 +37,7 @@ public class OthersPageFragment extends PageFragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshQuestions();
+                refreshEntries();
             }
         });
         /********************** end of SwipeRefreshLayout **********************/
@@ -45,9 +45,9 @@ public class OthersPageFragment extends PageFragment {
         /********************** RecyclerView **********************/
         // Set layout manager to position the items
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvQuestions.setLayoutManager(linearLayoutManager);
+        rvEntries.setLayoutManager(linearLayoutManager);
         // Add the scroll listener
-        rvQuestions.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        rvEntries.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 // TODO
@@ -90,14 +90,14 @@ public class OthersPageFragment extends PageFragment {
 
             @Override
             public void onEntries(List<Entry> questions) {
-                mQuestionsAdapter.addAll(questions);
+                mEntriesAdapter.addAll(questions);
             }
         });
     }
 
     // TODO
     @Override
-    protected void refreshQuestions() {
+    protected void refreshEntries() {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

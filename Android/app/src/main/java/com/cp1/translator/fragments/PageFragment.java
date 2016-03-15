@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 
 import com.cp1.translator.R;
 import com.cp1.translator.activities.PostActivity;
+import com.cp1.translator.adapters.EntriesAdapter;
 import com.cp1.translator.adapters.QuestionsAdapter;
 import com.cp1.translator.models.Entry;
+import com.cp1.translator.utils.Constants;
 import com.cp1.translator.utils.SpaceItemDecoration;
 
 import org.parceler.Parcels;
@@ -25,7 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 // In this case, the fragment displays simple text based on the page
-public abstract class PageFragment extends Fragment{
+public abstract class PageFragment extends Fragment {
 
     private static final int ITEM_SPACE = 24;
     public static final String ARG_PAGE = "ARG_PAGE";
@@ -33,10 +35,10 @@ public abstract class PageFragment extends Fragment{
 
     private String mMyUserName;
 
-    protected QuestionsAdapter mQuestionsAdapter;
-    protected List<Entry> mQuestions;
+    protected EntriesAdapter mEntriesAdapter;
+    protected List<Entry> mEntries;
 
-    @Bind(R.id.rvQuestions) RecyclerView rvQuestions;
+    @Bind(R.id.rvEntries) RecyclerView rvEntries;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     @Override
@@ -50,33 +52,33 @@ public abstract class PageFragment extends Fragment{
     // Set the associated text for the title
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_questions, container, false);
+        View view = inflater.inflate(R.layout.fragment_entries, container, false);
         ButterKnife.bind(this, view);
 
         mMyUserName = getArguments().getString(MY_USER_NAME);
 
         /********************** RecyclerView **********************/
-        mQuestions = new ArrayList<>();
-        mQuestionsAdapter = new QuestionsAdapter(mQuestions, mMyUserName);
+        mEntries = new ArrayList<>();
+        mEntriesAdapter = new QuestionsAdapter(mEntries, mMyUserName);
         // listener for the event of clicking an item in RecyclerView
-        mQuestionsAdapter.setOnItemClickListener(new QuestionsAdapter.OnItemClickListener() {
+        mEntriesAdapter.setOnClickItemListener(new EntriesAdapter.OnClickItemListener() {
 
             @Override
-            public void onQuestionClick(View itemView, int position) {
+            public void onClickItem(View itemView, int position) {
                 // create an intent to display the article
                 Intent i = new Intent(getContext(), PostActivity.class);
                 // get the article to display
-                Entry question = mQuestions.get(position);
+                Entry question = mEntries.get(position);
                 // pass objects to the target activity
-                i.putExtra(QsContentFragment.ENTRY, Parcels.wrap(question));
+                i.putExtra(Constants.ENTRY_KEY, Parcels.wrap(question));
                 // launch the activity
                 startActivity(i);
             }
         });
         // Attach the adapter to the RecyclerView to populate items
-        rvQuestions.setAdapter(mQuestionsAdapter);
+        rvEntries.setAdapter(mEntriesAdapter);
         // add ItemDecoration
-        rvQuestions.addItemDecoration(new SpaceItemDecoration(ITEM_SPACE));
+        rvEntries.addItemDecoration(new SpaceItemDecoration(ITEM_SPACE));
         /********************** end of RecyclerView **********************/
 
         /********************** SwipeRefreshLayout **********************/
@@ -96,13 +98,13 @@ public abstract class PageFragment extends Fragment{
     }
 
     public void addQuestion(Entry question) {
-        if (mQuestions == null) {
-            mQuestions = new ArrayList<>();
-            mQuestionsAdapter.setQuestionList(mQuestions);
+        if (mEntries == null) {
+            mEntries = new ArrayList<>();
+            mEntriesAdapter.setEntriesList(mEntries);
         }
-        mQuestionsAdapter.add(question);
+        mEntriesAdapter.add(question);
     }
 
-    protected abstract void refreshQuestions();
+    protected abstract void refreshEntries();
 
 }

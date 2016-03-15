@@ -96,7 +96,8 @@
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.LanguagesActivity" />
         <activity android:name=".activities.TestActivity" />
-        <activity android:name=".activities.PostActivity"></activity>
+        <activity android:name=".activities.PostActivity" />
+        <activity android:name=".activities.AnswerActivity" />
     </application>
 
 </manifest>
