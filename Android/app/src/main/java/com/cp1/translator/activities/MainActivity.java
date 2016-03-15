@@ -27,9 +27,7 @@ import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-
-import org.parceler.Parcels;
+import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
 
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     public void onNewQuestionClick(MenuItem item) {
         // start AskQuestion Activity
         Intent intent = new Intent(this, AskQuestion.class);
-        startActivityForResult(intent, Constants.REQ_CODE);
+        startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
     }
 
     public void onSettingsClick(MenuItem item) {
@@ -118,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK && requestCode ==  Constants.REQ_CODE){
+        if(resultCode == RESULT_OK && requestCode ==  Constants.ASK_QS_REQ_CODE){
             Log.d(APP_TAG, "On Activity result called");
-            Entry qsEntry = (Entry) Parcels.unwrap(data.getParcelableExtra("question"));
+            //Entry qsEntry = (Entry) Parcels.unwrap(data.getParcelableExtra("question"));
+            Entry qsEntry = data.getParcelableExtra("question");
             qsEntry.fetchIfNeededInBackground(new GetCallback<Entry>() {
                 @Override
                 public void done(Entry entry, ParseException e) {
@@ -135,8 +134,12 @@ public class MainActivity extends AppCompatActivity {
                         FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
                         PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
                         if(fragment!=null){
-                            Log.d(APP_TAG,"Fragment reference is here");
+                            Log.d(APP_TAG, "Fragment reference is here");
+                            User currUser = (User) User.getCurrentUser();
+                            // Set it to current user in case of ASK_QS_REQ_CODE
+                            entry.setUser(currUser);
                             fragment.addQuestion(entry);
+                            fragment.getRvEntries().getLayoutManager().scrollToPosition(0);
                         }
                     }
                 }

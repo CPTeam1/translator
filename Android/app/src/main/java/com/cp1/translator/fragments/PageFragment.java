@@ -41,6 +41,10 @@ public abstract class PageFragment extends Fragment {
     @Bind(R.id.rvEntries) RecyclerView rvEntries;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
+    public RecyclerView getRvEntries() {
+        return rvEntries;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

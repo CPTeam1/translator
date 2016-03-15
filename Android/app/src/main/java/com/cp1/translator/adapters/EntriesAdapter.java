@@ -44,7 +44,8 @@ public abstract class EntriesAdapter extends RecyclerView.Adapter<RecyclerView.V
     // Add a question to the list at specific position
     public void add(int idx, Entry question) {
         mEntriesList.add(idx, question);
-        notifyItemInserted(idx);
+        //notifyItemInserted(idx);
+        notifyDataSetChanged();
     }
 
     public void setEntriesList(List<Entry> entriesList) {

@@ -88,6 +88,7 @@ public class QuestionsAdapter extends EntriesAdapter {
         try {
             question.fetchIfNeeded();
             Log.d(APP_TAG,"Position: "+position + "Entry: "+question);
+            question.getUser().fetchIfNeeded();
             Log.d(APP_TAG,"user: "+question.getUser());
             String askedBy = question.getUser().fetchIfNeeded().getUsername();
             if (mMyUserName.equals(askedBy)) {

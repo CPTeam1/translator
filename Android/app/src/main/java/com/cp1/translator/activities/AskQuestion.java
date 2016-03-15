@@ -149,7 +149,8 @@ public class AskQuestion extends AppCompatActivity  {
                         Log.d(APP_TAG, "Adding question here");
 
                         Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
+                        //displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
+                        displayQsIntent.putExtra("question",qsEntry);
                         setResult(RESULT_OK, displayQsIntent);
                         finish();
                     } else {
