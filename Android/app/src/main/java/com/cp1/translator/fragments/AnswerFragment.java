@@ -3,6 +3,8 @@ package com.cp1.translator.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.utils.Constants;
 import com.cp1.translator.utils.SpaceItemDecoration;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -63,6 +67,9 @@ public class AnswerFragment extends PageFragment {
         });
         // Attach the adapter to the RecyclerView to populate items
         rvEntries.setAdapter(mEntriesAdapter);
+        // Set layout manager to position the items
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvEntries.setLayoutManager(linearLayoutManager);
         // add ItemDecoration
         rvEntries.addItemDecoration(new SpaceItemDecoration(ITEM_SPACE));
         /********************** end of RecyclerView **********************/
@@ -78,8 +85,17 @@ public class AnswerFragment extends PageFragment {
         /********************** end of SwipeRefreshLayout **********************/
 
         // load answers
-        List<Entry> answersList = mPost.getAnswers();
-        loadAnswers(answersList);
+        mPost.getAnswers(new Entry.EntriesListener() {
+            @Override
+            public void onEntries(List<Entry> answersList) {
+                loadAnswers(answersList);
+            }
+
+            @Override
+            public void onError(ParseException e) {
+                e.printStackTrace();
+            }
+        });
 
         // show emptyView message if answersList is empty
         if (mEntriesAdapter.getItemCount() == 0) {
@@ -96,6 +112,21 @@ public class AnswerFragment extends PageFragment {
 
     private void loadAnswers(List<Entry> answersList) {
         mEntriesAdapter.addAll(answersList);
+    }
+
+    public void addAnswerToPost(Entry answer) {
+        mPost.addAnswer(answer);
+        mPost.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e("err", "in AnswerFragment: Error occured while adding the Parcelable<Entry>(answer) to the Post!");
+                }
+                else {
+                    Log.i("info", "in AnswerFragment: Successfully added the Parcelable<Entry>(answer) to the Post!");
+                }
+            }
+        });
     }
 
     @Override

@@ -43,7 +43,6 @@ import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
 import org.apache.commons.io.IOUtils;
-import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -108,6 +107,8 @@ public class AskQuestion extends AppCompatActivity  {
 
     private boolean isMediaCaptured = false;
 
+    private boolean isAnswer; // false by default
+
     // Defines the listener interface
     public interface AskQuestionDialogListener {
         void onFinishAsking(Entry newQuestion);
@@ -117,6 +118,10 @@ public class AskQuestion extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         LoginUtils.checkIfLoggedIn(this);
         super.onCreate(savedInstanceState);
+
+        // since both MainActivity and PostActivity start this AskQuestion Activity,
+        // we should distinguish which is for creating a new question or answer.
+        isAnswer = getIntent().getBooleanExtra(Constants.IS_ANSWER_KEY, false);
 
         setContentView(R.layout.activity_ask_question);
         ButterKnife.bind(this);
@@ -150,7 +155,7 @@ public class AskQuestion extends AppCompatActivity  {
 
                         Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
                         //displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
-                        displayQsIntent.putExtra("question",qsEntry);
+                        displayQsIntent.putExtra("question", qsEntry);
                         setResult(RESULT_OK, displayQsIntent);
                         finish();
                     } else {
@@ -436,7 +441,8 @@ public class AskQuestion extends AppCompatActivity  {
 
         Entry qsEntry = new Entry();
         qsEntry.setText(question.getQuestion());
-        qsEntry.setAsQuestion();
+        if (!isAnswer)
+            qsEntry.setAsQuestion();
         qsEntry.setUser(currUser);
 
         qsEntry.setType(question.getType());
@@ -453,9 +459,6 @@ public class AskQuestion extends AppCompatActivity  {
                 qsEntry.setAudioUrl(multiMediaMap.get(AUDIO));
         }
 
-        Post qsPost = new Post();
-        qsPost.setQuestion(qsEntry);
-
         qsEntry.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -466,7 +469,13 @@ public class AskQuestion extends AppCompatActivity  {
             }
         });
 
-        qsPost.saveInBackground();
+        // create a new Post ONLY IF the Entry is a "question"
+        Post qsPost = new Post();
+        if (!isAnswer) {
+            qsPost.setQuestion(qsEntry);
+            qsPost.saveInBackground();
+        }
+
         return qsEntry;
     }
 

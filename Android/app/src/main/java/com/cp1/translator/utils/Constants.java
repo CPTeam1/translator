@@ -18,5 +18,6 @@ public class Constants {
     public static final int ASK_QS_REQ_CODE = 500;
     public static final String ENTRY_KEY = "entry_key";
     public static final String POST_KEY = "post_key";
+    public static final String IS_ANSWER_KEY = "is_answer_key";
 
 }

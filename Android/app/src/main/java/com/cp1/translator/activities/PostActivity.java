@@ -3,6 +3,7 @@ package com.cp1.translator.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.cp1.translator.fragments.AnswerFragment;
 import com.cp1.translator.fragments.QsContentFragment;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
+import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -31,6 +33,8 @@ import static com.cp1.translator.utils.Constants.ENTRY_KEY;
  * This is created after clicking an item in RecyclerView(the list of questions)
  */
 public class PostActivity extends AppCompatActivity {
+
+    private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class PostActivity extends AppCompatActivity {
                         post.saveInBackground();
                     }
 
-                    FragmentManager fm = getSupportFragmentManager();
+                    fm = getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     // question content
                     ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(object));
@@ -78,9 +82,29 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode ==  Constants.ASK_QS_REQ_CODE){
+            Entry answer = data.getParcelableExtra("question");
+            ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
+            query.whereEqualTo(Entry.TEXT_KEY, answer.getQuestionText());
+            query.whereEqualTo(Entry.USER_KEY, (User) User.getCurrentUser());
+            try {
+                List<Entry> entriesList = query.find();
+                if (entriesList != null && !entriesList.isEmpty()) {
+                    answer = entriesList.get(0);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            updateAnswerFragment(answer);
+        }
+    }
+
     private void showAnswerDialog() {
         // start AskQuestion Activity
         Intent intent = new Intent(this, AskQuestion.class);
+        intent.putExtra(Constants.IS_ANSWER_KEY, true);
         startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
     }
 
@@ -95,5 +119,17 @@ public class PostActivity extends AppCompatActivity {
         }
 
         return postList;
+    }
+
+    private void updateAnswerFragment(Entry answer) {
+        Fragment fragment = fm.findFragmentById(R.id.flAsContainer);
+        if (fragment instanceof AnswerFragment) {
+            User currUser = (User) User.getCurrentUser();
+            answer.setUser(currUser);
+            // add answer to Post
+            ((AnswerFragment) fragment).addAnswerToPost(answer);
+            ((AnswerFragment) fragment).addEntry(answer);
+            ((AnswerFragment) fragment).getRvEntries().getLayoutManager().scrollToPosition(0);
+        }
     }
 }

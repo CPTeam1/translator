@@ -102,7 +102,7 @@ public abstract class PageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void addQuestion(Entry question) {
+    public void addEntry(Entry question) {
         if (mEntries == null) {
             mEntries = new ArrayList<>();
             mEntriesAdapter.setEntriesList(mEntries);

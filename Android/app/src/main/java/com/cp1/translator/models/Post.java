@@ -1,12 +1,15 @@
 package com.cp1.translator.models;
 
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,29 +30,28 @@ public class Post extends ParseObject{
         put(QUESTION_KEY, entry);
     }
 
-    public List<Entry> getAnswers() {
-        List<Entry> answers = getList(ANSWERS_KEY);
-        if (answers == null)
-            answers = new ArrayList<>();
-        return answers;
+    public void getAnswers(final Entry.EntriesListener listener) {
+        ParseRelation<Entry> answers = getRelation(ANSWERS_KEY);
+        ParseQuery<Entry> query = answers.getQuery();
+        query.findInBackground(new FindCallback<Entry>() {
+            @Override
+            public void done(List<Entry> entriesList, ParseException e) {
+                if (e != null)
+                    listener.onError(e);
+                else
+                    listener.onEntries(entriesList);
+            }
+        });
     }
 
     public void addAnswer(Entry answer) {
-        answer.remove(Entry.IS_QUESTION_KEY); // Being paranoid.
-        List<Entry> answers = getAnswers();
-        if (answers == null) {
-            answers = new ArrayList<>();
-        }
+        ParseRelation<Entry> answers = getRelation(ANSWERS_KEY);
         answers.add(answer);
-        put(ANSWERS_KEY, answers);
     }
 
     public void removeAnswer(Entry answer) {
-        List<Entry> answers = getAnswers();
-        if (answers != null) {
-            answers.remove(answer);
-            put(ANSWERS_KEY, answers);
-        }
+        ParseRelation<Entry> answers = getRelation(ANSWERS_KEY);
+        answers.remove(answer);
     }
 
     @Override

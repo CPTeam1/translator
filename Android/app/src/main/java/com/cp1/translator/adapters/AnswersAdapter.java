@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
+import com.parse.ParseException;
 
 import java.util.List;
 
@@ -47,6 +48,12 @@ public class AnswersAdapter extends EntriesAdapter {
     }
 
     private void populateAnswers(AnswersViewHolder holder, Entry answer) {
+        try {
+            holder.tvAnswerUser.setText(answer.getUser().fetchIfNeeded().getUsername().substring(0, 3));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         // type of the answer
         Drawable typeDrawble = ContextCompat.getDrawable(context, R.drawable.shape_qs_txt);
 

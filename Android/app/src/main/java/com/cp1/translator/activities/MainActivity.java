@@ -27,7 +27,6 @@ import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
 
@@ -138,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                             User currUser = (User) User.getCurrentUser();
                             // Set it to current user in case of ASK_QS_REQ_CODE
                             entry.setUser(currUser);
-                            fragment.addQuestion(entry);
+                            fragment.addEntry(entry);
                             fragment.getRvEntries().getLayoutManager().scrollToPosition(0);
                         }
                     }
