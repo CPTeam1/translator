@@ -1,16 +1,20 @@
 package com.cp1.translator.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.cp1.translator.R;
 import com.cp1.translator.fragments.AnswerFragment;
 import com.cp1.translator.fragments.QsContentFragment;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
+import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -32,6 +36,15 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        // set behavior of FAB
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAnswerDialog();
+            }
+        });
 
         // query Post object
         String entryId = getIntent().getStringExtra(ENTRY_KEY);
@@ -63,6 +76,12 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showAnswerDialog() {
+        // start AskQuestion Activity
+        Intent intent = new Intent(this, AskQuestion.class);
+        startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
     }
 
     private List<Post> queryPost(Entry question) {

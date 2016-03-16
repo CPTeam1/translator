@@ -85,10 +85,10 @@ public class AnswerFragment extends PageFragment {
         if (mEntriesAdapter.getItemCount() == 0) {
             tvEmptyRvEntries.setText(getString(R.string.add_first_answer_label));
             tvEmptyRvEntries.setVisibility(View.VISIBLE);
-            rvEntries.setVisibility(View.GONE);
+            swipeContainer.setVisibility(View.GONE);
         } else {
             tvEmptyRvEntries.setVisibility(View.GONE);
-            rvEntries.setVisibility(View.VISIBLE);
+            swipeContainer.setVisibility(View.VISIBLE);
         }
 
         return view;
