@@ -18,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -147,14 +148,8 @@ public class AskQuestion extends AppCompatActivity  {
                         Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
 
                         Entry qsEntry = saveToParse(qsDB);
-//                    AskQuestionDialogListener listener = (AskQuestionDialogListener) getSupportFragmentManager().findFragmentByTag("PageFragment");
-                        // In order to test how to retrieve all questions by current user look at TestActivity
-//                    Intent displayQsIntent = new Intent(getApplicationContext(), TestActivity.class)
-
                         Log.d(APP_TAG, "Adding question here");
-
                         Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        //displayQsIntent.putExtra("question", Parcels.wrap(qsEntry));
                         displayQsIntent.putExtra("question", qsEntry);
                         setResult(RESULT_OK, displayQsIntent);
                         finish();
@@ -202,11 +197,15 @@ public class AskQuestion extends AppCompatActivity  {
 
     private void stopRecording() {
         if(mediaRecorder!=null) {
-            mediaRecorder.stop();
-            mediaRecorder.reset();
-            mediaRecorder.release();
-            isRecReleased = true;
-            Toast.makeText(getApplicationContext(),"Stopping recording..",Toast.LENGTH_SHORT).show();
+            try {
+                mediaRecorder.stop();
+                mediaRecorder.reset();
+                mediaRecorder.release();
+                isRecReleased = true;
+                Toast.makeText(getApplicationContext(), "Stopping recording..", Toast.LENGTH_SHORT).show();
+            }catch(Exception e){
+                Log.e(APP_TAG,"exception in stopping recording: "+e.getMessage());
+            }
         }
     }
 
@@ -221,12 +220,16 @@ public class AskQuestion extends AppCompatActivity  {
             hideMediaRecButtons();
             ibPlayAudio.setVisibility(View.VISIBLE);
             ibStopAudio.setVisibility(View.VISIBLE);
+            spinFromLang.setVisibility(View.INVISIBLE);
+            spinToLang.setVisibility(View.INVISIBLE);
         }
     }
 
     public void stopPlaying(View v) {
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if(mediaPlayer!=null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     public void onPlay(View view){
@@ -282,6 +285,7 @@ public class AskQuestion extends AppCompatActivity  {
                 mAudioFileName += "/audiorecordtest"+SEPARATOR + Long.toString(System.currentTimeMillis())+AUDIO_EXT;
                 Log.d(APP_TAG,"Audio file for question: "+mAudioFileName);
                 isRecReleased = false;
+
                 // Create the recorder
                 mediaRecorder = new MediaRecorder();
                 // Set the audio format and encoder
@@ -293,12 +297,14 @@ public class AskQuestion extends AppCompatActivity  {
                 // Start the recording
                 mediaRecorder.prepare();
                 mediaRecorder.start();
-                Log.d(APP_TAG,"Recording in progress..");
+                Log.d(APP_TAG, "Recording in progress..");
+
             } else { // no mic on device
                 Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
             }
         }catch (Exception e){
             Log.e(APP_TAG,"Exception in recording media"+e.getMessage());
+            Toast.makeText(this, "Error in recording audio", Toast.LENGTH_LONG).show();
         }
     }
 
