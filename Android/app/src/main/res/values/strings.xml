@@ -22,5 +22,6 @@
     <string name="desc_ivQsContentImg">Placeholder of the image of the question if exists</string>
     <string name="zero">0</string>
     <string name="desc_ivAnswerLike">Toggle to like this answer</string>
+    <string name="answers">Answers</string>
 
 </resources>

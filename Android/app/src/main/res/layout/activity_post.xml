@@ -17,6 +17,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"></FrameLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/answers"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginTop="@dimen/custom_qs_margin"
+            android:layout_marginBottom="@dimen/custom_qs_margin"/>
+
         <FrameLayout
             android:id="@+id/flAsContainer"
             android:layout_width="match_parent"

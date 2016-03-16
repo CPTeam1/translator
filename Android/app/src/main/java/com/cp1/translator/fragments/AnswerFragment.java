@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,13 @@ public class AnswerFragment extends PageFragment {
                 startActivity(i);
             }
         });
+        mEntriesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                showHideEmptyView();
+            }
+        });
         // Attach the adapter to the RecyclerView to populate items
         rvEntries.setAdapter(mEntriesAdapter);
         // Set layout manager to position the items
@@ -97,6 +105,14 @@ public class AnswerFragment extends PageFragment {
             }
         });
 
+        return view;
+    }
+
+    private void loadAnswers(List<Entry> answersList) {
+        mEntriesAdapter.addAll(answersList);
+    }
+
+    private void showHideEmptyView() {
         // show emptyView message if answersList is empty
         if (mEntriesAdapter.getItemCount() == 0) {
             tvEmptyRvEntries.setText(getString(R.string.add_first_answer_label));
@@ -106,12 +122,6 @@ public class AnswerFragment extends PageFragment {
             tvEmptyRvEntries.setVisibility(View.GONE);
             swipeContainer.setVisibility(View.VISIBLE);
         }
-
-        return view;
-    }
-
-    private void loadAnswers(List<Entry> answersList) {
-        mEntriesAdapter.addAll(answersList);
     }
 
     public void addAnswerToPost(Entry answer) {
