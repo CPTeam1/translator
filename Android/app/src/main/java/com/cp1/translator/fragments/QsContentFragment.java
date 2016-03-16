@@ -16,8 +16,7 @@ import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
 import com.cp1.translator.utils.Constants;
-
-import org.parceler.Parcels;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,16 +48,17 @@ public class QsContentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_qs_content, container, false);
         ButterKnife.bind(this, view);
 
-        Entry question = Parcels.unwrap(getArguments().getParcelable(Constants.ENTRY_KEY));
-        question.fetchIfNeededInBackground();
+        Entry question = getArguments().getParcelable(Constants.ENTRY_KEY);
         String qsType = question.getType();
         if (qsType == null)
             qsType = Types.TEXT;
         switch (qsType) {
-            default:
-                tvQsContentTxt.setText(question.getText());
             case Types.PICTURE:
                 // load img onto ivQsMediaImg
+                Picasso.with(getContext())
+                        .load(question.getImageUrl().getUrl())
+                        .into(ivQsMediaImg);
+                ivQsMediaImg.setVisibility(View.VISIBLE);
 
                 // set visible
                 break;
@@ -73,6 +73,11 @@ public class QsContentFragment extends Fragment {
                 // set visible
                 break;
         }
+
+        String qsContent = question.getText();
+        if (qsContent == null || qsContent.trim().isEmpty())
+            qsContent = "< No Caption Available >";
+        tvQsContentTxt.setText(qsContent);
 
         return view;
     }

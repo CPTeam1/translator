@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.activities.PostActivity;
@@ -17,8 +18,6 @@ import com.cp1.translator.adapters.QuestionsAdapter;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.utils.Constants;
 import com.cp1.translator.utils.SpaceItemDecoration;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,7 @@ public abstract class PageFragment extends Fragment {
 
     @Bind(R.id.rvEntries) RecyclerView rvEntries;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+    @Bind(R.id.tvEmptyRvEntries) TextView tvEmptyRvEntries;
 
     public RecyclerView getRvEntries() {
         return rvEntries;
@@ -72,9 +72,10 @@ public abstract class PageFragment extends Fragment {
                 // create an intent to display the article
                 Intent i = new Intent(getContext(), PostActivity.class);
                 // get the article to display
-                Entry question = mEntries.get(position);
+                Entry entry = mEntries.get(position);
+                String entryId = entry.getObjectId();
                 // pass objects to the target activity
-                i.putExtra(Constants.ENTRY_KEY, Parcels.wrap(question));
+                i.putExtra(Constants.ENTRY_KEY, entryId);
                 // launch the activity
                 startActivity(i);
             }

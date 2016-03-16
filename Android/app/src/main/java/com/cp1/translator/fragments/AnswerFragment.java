@@ -2,7 +2,6 @@ package com.cp1.translator.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +30,11 @@ public class AnswerFragment extends PageFragment {
 
     private static final int ITEM_SPACE = 12;
 
-    public static AnswerFragment newInstance(Parcelable postParcelable) {
-        Bundle args = new Bundle();
-        args.putParcelable(Constants.POST_KEY, postParcelable);
+    private Post mPost;
+
+    public static AnswerFragment newInstance(Post post) {
         AnswerFragment fragment = new AnswerFragment();
-        fragment.setArguments(args);
+        fragment.mPost = post;
         return fragment;
     }
 
@@ -79,10 +78,18 @@ public class AnswerFragment extends PageFragment {
         /********************** end of SwipeRefreshLayout **********************/
 
         // load answers
-        Post post = Parcels.unwrap(getArguments().getParcelable(Constants.POST_KEY));
-        post.fetchIfNeededInBackground();
-        List<Entry> answersList = post.getAnswers();
+        List<Entry> answersList = mPost.getAnswers();
         loadAnswers(answersList);
+
+        // show emptyView message if answersList is empty
+        if (mEntriesAdapter.getItemCount() == 0) {
+            tvEmptyRvEntries.setText(getString(R.string.add_first_answer_label));
+            tvEmptyRvEntries.setVisibility(View.VISIBLE);
+            rvEntries.setVisibility(View.GONE);
+        } else {
+            tvEmptyRvEntries.setVisibility(View.GONE);
+            rvEntries.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }

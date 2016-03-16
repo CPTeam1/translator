@@ -7,6 +7,7 @@
     <string name="answered_label">Answered:</string>
     <string name="no_question_label">No Questions</string>
     <string name="say_something_label">Say something in your first language, \nGet it translated into another language!</string>
+    <string name="add_first_answer_label">Somebody is waiting for your answer.\nBe the first translator!</string>
     <string name="me">Me</string>
     <string name="languages">Languages</string>
     <string name="settings">Settings</string>

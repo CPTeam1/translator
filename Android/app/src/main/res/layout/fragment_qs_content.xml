@@ -45,6 +45,11 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/shape_speech_bubble"
-        android:lines="5" />
+        android:lines="5"
+        android:paddingLeft="@dimen/custom_qs_margin"
+        android:paddingTop="@dimen/custom_qs_margin"
+        android:paddingRight="@dimen/custom_qs_margin"
+        android:paddingBottom="@dimen/custom_qs_margin"
+        android:padding="@dimen/custom_qs_margin" />
 
 </RelativeLayout>
