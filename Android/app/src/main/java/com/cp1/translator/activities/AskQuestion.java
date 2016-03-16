@@ -56,12 +56,14 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.cp1.translator.utils.Constants.ANS_HINT;
 import static com.cp1.translator.utils.Constants.APP_TAG;
 import static com.cp1.translator.utils.Constants.AUDIO;
 import static com.cp1.translator.utils.Constants.AUDIO_EXT;
 import static com.cp1.translator.utils.Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
 import static com.cp1.translator.utils.Constants.IMG;
 import static com.cp1.translator.utils.Constants.PIC_EXT;
+import static com.cp1.translator.utils.Constants.QS_HINT;
 import static com.cp1.translator.utils.Constants.SEPARATOR;
 import static com.cp1.translator.utils.Constants.VIDEO;
 import static com.cp1.translator.utils.Constants.VIDEO_CAPTURE;
@@ -128,6 +130,14 @@ public class AskQuestion extends AppCompatActivity  {
         ButterKnife.bind(this);
 
         etQs.addTextChangedListener(textWatcher);
+
+        if(isAnswer){
+            etQs.setHint(ANS_HINT);
+        }
+        else{
+            etQs.setHint(QS_HINT);
+        }
+
         textColor = tvCharsLeft.getCurrentTextColor();
 
         btAskQs.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +223,7 @@ public class AskQuestion extends AppCompatActivity  {
         if(mediaRecorder!=null){
             ibRelAudio.setVisibility(View.GONE);
             pbRecording.setVisibility(ProgressBar.INVISIBLE);
-            Log.d(APP_TAG,"Stopping recording..");
+            Log.d(APP_TAG, "Stopping recording..");
             stopRecording();
             //mediaRecorder = null;
             audioURI = mAudioFileName;
