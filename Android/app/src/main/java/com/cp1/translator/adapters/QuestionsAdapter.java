@@ -85,7 +85,7 @@ public class QuestionsAdapter extends EntriesAdapter {
     @Override
     public int getItemViewType(int position) {
         Entry question = mEntriesList.get(position);
-        Log.d(APP_TAG,"Position: "+position + "Entry: "+question);
+        Log.d(APP_TAG, "Position: " + position + "Entry: " + question);
         Log.d(APP_TAG,"user: "+question.getUser());
         String askedBy = question.getUserID();
         if (mMyUserName.equals(askedBy)) {
@@ -104,8 +104,8 @@ public class QuestionsAdapter extends EntriesAdapter {
         // As we dont want the switch case to crash :)
         String type = Types.TEXT;
 
-        if(question.getType() != null)
-            type = question.getType();
+        if(question.getTypeLocally() != null)
+            type = question.getTypeLocally();
 
         switch (type) {
             case Types.PICTURE:

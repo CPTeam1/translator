@@ -197,6 +197,10 @@ public class Entry extends ParseObject implements Parcelable {
         return getString(QS_TYPE_KEY);
     }
 
+    public String getTypeLocally(){
+        return this.type;
+    }
+
     public void setType(String type) {
         this.type = type;
         put(QS_TYPE_KEY,type);
