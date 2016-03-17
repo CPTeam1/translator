@@ -23,6 +23,12 @@ The following stories are completed:
 
 Here's a walkthrough of implemented user stories:
 
+Push Notifications
+
+Sending Phone:
+![Elanelango Sending](elanelango_sending.gif)
+![Random123 Recieving](random123_rec.gif)
+
 ![Video Walkthrough](demo_play_1.gif)
 
 ![Video Walkthrough](demo_play_2.gif)
