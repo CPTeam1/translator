@@ -35,6 +35,9 @@ Push Notifications
 Sending Phone:
 
 ![Elanelango Sending](elanelango_asking.gif)
+
+Receiving Phone:
+
 ![Random123 Recieving](random123_rec.gif)
 
 
