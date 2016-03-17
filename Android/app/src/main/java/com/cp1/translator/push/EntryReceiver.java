@@ -9,11 +9,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.cp1.translator.R;
+import com.cp1.translator.models.Entry;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class EntryReceiver extends BroadcastReceiver {
     private static final String TAG = "EntryReceiver";
@@ -37,17 +42,18 @@ public class EntryReceiver extends BroadcastReceiver {
             try {
                 JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
                 Log.d(TAG, "got action " + action + " on channel " + channel + " with:");
+                createNotification(context, json);
                 // Iterate the parse keys if needed
-                Iterator<String> itr = json.keys();
-                while (itr.hasNext()) {
-                    String key = (String) itr.next();
-                    String value = json.getString(key);
-                    Log.d(TAG, "..." + key + " => " + value);
-                    // Extract custom push data
-                    if (key.equals("customdata")) {
-                        // create a local notification
-                        createNotification(context, value);
-                    }
+//                Iterator<String> itr = json.keys();
+//                while (itr.hasNext()) {
+//                    String key = (String) itr.next();
+//                    String value = json.getString(key);
+//                    Log.d(TAG, "..." + key + " => " + value);
+//                    // Extract custom push data
+//                    if (key.equals("username")) {
+//                        // create a local notification
+//                        createNotification(context, value);
+//                    }
 //                    else if (key.equals("launch")) {
 //                        // Handle push notification by invoking activity directly
 //                        launchSomeActivity(context, value);
@@ -55,22 +61,31 @@ public class EntryReceiver extends BroadcastReceiver {
 //                        // OR trigger a broadcast to activity
 //                        triggerBroadcastToActivity(context, value);
 //                    }
-                }
-            } catch (JSONException ex) {
-                Log.d(TAG, "JSON failed!");
-            }
+//            }
+        }catch(JSONException ex){
+            Log.d(TAG, "JSON failed!");
         }
     }
 
-    public static final int NOTIFICATION_ID = 45;
+}
+
+public static final int NOTIFICATION_ID = 45;
+
     // Create a local dashboard notification to tell user about the event
     // See: http://guides.codepath.com/android/Notifications
-    private void createNotification(Context context, String datavalue) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(
-                R.drawable.ic_launcher).setContentTitle("Notification: " + datavalue).setContentText("Pushed!");
-        NotificationManager mNotificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    private void createNotification(Context context, JSONObject json) {
+        try {
+            String username = json.getString("username");
+            String entryid = json.getString("entryid");
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(
+                    R.drawable.ic_launcher).setContentTitle(username + " asked a question.").setContentText(entryid);
+            NotificationManager mNotificationManager = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        } catch (JSONException exp) {
+            exp.printStackTrace();
+        }
+
     }
 
     // Handle push notification by invoking activity directly

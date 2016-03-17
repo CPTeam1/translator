@@ -14,7 +14,9 @@ import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -63,9 +65,22 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
+                    ParseInstallation parseInstall = ParseInstallation.getCurrentInstallation();
+                    parseInstall.put("user", user);
+                    parseInstall.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(i);
+                                finish();
+                            } else {
+                                e.printStackTrace();
+                                Toast.makeText(LoginActivity.this, "Temporary failure. Please try again.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                 } else {
                     Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

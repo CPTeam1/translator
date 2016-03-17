@@ -17,6 +17,7 @@ import com.cp1.translator.push.EntryPusher;
 import com.cp1.translator.utils.SaveListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -124,7 +125,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 });
             }
-            EntryPusher.pushTestToEveryone();
         }
     }
 
@@ -179,6 +179,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 mUsers.add(friend);
                         }
                         notifyItemRangeChanged(0, mUsers.size());
+
+                        Log.e("ELANLOG", ParseInstallation.getCurrentInstallation().getObjectId());
                     }
 
                     @Override

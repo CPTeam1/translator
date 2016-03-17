@@ -38,6 +38,7 @@ import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Question;
 import com.cp1.translator.models.Types;
 import com.cp1.translator.models.User;
+import com.cp1.translator.push.EntryPusher;
 import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -480,10 +481,13 @@ public class AskQuestion extends AppCompatActivity  {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(APP_TAG, "Error in saving to parse backend" + e.getMessage());
-                } else
+                } else {
                     Log.d(APP_TAG, "Saved successfully");
+
+                }
             }
         });
+        EntryPusher.pushEntryToFriends(qsEntry.getText());
 
         // create a new Post ONLY IF the Entry is a "question"
         Post qsPost = new Post();
