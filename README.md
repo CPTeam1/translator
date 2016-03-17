@@ -10,11 +10,15 @@ The following stories are completed:
 
 * [x] User can create a new account to Parse
 * [x] User can log in with the Parse account
-* [ ] User can create a friend list by importing the user's friend list on facebook.
 * [x] User can add the languages to the user profile (=Settings)
+  * [x] User can add/remove their skills
+  * [x] User can edit their nickname
 * [x] User can ask other users to translate word(s) or sentence(s) in the first language into the second language.
   * [x] User sends simple texts.
   * [x] User can upload video/photo/sound recording.
+* [x] User can seamlessly add friends
+  * [x] User can follow friends
+  * [x] User can view the questions from friends and  answer their questions
 
 ## Video Walkthrough 
 
@@ -45,6 +49,10 @@ Add Friends:
 ![Adding a friends](Friends.gif)
 
 ![Friend's questions](Friends_Questions.gif)
+
+
+Add Skills:
+![Adding a language as skill](Skills.gif)
 
 
 
