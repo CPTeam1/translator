@@ -14,23 +14,25 @@ The following stories are completed:
 * [x] User can add the languages to the user profile (=Settings)
 * [x] User can ask other users to translate word(s) or sentence(s) in the first language into the second language.
   * [x] User sends simple texts.
-  * [x] User takes a picture and post it.
-  * [ ] User records voice and upload it.
-  * [ ] If Location Services is turned **on**, the question is broadcasted to all the people in nearby location.
-  * [ ] If Location Services is turned **off**, the question is sent to the user's friends only.
+  * [x] User can upload video/photo/sound recording.
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
+Asking a Question:
+![Ask a question](AskQuestion_1.gif)
+![Ask a multimedia question](AskQuestion_2.gif)
+
+Answer a Question:
+![Answer a question](AnswerQuestion.gif)
 
 Push Notifications
 
 Sending Phone:
+
 ![Elanelango Sending](elanelango_asking.gif)
 ![Random123 Recieving](random123_rec.gif)
-
 ![Video Walkthrough](demo_play_1.gif)
-
 ![Video Walkthrough](demo_play_2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
