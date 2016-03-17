@@ -37,11 +37,6 @@ Sending Phone:
 ![Elanelango Sending](elanelango_asking.gif)
 ![Random123 Recieving](random123_rec.gif)
 
-Login Using Parse: 
-
-![Video Walkthrough](demo_play_1.gif)
-
-![Video Walkthrough](demo_play_2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
