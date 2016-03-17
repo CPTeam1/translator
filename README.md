@@ -40,6 +40,14 @@ Receiving Phone:
 
 ![Random123 Recieving](random123_rec.gif)
 
+Add Friends:
+
+![Adding a friends](Friends.gif)
+
+![Friend's questions](Friends_Questions.gif)
+
+
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
