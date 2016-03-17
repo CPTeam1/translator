@@ -24,17 +24,17 @@ The following stories are completed:
 
 Here's a walkthrough of implemented user stories:
 
-Asking a Question:
+### Asking a Question
 
 ![Ask a question](AskQuestion_1.gif)
+
 ![Ask a multimedia question](AskQuestion_2.gif)
 
-
-Answer a Question:
+### Answer a Question
 
 ![Answer a question](AnswerQuestion.gif)
 
-Push Notifications
+### Push Notifications
 
 Sending Phone:
 
@@ -44,16 +44,17 @@ Receiving Phone:
 
 ![Random123 Recieving](random123_rec.gif)
 
-Add Friends:
+### Add Friends
 
 ![Adding a friends](Friends.gif)
 
+### Answer to a question from my friend
+
 ![Friend's questions](Friends_Questions.gif)
 
+### Add Skills
 
-Add Skills:
 ![Adding a language as skill](Skills.gif)
-
 
 
 
