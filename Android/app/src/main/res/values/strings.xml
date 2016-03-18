@@ -23,5 +23,7 @@
     <string name="zero">0</string>
     <string name="desc_ivAnswerLike">Toggle to like this answer</string>
     <string name="answers">Answers</string>
+    <string name="snackbar_text_del_lang">Language deleted!</string>
+    <string name="snackbar_action_undo">UNDO</string>
 
 </resources>

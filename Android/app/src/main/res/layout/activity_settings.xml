@@ -3,40 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cp1.translator.activities.SettingsActivity"
-    android:background="@color/bg_gray_light">
+    android:background="@color/bg_gray_light"
+    tools:context="com.cp1.translator.activities.SettingsActivity">
 
     <LinearLayout
+        android:id="@+id/llUserContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/llUserContainer"
+        android:layout_marginTop="16dp"
         android:background="@android:color/background_light"
-        android:layout_marginTop="16dp">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/ivUserProfilePic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_launcher"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/desc_ivUserProfilePic" />
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/desc_ivUserProfilePic"
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/tvUserNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/tvUserEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 
@@ -80,5 +80,13 @@
         android:layout_centerInParent="true"
         android:text="@string/empty_language_label"
         android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/pbLoadingLangs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvEmptyLanguage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

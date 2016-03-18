@@ -2,13 +2,18 @@ package com.cp1.translator.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
@@ -35,6 +40,9 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
     @Bind(R.id.tvUserNickname) TextView tvUserNickname;
     @Bind(R.id.tvEmptyLanguage) TextView tvEmptyLanguage;
 
+    @Nullable
+    @Bind(R.id.pbLoadingLangs) ProgressBar pbLoadingLangs;
+
     private ArrayAdapter<Lang> mAdapter;
     private List<Lang> mLangList;
     private User me;
@@ -56,18 +64,16 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == LANG_REQ_CODE) {
-                String langName = data.getStringExtra("language");
-                Lang lang = Lang.getOrCreate(langName);
-                me.addLang(lang);
-                try {
-                    me.save();
-                    mLangList.add(lang);
-                    mAdapter.notifyDataSetChanged();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        if (resultCode == RESULT_OK && requestCode == LANG_REQ_CODE) {
+            String langName = data.getStringExtra("language");
+            Lang lang = Lang.getOrCreate(langName);
+            me.addLang(lang);
+            try {
+                me.save();
+                mLangList.add(lang);
+                mAdapter.notifyDataSetChanged();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -87,6 +93,7 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
             nickname = me.getEmail();
         tvUserNickname.setText(nickname);
 
+        // set empty view
         lvLanguages.setEmptyView(tvEmptyLanguage);
 
         // load languages
@@ -94,11 +101,44 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
         mAdapter = new LanguagesAdapter(this, mLangList);
         lvLanguages.setAdapter(mAdapter);
 
+        // OnItemLongClickListener to delete a language from the ListView
+        lvLanguages.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Lang lang = mLangList.get(position);
+
+                // save to parse
+                me.removeLang(lang);
+                me.saveInBackground();
+
+                // remove Lang from mLangList
+                mLangList.remove(position);
+                mAdapter.notifyDataSetChanged();
+
+                Snackbar.make(lvLanguages, R.string.snackbar_text_del_lang, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.snackbar_action_undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mLangList.add(position, lang);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .show(); // Don’t forget to show!
+
+                return true;
+            }
+        });
+
+        // show progress bar while loading the languages
+        pbLoadingLangs.setVisibility(View.VISIBLE);
         me.getLangs(new Lang.LangsListener() {
             @Override
             public void onLangs(List<Lang> langs) {
                 mLangList.addAll(langs);
                 mAdapter.notifyDataSetChanged();
+
+                pbLoadingLangs.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -141,42 +181,4 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
             }
         });
     }
-
-    // TODO
-//    public void onSaveSettings(MenuItem item) {
-//        saveLangs();
-//    }
-//
-//    private void saveLangs() {
-//        for (final Lang skill : mLangList) {
-//            if (!skill.isSavedRemotely()) {
-//                // save ParseObject<Skill> BEFORE updating the user profile!!
-//                skill.saveInBackground(new SaveCallback() {
-//                    @Override
-//                    public void done(ParseException e) {
-//                        if (e != null) {
-//                            Log.e(Constants.APP_TAG, "Error in saving the Skill " + skill.getLangCode() + " : " + e.getMessage());
-//                        } else {
-//                            Log.d(Constants.APP_TAG, "Successfully saved the Skill: " + skill.getLangCode());
-//                            updateMySkills(skill);
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//    }
-//
-//    private void updateMySkills(final Skill skill) {
-//        me.addSkill(skill);
-//        me.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if (e != null) {
-//                    Log.e(Constants.APP_TAG, "Error in updating the Skill " + skill.getLangCode() + " : " + e.getMessage());
-//                } else {
-//                    Log.d(Constants.APP_TAG, "Successfully added the Skill: " + skill.getLangCode());
-//                }
-//            }
-//        });
-//    }
 }
