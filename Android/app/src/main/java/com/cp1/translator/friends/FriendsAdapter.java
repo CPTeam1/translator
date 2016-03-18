@@ -163,32 +163,34 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
 
-        ParseQuery<User> mainQuery = ParseQuery.or(userQueries);
-        mainQuery.findInBackground(new FindCallback<User>() {
-            @Override
-            public void done(final List<User> contacts, ParseException e) {
-                Log.e("ELANLOG", "Queried all users in contacts");
-                mUsers.addAll(contacts);
-                User currentUser = (User) ParseUser.getCurrentUser();
-                currentUser.getFriends(new User.UsersListener() {
-                    @Override
-                    public void onUsers(List<User> friends) {
-                        mFriends.addAll(friends);
-                        for (User friend: friends) {
-                            if (!mUsers.contains(friend))
-                                mUsers.add(friend);
+        if(userQueries!=null && userQueries.size()>0) {
+            ParseQuery<User> mainQuery = ParseQuery.or(userQueries);
+            mainQuery.findInBackground(new FindCallback<User>() {
+                @Override
+                public void done(final List<User> contacts, ParseException e) {
+                    Log.e("ELANLOG", "Queried all users in contacts");
+                    mUsers.addAll(contacts);
+                    User currentUser = (User) ParseUser.getCurrentUser();
+                    currentUser.getFriends(new User.UsersListener() {
+                        @Override
+                        public void onUsers(List<User> friends) {
+                            mFriends.addAll(friends);
+                            for (User friend : friends) {
+                                if (!mUsers.contains(friend))
+                                    mUsers.add(friend);
+                            }
+                            notifyItemRangeChanged(0, mUsers.size());
+
+                            Log.e("ELANLOG", ParseInstallation.getCurrentInstallation().getObjectId());
                         }
-                        notifyItemRangeChanged(0, mUsers.size());
 
-                        Log.e("ELANLOG", ParseInstallation.getCurrentInstallation().getObjectId());
-                    }
-
-                    @Override
-                    public void onError(ParseException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-        });
+                        @Override
+                        public void onError(ParseException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            });
+        }
     }
 }

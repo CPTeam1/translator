@@ -1,6 +1,8 @@
 package com.cp1.translator.push;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.cp1.translator.R;
+import com.cp1.translator.activities.PostActivity;
 import com.cp1.translator.models.Entry;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -77,11 +80,29 @@ public static final int NOTIFICATION_ID = 45;
         try {
             String username = json.getString("username");
             String entryid = json.getString("entryid");
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(
-                    R.drawable.ic_launcher).setContentTitle(username + " asked a question.").setContentText(entryid);
+
+            // add a pending intent to launch the PostActivity
+            Intent intent = new Intent(context, PostActivity.class);
+            // Next, let's turn this into a PendingIntent using
+            //   public static PendingIntent getActivity(Context context, int requestCode,
+            //       Intent intent, int flags)
+            int requestID = (int) System.currentTimeMillis(); //unique requestID to differentiate between various notification with same NotifId
+            int flags = PendingIntent.FLAG_CANCEL_CURRENT; // cancel old intent and create new one
+            PendingIntent postIntent = PendingIntent.getActivity(context, requestID, intent, flags);
+
+
+            Notification notification = new NotificationCompat.Builder(context)
+                                        .setSmallIcon(R.drawable.ic_launcher)
+                                        .setContentTitle(username + " asked a question.")
+                                        .setContentIntent(postIntent)
+                                        .setAutoCancel(true)
+                                        .setContentText(entryid).build();
+
+
             NotificationManager mNotificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            mNotificationManager.notify(NOTIFICATION_ID, notification);
+
         } catch (JSONException exp) {
             exp.printStackTrace();
         }
