@@ -49,4 +49,14 @@
         android:text="Create New Account"
         android:clickable="true" />
 
+    <ProgressBar
+        android:id="@+id/pbLoggingIn"
+        android:visibility="invisible"
+        android:layout_below="@+id/tvCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp" />
+
+
 </RelativeLayout>

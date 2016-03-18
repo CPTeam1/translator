@@ -2,10 +2,12 @@ package com.cp1.translator.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cp1.translator.R;
@@ -30,6 +32,10 @@ public class LoginActivity extends AppCompatActivity{
 
     @Bind(R.id.etPassword)
     EditText etPassword;
+
+    @Nullable
+    @Bind(R.id.pbLoggingIn)
+    ProgressBar pbLoggingIn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class LoginActivity extends AppCompatActivity{
 	public void login(View view) {
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
+        pbLoggingIn.setVisibility(ProgressBar.VISIBLE);
 		User.logInInBackground(email, password, new LogInCallback() {
 
             @Override
@@ -84,6 +91,7 @@ public class LoginActivity extends AppCompatActivity{
                 } else {
                     Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                pbLoggingIn.setVisibility(ProgressBar.INVISIBLE);
             }
         });
 	}
