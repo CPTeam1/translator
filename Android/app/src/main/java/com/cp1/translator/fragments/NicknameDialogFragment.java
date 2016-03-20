@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 /**
- * Created by kimhy08 on 3/13/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/13/2016.
  */
 public class NicknameDialogFragment extends DialogFragment {
 

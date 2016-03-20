@@ -25,5 +25,7 @@
     <string name="answers">Answers</string>
     <string name="snackbar_text_del_lang">Language deleted!</string>
     <string name="snackbar_action_undo">UNDO</string>
+    <string name="desc_ivEntryPic">placeholder of the picture of an entry</string>
+    <string name="desc_ivEntryMediaIcon">placeholder of the icon (audio or video)</string>
 
 </resources>

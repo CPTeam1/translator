@@ -14,7 +14,7 @@ import com.cp1.translator.R;
 import com.cp1.translator.utils.Constants;
 
 /**
- * Created by kimhy08 on 3/19/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/19/2016.
  */
 public class VideoPlayerFragment extends Fragment {
 

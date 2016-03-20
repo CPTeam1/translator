@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llPostContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_qs_container"
+    android:orientation="vertical">
+
+    <!-- only if questions of others(friends) -->
+    <TextView
+        android:id="@+id/tvLangWrittenBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+
+    <!-- Question -->
+    <include
+        android:id="@+id/includeQs"
+        layout="@layout/item_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Top Answer -->
+    <include
+        android:id="@+id/includeAs"
+        layout="@layout/item_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -9,7 +9,7 @@ import com.cp1.translator.models.Entry;
 import java.util.List;
 
 /**
- * Created by kimhy08 on 3/15/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/15/2016.
  */
 public abstract class EntriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

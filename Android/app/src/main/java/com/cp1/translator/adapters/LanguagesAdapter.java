@@ -16,7 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by kimhy08 on 3/9/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/9/2016.
  */
 public class LanguagesAdapter extends ArrayAdapter<Lang> {
 

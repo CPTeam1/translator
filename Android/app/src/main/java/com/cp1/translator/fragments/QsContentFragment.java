@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.ButterKnife;
 
 /**
- * Created by kimhy08 on 3/13/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/13/2016.
  */
 public class QsContentFragment extends Fragment {
 

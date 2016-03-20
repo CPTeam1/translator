@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by kimhy08 on 3/12/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/12/2016.
  */
 public class UsersFragment extends Fragment {
 
