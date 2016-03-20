@@ -14,6 +14,7 @@ import com.cp1.translator.R;
 import com.cp1.translator.fragments.AnswerFragment;
 import com.cp1.translator.fragments.AudioPlayerFragment;
 import com.cp1.translator.fragments.QsContentFragment;
+import com.cp1.translator.fragments.VideoPlayerFragment;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Types;
@@ -89,9 +90,12 @@ public class PostActivity extends AppCompatActivity {
                         case Types.VIDEO:
                             // VideoPlayerFragment
                             String videoUrl = object.getVideoUrl().getUrl();
+                            ft.replace(R.id.flMediaContainer, VideoPlayerFragment.newInstance(videoUrl));
+
                             break;
                         case Types.PICTURE:
                             imgUrl = object.getImageUrl().getUrl();
+                            break;
                     }
 
                     // question content
