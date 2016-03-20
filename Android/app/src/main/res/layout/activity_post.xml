@@ -35,7 +35,8 @@
             android:id="@+id/flAsContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </LinearLayout>
 
@@ -43,9 +44,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add_42dp_fff"
-        app:layout_anchor="@+id/flQsContainer"
+        app:layout_anchor="@+id/flAsContainer"
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
