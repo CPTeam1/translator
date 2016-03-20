@@ -1,24 +1,18 @@
 package com.cp1.translator.fragments;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.cp1.translator.R;
-import com.cp1.translator.models.Entry;
-import com.cp1.translator.models.Types;
 import com.cp1.translator.utils.Constants;
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -26,17 +20,10 @@ import butterknife.ButterKnife;
  */
 public class QsContentFragment extends Fragment {
 
-    // this always shows up on the screen regardless of the question type
-    @Bind(R.id.tvQsContentTxt) TextView tvQsContentTxt;
-
-    // only one of three shows up based on the question type
-    @Bind(R.id.ivQsMediaImg) ImageView ivQsMediaImg;
-    @Bind(R.id.mcQsMediaVoice) MediaController mcQsMediaVoice;
-    @Bind(R.id.vvQsMediaVideo) VideoView vvQsMediaVideo;
-
-    public static QsContentFragment newInstance(Parcelable qsParcelable) {
+    public static QsContentFragment newInstance(String imgUrl, String text) {
         Bundle args = new Bundle();
-        args.putParcelable(Constants.ENTRY_KEY, qsParcelable);
+        args.putString(Constants.IMAGE, imgUrl);
+        args.putString(Constants.TEXT, text);
         QsContentFragment fragment = new QsContentFragment();
         fragment.setArguments(args);
         return fragment;
@@ -48,35 +35,22 @@ public class QsContentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_qs_content, container, false);
         ButterKnife.bind(this, view);
 
-        Entry question = getArguments().getParcelable(Constants.ENTRY_KEY);
-        String qsType = question.getType();
-        if (qsType == null)
-            qsType = Types.TEXT;
-        switch (qsType) {
-            case Types.PICTURE:
-                // load img onto ivQsMediaImg
-                Picasso.with(getContext())
-                        .load(question.getImageUrl().getUrl())
-                        .into(ivQsMediaImg);
-                ivQsMediaImg.setVisibility(View.VISIBLE);
-
-                // set visible
-                break;
-            case Types.AUDIO:
-                // load voice file
-
-                // set visible
-                break;
-            case Types.VIDEO:
-                // load video file
-
-                // set visible
-                break;
+        String imgUrl = getArguments().getString(Constants.IMAGE);
+        if (imgUrl != null && !(imgUrl.trim().isEmpty()) ) {
+            // find ImageView
+            ImageView ivQsMediaImg = (ImageView) view.findViewById(R.id.ivQsMediaImg);
+            // load img onto ivQsMediaImg
+            Picasso.with(getContext())
+                    .load(imgUrl)
+                    .into(ivQsMediaImg);
+            ivQsMediaImg.setVisibility(View.VISIBLE);
         }
 
-        String qsContent = question.getText();
+        String qsContent = getArguments().getString(Constants.TEXT);
         if (qsContent == null || qsContent.trim().isEmpty())
             qsContent = "< No Caption Available >";
+        // find TextView and set text
+        TextView tvQsContentTxt = (TextView) view.findViewById(R.id.tvQsContentTxt);
         tvQsContentTxt.setText(qsContent);
 
         return view;

@@ -18,7 +18,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -62,7 +61,7 @@ import static com.cp1.translator.utils.Constants.APP_TAG;
 import static com.cp1.translator.utils.Constants.AUDIO;
 import static com.cp1.translator.utils.Constants.AUDIO_EXT;
 import static com.cp1.translator.utils.Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
-import static com.cp1.translator.utils.Constants.IMG;
+import static com.cp1.translator.utils.Constants.IMAGE;
 import static com.cp1.translator.utils.Constants.PIC_EXT;
 import static com.cp1.translator.utils.Constants.QS_HINT;
 import static com.cp1.translator.utils.Constants.SEPARATOR;
@@ -468,8 +467,8 @@ public class AskQuestion extends AppCompatActivity  {
         qsEntry.setToLang(question.getToLang());
 
         if(multiMediaMap!=null && multiMediaMap.size()>0) {
-            if(multiMediaMap.containsKey(IMG))
-                qsEntry.setImageUrl(multiMediaMap.get(IMG));
+            if(multiMediaMap.containsKey(IMAGE))
+                qsEntry.setImageUrl(multiMediaMap.get(IMAGE));
             if(multiMediaMap.containsKey(VIDEO))
                 qsEntry.setVideoUrl(multiMediaMap.get(VIDEO));
             if(multiMediaMap.containsKey(AUDIO))
@@ -550,7 +549,7 @@ public class AskQuestion extends AppCompatActivity  {
                 Log.d(APP_TAG,"Saving image question: "+file.getName());
                 saveFileInBackground(file);
                 if(file!=null)
-                    multiMediaMap.put(IMG,file);
+                    multiMediaMap.put(IMAGE,file);
             }
             if(question.getVideoURI()!=null){
                 ParseFile file = convertURIToParseFile(question.getVideoURI());

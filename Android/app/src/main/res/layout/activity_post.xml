@@ -12,10 +12,16 @@
         android:orientation="vertical">
 
         <FrameLayout
+            android:id="@+id/flMediaContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <FrameLayout
             android:id="@+id/flQsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"></FrameLayout>
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:layout_width="match_parent"
@@ -29,7 +35,7 @@
             android:id="@+id/flAsContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"></FrameLayout>
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 

@@ -12,9 +12,11 @@ import android.view.View;
 
 import com.cp1.translator.R;
 import com.cp1.translator.fragments.AnswerFragment;
+import com.cp1.translator.fragments.AudioPlayerFragment;
 import com.cp1.translator.fragments.QsContentFragment;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
+import com.cp1.translator.models.Types;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
@@ -72,8 +74,28 @@ public class PostActivity extends AppCompatActivity {
 
                     fm = getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
+
+                    String imgUrl = null;
+                    String qsType = object.getType();
+                    if (qsType == null || qsType.trim().isEmpty())
+                        qsType = Types.TEXT;
+                    switch (qsType) {
+                        case Types.AUDIO:
+                            // AudioPlayerFragment
+                            String audioUrl = object.getAudioUrl().getUrl();
+                            ft.replace(R.id.flMediaContainer, AudioPlayerFragment.newInstance(audioUrl));
+
+                            break;
+                        case Types.VIDEO:
+                            // VideoPlayerFragment
+                            String videoUrl = object.getVideoUrl().getUrl();
+                            break;
+                        case Types.PICTURE:
+                            imgUrl = object.getImageUrl().getUrl();
+                    }
+
                     // question content
-                    ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(object));
+                    ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(imgUrl, object.getText()));
                     // answers list
                     ft.replace(R.id.flAsContainer, AnswerFragment.newInstance(post));
                     ft.commit();
