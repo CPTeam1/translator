@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cp1.translator.activities.MainActivity">
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
-        app:pstsShouldExpand="true"
-        app:pstsTextAllCaps="true"
-        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:textColor="?android:textColorPrimary"
+        android:textSize="14sp"
         app:pstsDividerColor="?colorPrimaryDark"
         app:pstsIndicatorColor="?colorPrimary"
-        app:pstsUnderlineColor="?colorPrimary"
+        app:pstsShouldExpand="true"
         app:pstsTabPaddingLeftRight="14dp"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        app:pstsTextAllCaps="true"
+        app:pstsUnderlineColor="?colorPrimary" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tabs"
-        android:background="?background">
-    </android.support.v4.view.ViewPager>
+        android:background="?background"></android.support.v4.view.ViewPager>
 
 
     <FrameLayout
         android:id="@+id/frag_question"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabNewQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_42dp_fff" />
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

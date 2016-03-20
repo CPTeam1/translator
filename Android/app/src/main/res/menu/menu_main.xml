@@ -11,14 +11,6 @@
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/miNewQs"
-        android:icon="@drawable/ic_add_42dp_fff"
-        android:onClick="onNewQuestionClick"
-        android:orderInCategory="2"
-        android:title="@string/new_qs"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/miFriends"
         android:icon="@drawable/ic_friends"
         android:onClick="onFriendsClick"

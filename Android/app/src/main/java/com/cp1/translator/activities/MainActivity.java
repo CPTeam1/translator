@@ -2,6 +2,7 @@ package com.cp1.translator.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
@@ -11,6 +12,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -28,6 +30,7 @@ import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
     private User me;
     private ViewPager viewPager;
+
+    @Bind(R.id.fabNewQuestion)
+    FloatingActionButton fabNewQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
 
+
+        fabNewQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // start AskQuestion Activity
+                Intent intent = new Intent(MainActivity.this, AskQuestion.class);
+                startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
+            }
+        });
 
         // from Hyunji: commented below as AppTheme color is set
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55acee")));
@@ -90,12 +105,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return true;
-    }
-
-    public void onNewQuestionClick(MenuItem item) {
-        // start AskQuestion Activity
-        Intent intent = new Intent(this, AskQuestion.class);
-        startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
     }
 
     public void onSettingsClick(MenuItem item) {
