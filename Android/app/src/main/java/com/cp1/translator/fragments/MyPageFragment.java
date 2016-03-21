@@ -1,6 +1,7 @@
 package com.cp1.translator.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.cp1.translator.listeners.EndlessRecyclerViewScrollListener;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.ParseErrorConverter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -22,6 +24,8 @@ import java.util.List;
  * Created by erioness1125(Hyunji Kim) on 3/12/2016.
  */
 public class MyPageFragment extends PageFragment {
+
+    private static final String LOG_TAG = "MyPageFragment";
 
     public static MyPageFragment newInstance(String title, String myUserName) {
         Bundle args = new Bundle();
@@ -61,12 +65,13 @@ public class MyPageFragment extends PageFragment {
         /********************** end of RecyclerView **********************/
 
         // first request: load questions
-        loadPosts();
+        loadPosts(true);
 
+        mFragmentView = view;
         return view;
     }
 
-    private void loadPosts() {
+    private void loadPosts(final boolean isRefresh) {
         User me = (User) User.getCurrentUser();
 
         /*
@@ -85,23 +90,30 @@ public class MyPageFragment extends PageFragment {
             @Override
             public void done(List<Post> postsList, ParseException e) {
                 if (e != null) {
-                    Log.e("err", "in MyPageFragment: failed to load Post!");
-                    e.printStackTrace();
+                    String errMsg = ParseErrorConverter.getErrMsg(e.getCode());
+                    Log.e(LOG_TAG, "Failed to load Post! " + errMsg, e);
+                    Snackbar.make(mFragmentView, errMsg, Snackbar.LENGTH_LONG).show();
                 } else {
-                    mPostsAdapter.addAll(postsList);
-                    swipeContainer.setRefreshing(false);
+                    if (isRefresh) {
+                        mPostsAdapter.setPostsList(postsList);
+                        mPostsAdapter.notifyDataSetChanged();
+                    }
+                    else {
+                        mPostsAdapter.addAll(postsList);
+                    }
                 }
+
+                swipeContainer.setRefreshing(false);
             }
         });
     }
 
-    // TODO
     @Override
     protected void refreshEntries() {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                swipeContainer.setRefreshing(false);
+                loadPosts(true);
             }
         }, 1000);
     }

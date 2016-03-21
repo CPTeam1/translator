@@ -35,6 +35,7 @@ public abstract class PageFragment extends Fragment {
 
     protected PostsAdapter mPostsAdapter;
     protected List<Post> mPosts;
+    protected View mFragmentView;
 
     @Bind(R.id.rvEntries) RecyclerView rvEntries;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;

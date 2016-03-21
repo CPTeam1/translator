@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -12,8 +13,8 @@ import android.widget.Toast;
 
 import com.cp1.translator.R;
 import com.cp1.translator.activities.MainActivity;
-import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.ParseErrorConverter;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -82,14 +83,17 @@ public class LoginActivity extends AppCompatActivity{
                                 startActivity(i);
                                 finish();
                             } else {
-                                e.printStackTrace();
-                                Toast.makeText(LoginActivity.this, "Temporary failure. Please try again.", Toast.LENGTH_SHORT).show();
+                                String errMsg = ParseErrorConverter.getErrMsg(e.getCode());
+                                Log.e(LOG_TAG, errMsg, e);
+                                Toast.makeText(LoginActivity.this, errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    String errMsg = ParseErrorConverter.getErrMsg(e.getCode());
+                    Log.e(LOG_TAG, errMsg, e);
+                    Toast.makeText(LoginActivity.this, errMsg, Toast.LENGTH_SHORT).show();
                 }
                 pbLoggingIn.setVisibility(ProgressBar.INVISIBLE);
             }

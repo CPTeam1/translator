@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set listener of each menu item
         // Search
+        /*
         MenuItem searchItem = menu.findItem(R.id.miSearch);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        */
 
         return true;
     }
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             String myUserName = me.getUsername();
-            Log.d(APP_TAG,"position: "+position);
+            Log.d(APP_TAG, "position: " + position);
             switch(position){
                 case 0: {
                     return MyPageFragment.newInstance(tabTitles[0], myUserName);
