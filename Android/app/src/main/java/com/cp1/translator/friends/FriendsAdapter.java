@@ -116,6 +116,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     public void saved() {
                         isFriend = true;
                         ViewHolder.removeFriendStyle(btAdd);
+                        EntryPusher.pushFriendship(user);
                         friendshipListener.changedFriendship(user, true);
                     }
 
