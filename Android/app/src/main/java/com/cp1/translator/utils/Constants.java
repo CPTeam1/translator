@@ -1,5 +1,13 @@
 package com.cp1.translator.utils;
 
+import android.text.format.DateUtils;
+
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by ishanpande on 3/3/16.
  */
@@ -25,5 +33,26 @@ public class Constants {
     public static final int ASK_QS_REQ_CODE = 500;
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public static final int VIDEO_CAPTURE = 101;
-    /*********************** end of req codes *********************/
+    /*********************** end of req codes*/
+
+
+
+    public static String getRelativeTimeAgo(Date date) {
+        Format formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+        String rawJsonDate = formatter.format(date);
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
+    }
 }

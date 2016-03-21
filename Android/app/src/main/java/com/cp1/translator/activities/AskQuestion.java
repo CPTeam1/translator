@@ -359,13 +359,9 @@ public class AskQuestion extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
 
-
-                // Resize the bitmap to 150x100 (width x height)
-
+                // Resize the bitmap to DeviceWidth x 100 (width x height)
                 Bitmap bMapScaled = BitmapScaler.scaleToFill(takenImage, DeviceDimensionsHelper.getDisplayWidth(this),
                         200);
-//                Bitmap bMapScaled = Bitmap.createScaledBitmap(takenImage,DeviceDimensionsHelper.getDisplayWidth(this),
-//                                                                200,true);
 
                 // Load the taken image into a preview
                 ivQsPic.setImageBitmap(bMapScaled);

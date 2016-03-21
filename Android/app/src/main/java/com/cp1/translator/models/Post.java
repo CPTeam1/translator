@@ -61,7 +61,7 @@ public class Post extends ParseObject{
 
     public void setFromLang(String fromLang) {
         this.fromLang = fromLang;
-        put(FROM_LANG_KEY,fromLang);
+        put(FROM_LANG_KEY, fromLang);
     }
 
     public void setToLang(String toLang) {
@@ -76,6 +76,7 @@ public class Post extends ParseObject{
     public String getToLang(){
         return getString(TO_LANG_KEY);
     }
+
 
     @Override
     public boolean equals(Object o) {

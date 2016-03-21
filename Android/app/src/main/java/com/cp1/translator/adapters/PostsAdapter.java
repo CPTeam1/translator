@@ -2,6 +2,7 @@ package com.cp1.translator.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Types;
+import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 
@@ -76,6 +78,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         tvFromLang.setText(post.getFromLang());
         TextView tvToLang = (TextView) holder.includeAsLang.findViewById(R.id.tvLabel);
         tvToLang.setText(post.getToLang());
+
+        TextView tvTimeAsked = (TextView) holder.includeTimeAsked.findViewById(R.id.tvLabel);
+        String relativeTimeStamp = Constants.getRelativeTimeAgo(post.getCreatedAt());
+        tvTimeAsked.setText(relativeTimeStamp);
+
+
 
         Entry question = post.getQuestion();
         // load answers to choose the top one
@@ -216,6 +224,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Bind(R.id.includeQs) View includeQs;
         @Bind(R.id.includeAsLang) View includeAsLang;
         @Bind(R.id.includeAs) View includeAs;
+        @Bind(R.id.includeTimeAsked) View includeTimeAsked;
+
 
         public PostViewHolder(final View itemView) {
             super(itemView);
