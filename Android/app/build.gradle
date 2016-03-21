@@ -52,5 +52,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
     compile "commons-io:commons-io:+"
-
+    compile 'com.android.support:cardview-v7:23.1.0'
 }

@@ -3,7 +3,6 @@
     android:id="@+id/rlQsContent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?background"
     android:orientation="vertical">
 
     <ImageView
@@ -17,19 +16,11 @@
 
     <TextView
         android:id="@+id/tvQsContentTxt"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/shape_speech_bubble"
-        android:lines="5"
-        android:padding="@dimen/custom_qs_margin"
+        android:maxLines="5"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:paddingBottom="@dimen/custom_qs_margin"
-        android:paddingLeft="@dimen/custom_qs_margin"
-        android:paddingRight="@dimen/custom_qs_margin"
         android:paddingTop="@dimen/custom_qs_margin" />
 
 </LinearLayout>

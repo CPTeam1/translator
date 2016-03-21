@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.fragments.AnswerFragment;
@@ -26,6 +27,9 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static com.cp1.translator.utils.Constants.APP_TAG;
 import static com.cp1.translator.utils.Constants.ENTRY_KEY;
 
@@ -39,10 +43,16 @@ public class PostActivity extends AppCompatActivity {
 
     private FragmentManager fm;
 
+    @Bind(R.id.tvQuestionUser)
+    TextView tvQuestionUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        ButterKnife.bind(this);
+
+        setTitle("Question");
 
         // set behavior of FAB
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -55,7 +65,7 @@ public class PostActivity extends AppCompatActivity {
 
         // query Post object
         String entryId = getIntent().getStringExtra(ENTRY_KEY);
-        ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
+        ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class).include(Entry.USER_KEY);
         query.getInBackground(entryId, new GetCallback<Entry>() {
             @Override
             public void done(Entry object, ParseException e) {
@@ -97,6 +107,9 @@ public class PostActivity extends AppCompatActivity {
                             imgUrl = object.getImageUrl().getUrl();
                             break;
                     }
+
+                    User qsUser = object.getUser();
+                    tvQuestionUser.setText(qsUser.getNickname());
 
                     // question content
                     ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(imgUrl, object.getText()));
