@@ -1,10 +1,13 @@
 package com.cp1.translator.models;
 
+import android.util.Log;
+
 import com.cp1.translator.utils.SaveListener;
 import com.parse.ParseClassName;
 import com.cp1.translator.utils.ModelListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -146,6 +149,9 @@ public class User extends ParseUser {
 
     @Override
     public boolean equals(Object o) {
+        ParseObject otherObject = (ParseObject) o;
+        if (otherObject.getClassName() != "_User")
+            return false;
         User otherUser = (User) o;
         return getObjectId().equals(otherUser.getObjectId());
     }

@@ -11,7 +11,10 @@ import android.util.Log;
 
 import com.cp1.translator.R;
 import com.cp1.translator.activities.PostActivity;
+import com.cp1.translator.models.Entry;
+import com.cp1.translator.models.Post;
 import com.cp1.translator.models.User;
+import com.cp1.translator.utils.Constants;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -60,24 +63,28 @@ public class EntryReceiver extends BroadcastReceiver {
             if (json.has("entryid")) {
 
                 String username = json.getString("username");
-                String entryid = json.getString("entryid");
+                String postId = json.getString("entryid");
+
+                ParseQuery<Post> entryQuery = new ParseQuery<>(Post.class);
+                Post post = entryQuery.include(Post.QUESTION_KEY).get(postId);
 
                 // add a pending intent to launch the PostActivity
                 Intent intent = new Intent(context, PostActivity.class);
+
                 // Next, let's turn this into a PendingIntent using
                 //   public static PendingIntent getActivity(Context context, int requestCode,
                 //       Intent intent, int flags)
                 int requestID = (int) System.currentTimeMillis(); //unique requestID to differentiate between various notification with same NotifId
                 int flags = PendingIntent.FLAG_CANCEL_CURRENT; // cancel old intent and create new one
+                intent.putExtra(Constants.POST_KEY, postId);
                 PendingIntent postIntent = PendingIntent.getActivity(context, requestID, intent, flags);
-
 
                 Notification notification = new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(username + " asked a question.")
                         .setContentIntent(postIntent)
                         .setAutoCancel(true)
-                        .setContentText(entryid).build();
+                        .setContentText(post.getQuestion().getText()).build();
 
 
                 NotificationManager mNotificationManager = (NotificationManager) context
@@ -112,6 +119,8 @@ public class EntryReceiver extends BroadcastReceiver {
 
         } catch (JSONException exp) {
             exp.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
     }

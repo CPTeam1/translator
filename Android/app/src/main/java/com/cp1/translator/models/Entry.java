@@ -178,6 +178,9 @@ public class Entry extends ParseObject implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
+        ParseObject otherObject = (ParseObject) o;
+        if (otherObject.getClassName() != "Entry")
+            return false;
         Entry otherEntry = (Entry) o;
         return getObjectId().equals(otherEntry.getObjectId());
     }

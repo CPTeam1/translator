@@ -62,6 +62,9 @@ public class Lang extends ParseObject {
 
     @Override
     public boolean equals(Object o) {
+        ParseObject otherObject = (ParseObject) o;
+        if (otherObject.getClassName() != "Lang")
+            return false;
         Lang otherLang = (Lang) o;
         return getObjectId().equals(otherLang.getObjectId());
     }

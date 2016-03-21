@@ -79,6 +79,9 @@ public class Post extends ParseObject{
 
     @Override
     public boolean equals(Object o) {
+        ParseObject otherObject = (ParseObject) o;
+        if (otherObject.getClassName() != "Post")
+            return false;
         Post otherPost = (Post) o;
         return getObjectId().equals(otherPost.getObjectId());
     }

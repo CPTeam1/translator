@@ -501,6 +501,7 @@ public class AskQuestion extends AppCompatActivity {
                             @Override
                             public void done(ParseException e) {
                                 if (e == null) {
+                                    EntryPusher.pushEntryToFriends(qsPost.getObjectId());
                                     setResultAndFinishActivity(true, qsPost.getObjectId());
                                 } else {
                                     setResultAndFinishActivity(false, "Failed to save a question... Try it again.");
@@ -511,7 +512,6 @@ public class AskQuestion extends AppCompatActivity {
                 }
             }
         });
-        EntryPusher.pushEntryToFriends(qsEntry.getText());
     }
 
     private ParseFile convertURIToParseFile(String path) {
