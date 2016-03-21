@@ -38,7 +38,9 @@ import com.cp1.translator.models.Question;
 import com.cp1.translator.models.Types;
 import com.cp1.translator.models.User;
 import com.cp1.translator.push.EntryPusher;
+import com.cp1.translator.utils.BitmapScaler;
 import com.cp1.translator.utils.Constants;
+import com.cp1.translator.utils.DeviceDimensionsHelper;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
@@ -357,8 +359,16 @@ public class AskQuestion extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
 
+
+                // Resize the bitmap to 150x100 (width x height)
+
+                Bitmap bMapScaled = BitmapScaler.scaleToFill(takenImage, DeviceDimensionsHelper.getDisplayWidth(this),
+                        200);
+//                Bitmap bMapScaled = Bitmap.createScaledBitmap(takenImage,DeviceDimensionsHelper.getDisplayWidth(this),
+//                                                                200,true);
+
                 // Load the taken image into a preview
-                ivQsPic.setImageBitmap(takenImage);
+                ivQsPic.setImageBitmap(bMapScaled);
 
             } else { // Result was a failure
                 showMediaRecButtons();
