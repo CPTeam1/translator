@@ -32,6 +32,7 @@ public class Entry extends ParseObject implements Parcelable {
     public static final String FROM_LANG_KEY    = "fromLang";
     public static final String TO_LANG_KEY      = "toLang";
     public static final String QS_TYPE_KEY      = "type";
+    public static final String CREATED_AT_KEY   = "createdAt";
 
     private String text;
     private String imgURL;

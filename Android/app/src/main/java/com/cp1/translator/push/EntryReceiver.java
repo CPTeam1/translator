@@ -65,14 +65,14 @@ public class EntryReceiver extends BroadcastReceiver {
 //                        triggerBroadcastToActivity(context, value);
 //                    }
 //            }
-        }catch(JSONException ex){
-            Log.d(TAG, "JSON failed!");
+            } catch (JSONException ex) {
+                Log.d(TAG, "JSON failed!");
+            }
         }
+
     }
 
-}
-
-public static final int NOTIFICATION_ID = 45;
+    public static final int NOTIFICATION_ID = 45;
 
     // Create a local dashboard notification to tell user about the event
     // See: http://guides.codepath.com/android/Notifications
@@ -92,11 +92,11 @@ public static final int NOTIFICATION_ID = 45;
 
 
             Notification notification = new NotificationCompat.Builder(context)
-                                        .setSmallIcon(R.drawable.ic_launcher)
-                                        .setContentTitle(username + " asked a question.")
-                                        .setContentIntent(postIntent)
-                                        .setAutoCancel(true)
-                                        .setContentText(entryid).build();
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle(username + " asked a question.")
+                    .setContentIntent(postIntent)
+                    .setAutoCancel(true)
+                    .setContentText(entryid).build();
 
 
             NotificationManager mNotificationManager = (NotificationManager) context

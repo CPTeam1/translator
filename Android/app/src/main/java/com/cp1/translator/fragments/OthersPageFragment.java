@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import com.cp1.translator.listeners.EndlessRecyclerViewScrollListener;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.User;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 
 import java.util.List;
 
@@ -56,53 +59,41 @@ public class OthersPageFragment extends PageFragment {
         /********************** end of RecyclerView **********************/
 
         // first request: load questions by others(friends)
-        loadFriends();
+        loadBuddyQuestions();
 
         return view;
     }
 
-    private void loadFriends() {
+    @Override
+    protected void refreshEntries() {
+        loadBuddyQuestions();
+    }
+
+    private void loadBuddyQuestions() {
         User me = (User) User.getCurrentUser();
-        me.getFriends(new User.UsersListener() {
+        // All questions
+        ParseQuery<Entry> buddyQsQuery = new ParseQuery<>(Entry.class);
+        buddyQsQuery.whereEqualTo(Entry.IS_QUESTION_KEY, true);
 
-            @Override
-            public void onError(ParseException e) {
-                e.printStackTrace();
-            }
+        // filter by questions from current user's friends
+        ParseRelation<User> friendsRelation = me.getFriendsRelation();
+        ParseQuery<User> friendsQuery = friendsRelation.getQuery();
+        buddyQsQuery.whereMatchesQuery(Entry.USER_KEY, friendsQuery);
 
+        // Order in descending order of creation.
+        buddyQsQuery.orderByDescending(Entry.CREATED_AT_KEY);
+
+        buddyQsQuery.findInBackground(new FindCallback<Entry>() {
             @Override
-            public void onUsers(List<User> users) {
-                if (users != null) {
-                    for (User user : users)
-                        loadOthersQuestions(user);
+            public void done(List<Entry> questions, ParseException e) {
+                if (e == null) {
+                    mEntriesAdapter.clear();
+                    mEntriesAdapter.addAll(questions);
+                    swipeContainer.setRefreshing(false);
+                } else {
+                    e.printStackTrace();
                 }
             }
         });
-    }
-
-    private void loadOthersQuestions(User user) {
-        user.getQuestions(new Entry.EntriesListener() {
-
-            @Override
-            public void onError(ParseException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onEntries(List<Entry> questions) {
-                mEntriesAdapter.addAll(questions);
-            }
-        });
-    }
-
-    // TODO
-    @Override
-    protected void refreshEntries() {
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeContainer.setRefreshing(false);
-            }
-        }, 1000);
     }
 }

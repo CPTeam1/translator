@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class FragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
-        private String tabTitles[] = new String[] { "Ask Qs", "Answer Qs","Top Users" };
+        private String tabTitles[] = new String[] { "My Questions", "Buddy Questions","Top Users" };
 
         public FragmentPagerAdapter(FragmentManager fm) {
             super(fm);

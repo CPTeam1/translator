@@ -40,6 +40,10 @@ public class User extends ParseUser {
         put(PROFILE_PIC_KEY, profilePic);
     }
 
+    public ParseRelation<User> getFriendsRelation() {
+        return getRelation(FRIENDS_KEY);
+    }
+
     public void getFriends(final UsersListener listener) {
         ParseRelation<User> friends = getRelation(FRIENDS_KEY);
         ParseQuery<User> query = friends.getQuery();

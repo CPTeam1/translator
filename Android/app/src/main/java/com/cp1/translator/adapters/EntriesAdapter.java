@@ -48,6 +48,11 @@ public abstract class EntriesAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        mEntriesList.clear();
+        notifyDataSetChanged();
+    }
+
     public void setEntriesList(List<Entry> entriesList) {
         mEntriesList = entriesList;
     }
