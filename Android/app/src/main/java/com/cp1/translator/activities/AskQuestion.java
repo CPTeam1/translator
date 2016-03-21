@@ -153,16 +153,9 @@ public class AskQuestion extends AppCompatActivity  {
                     toLang = spinToLang.getSelectedItem().toString();
 
                     if (toLang != null && fromLang != null) {
-
-
                         Question qsDB = saveLocally(question, User.getCurrentUser().getEmail());
 
-                        Entry qsEntry = saveToParse(qsDB);
-                        Log.d(APP_TAG, "Adding question here");
-                        Intent displayQsIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        displayQsIntent.putExtra("question", qsEntry);
-                        setResult(RESULT_OK, displayQsIntent);
-                        finish();
+                        saveToParse(qsDB);
                     } else {
                         Toast.makeText(getApplicationContext(), "Please choose which Language you want to translate to!", Toast.LENGTH_SHORT).show();
                     }
@@ -417,7 +410,7 @@ public class AskQuestion extends AppCompatActivity  {
 
 
     private Question saveLocally(String question, String userName) {
-        Question q = Question.toQuestion(question,userName);
+        Question q = Question.toQuestion(question, userName);
 
         if(q!=null) {
             q.setType(Types.TEXT);
@@ -450,12 +443,12 @@ public class AskQuestion extends AppCompatActivity  {
         return q;
     }
 
-    private Entry saveToParse(Question question) {
+    private void saveToParse(final Question question) {
         //1. Save the multimedia as file objects to Parse
         Map<String,ParseFile> multiMediaMap = saveMultimedia(question);
         User currUser = (User) User.getCurrentUser();
 
-        Entry qsEntry = new Entry();
+        final Entry qsEntry = new Entry();
         qsEntry.setText(question.getQuestion());
         if (!isAnswer)
             qsEntry.setAsQuestion();
@@ -480,21 +473,28 @@ public class AskQuestion extends AppCompatActivity  {
                 } else {
                     Log.d(APP_TAG, "Saved successfully");
 
+                    // create a new Post ONLY IF the Entry is a "question"
+                    final Post qsPost = new Post();
+                    if (!isAnswer) {
+                        qsPost.setQuestion(qsEntry);
+                        qsPost.setFromLang(question.getFromLang());
+                        qsPost.setToLang(question.getToLang());
+                        qsPost.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    setResultAndFinishActivity(true, qsPost.getObjectId());
+                                }
+                                else {
+                                    setResultAndFinishActivity(false, "Failed to save a question... Try it again.");
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });
         EntryPusher.pushEntryToFriends(qsEntry.getText());
-
-        // create a new Post ONLY IF the Entry is a "question"
-        Post qsPost = new Post();
-        if (!isAnswer) {
-            qsPost.setQuestion(qsEntry);
-            qsPost.setFromLang(question.getFromLang());
-            qsPost.setToLang(question.getToLang());
-            qsPost.saveInBackground();
-        }
-
-        return qsEntry;
     }
 
     private ParseFile convertURIToParseFile(String path){
@@ -566,6 +566,21 @@ public class AskQuestion extends AppCompatActivity  {
             }
         }
         return multiMediaMap;
+    }
+
+    private void setResultAndFinishActivity(boolean isPostSaved, String postObjectId) {
+        // pass the object ID of qsPost to MainActivity
+        // This is the simplest way to pass a ParseObject between activities.
+        // While we could implement parceling ourselves, this is not ideal as it's pretty complex to manage the state of Parse objects.
+        // We could also use a Proxy object to pass the data as well but this can be brittle.
+        // from CodePath Android Cliffnotes: https://github.com/codepath/android_guides/wiki/Building-Data-driven-Apps-with-Parse
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        i.putExtra(Constants.POST_KEY, postObjectId);
+        if (isPostSaved)
+            setResult(RESULT_OK, i);
+        else
+            setResult(RESULT_CANCELED, i);
+        finish();
     }
 
     TextWatcher textWatcher = new TextWatcher() {

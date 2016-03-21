@@ -3,19 +3,23 @@ package com.cp1.translator.fragments;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cp1.translator.listeners.EndlessRecyclerViewScrollListener;
 import com.cp1.translator.models.Entry;
+import com.cp1.translator.models.Post;
 import com.cp1.translator.models.User;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.List;
 
 /**
- * Created by kimhy08 on 3/12/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/12/2016.
  */
 public class MyPageFragment extends PageFragment {
 
@@ -57,23 +61,35 @@ public class MyPageFragment extends PageFragment {
         /********************** end of RecyclerView **********************/
 
         // first request: load questions
-        loadQuestions();
+        loadPosts();
 
         return view;
     }
 
-    private void loadQuestions() {
+    private void loadPosts() {
         User me = (User) User.getCurrentUser();
-        me.getQuestions(new Entry.EntriesListener() {
 
-            @Override
-            public void onError(ParseException e) {
-                e.printStackTrace();
-            }
+        /*
+        equivalent SQL query (to help you to understand):
 
+        select * from Post
+        where Post.question in (select * from Entry where Entry.user = me)
+         */
+        ParseQuery<Entry> innerQuery = ParseQuery.getQuery(Entry.class);
+        innerQuery.whereEqualTo(Entry.USER_KEY, me);
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.whereMatchesQuery(Post.QUESTION_KEY, innerQuery);
+        query.include(Post.QUESTION_KEY);
+        query.include(Post.QUESTION_KEY + "." + Entry.USER_KEY);
+        query.findInBackground(new FindCallback<Post>() {
             @Override
-            public void onEntries(List<Entry> questions) {
-                mEntriesAdapter.addAll(questions);
+            public void done(List<Post> postsList, ParseException e) {
+                if (e != null) {
+                    Log.e("err", "in MyPageFragment: failed to load Post!");
+                    e.printStackTrace();
+                } else {
+                    mPostsAdapter.addAll(postsList);
+                }
             }
         });
     }

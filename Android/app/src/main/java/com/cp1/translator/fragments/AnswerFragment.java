@@ -1,35 +1,24 @@
 package com.cp1.translator.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cp1.translator.R;
-import com.cp1.translator.activities.AnswerActivity;
-import com.cp1.translator.adapters.AnswersAdapter;
-import com.cp1.translator.adapters.EntriesAdapter;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
-import com.cp1.translator.utils.Constants;
-import com.cp1.translator.utils.SpaceItemDecoration;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 
 /**
- * Created by kimhy08 on 3/15/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/15/2016.
  */
 public class AnswerFragment extends PageFragment {
 
@@ -49,37 +38,37 @@ public class AnswerFragment extends PageFragment {
         ButterKnife.bind(this, view);
 
         /********************** RecyclerView **********************/
-        mEntries = new ArrayList<>();
-        mEntriesAdapter = new AnswersAdapter(mEntries);
-        // listener for the event of clicking an item in RecyclerView
-        mEntriesAdapter.setOnClickItemListener(new EntriesAdapter.OnClickItemListener() {
-
-            @Override
-            public void onClickItem(View itemView, int position) {
-                // create an intent to display the article
-                Intent i = new Intent(getContext(), AnswerActivity.class);
-                // get the article to display
-                Entry answer = mEntries.get(position);
-                // pass objects to the target activity
-                i.putExtra(Constants.ENTRY_KEY, Parcels.wrap(answer));
-                // launch the activity
-                startActivity(i);
-            }
-        });
-        mEntriesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                showHideEmptyView();
-            }
-        });
-        // Attach the adapter to the RecyclerView to populate items
-        rvEntries.setAdapter(mEntriesAdapter);
-        // Set layout manager to position the items
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvEntries.setLayoutManager(linearLayoutManager);
-        // add ItemDecoration
-        rvEntries.addItemDecoration(new SpaceItemDecoration(ITEM_SPACE));
+//        mEntries = new ArrayList<>();
+//        mEntriesAdapter = new AnswersAdapter(mEntries);
+//        // listener for the event of clicking an item in RecyclerView
+//        mEntriesAdapter.setOnClickItemListener(new EntriesAdapter.OnClickItemListener() {
+//
+//            @Override
+//            public void onClickItem(View itemView, int position) {
+//                // create an intent to display the article
+//                Intent i = new Intent(getContext(), AnswerActivity.class);
+//                // get the article to display
+//                Entry answer = mEntries.get(position);
+//                // pass objects to the target activity
+//                i.putExtra(Constants.ENTRY_KEY, Parcels.wrap(answer));
+//                // launch the activity
+//                startActivity(i);
+//            }
+//        });
+//        mEntriesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onChanged() {
+//                super.onChanged();
+//                showHideEmptyView();
+//            }
+//        });
+//        // Attach the adapter to the RecyclerView to populate items
+//        rvEntries.setAdapter(mEntriesAdapter);
+//        // Set layout manager to position the items
+//        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//        rvEntries.setLayoutManager(linearLayoutManager);
+//        // add ItemDecoration
+//        rvEntries.addItemDecoration(new SpaceItemDecoration(ITEM_SPACE));
         /********************** end of RecyclerView **********************/
 
         /********************** SwipeRefreshLayout **********************/
@@ -109,19 +98,19 @@ public class AnswerFragment extends PageFragment {
     }
 
     private void loadAnswers(List<Entry> answersList) {
-        mEntriesAdapter.addAll(answersList);
+//        mEntriesAdapter.addAll(answersList);
     }
 
     private void showHideEmptyView() {
         // show emptyView message if answersList is empty
-        if (mEntriesAdapter.getItemCount() == 0) {
-            tvEmptyRvEntries.setText(getString(R.string.add_first_answer_label));
-            tvEmptyRvEntries.setVisibility(View.VISIBLE);
-            swipeContainer.setVisibility(View.GONE);
-        } else {
-            tvEmptyRvEntries.setVisibility(View.GONE);
-            swipeContainer.setVisibility(View.VISIBLE);
-        }
+//        if (mEntriesAdapter.getItemCount() == 0) {
+//            tvEmptyRvEntries.setText(getString(R.string.add_first_answer_label));
+//            tvEmptyRvEntries.setVisibility(View.VISIBLE);
+//            swipeContainer.setVisibility(View.GONE);
+//        } else {
+//            tvEmptyRvEntries.setVisibility(View.GONE);
+//            swipeContainer.setVisibility(View.VISIBLE);
+//        }
     }
 
     public void addAnswerToPost(Entry answer) {

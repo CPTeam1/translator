@@ -87,8 +87,8 @@ public class OthersPageFragment extends PageFragment {
             @Override
             public void done(List<Entry> questions, ParseException e) {
                 if (e == null) {
-                    mEntriesAdapter.clear();
-                    mEntriesAdapter.addAll(questions);
+//                    mEntriesAdapter.clear();
+//                    mEntriesAdapter.addAll(questions);
                     swipeContainer.setRefreshing(false);
                 } else {
                     e.printStackTrace();

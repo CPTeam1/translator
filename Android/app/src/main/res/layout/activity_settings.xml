@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:contentDescription="@string/desc_ivUserProfilePic"
             android:src="@drawable/ic_launcher" />
 
         <TextView

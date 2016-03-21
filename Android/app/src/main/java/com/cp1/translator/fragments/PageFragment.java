@@ -13,9 +13,8 @@ import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.activities.PostActivity;
-import com.cp1.translator.adapters.EntriesAdapter;
-import com.cp1.translator.adapters.QuestionsAdapter;
-import com.cp1.translator.models.Entry;
+import com.cp1.translator.adapters.PostsAdapter;
+import com.cp1.translator.models.Post;
 import com.cp1.translator.utils.Constants;
 import com.cp1.translator.utils.SpaceItemDecoration;
 
@@ -34,8 +33,8 @@ public abstract class PageFragment extends Fragment {
 
     private String mMyUserName;
 
-    protected EntriesAdapter mEntriesAdapter;
-    protected List<Entry> mEntries;
+    protected PostsAdapter mPostsAdapter;
+    protected List<Post> mPosts;
 
     @Bind(R.id.rvEntries) RecyclerView rvEntries;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
@@ -62,26 +61,33 @@ public abstract class PageFragment extends Fragment {
         mMyUserName = getArguments().getString(MY_USER_NAME);
 
         /********************** RecyclerView **********************/
-        mEntries = new ArrayList<>();
-        mEntriesAdapter = new QuestionsAdapter(mEntries, mMyUserName);
+        mPosts = new ArrayList<>();
+        mPostsAdapter = new PostsAdapter(mPosts, mMyUserName);
         // listener for the event of clicking an item in RecyclerView
-        mEntriesAdapter.setOnClickItemListener(new EntriesAdapter.OnClickItemListener() {
+        mPostsAdapter.setOnClickItemListener(new PostsAdapter.OnClickItemListener() {
 
             @Override
             public void onClickItem(View itemView, int position) {
                 // create an intent to display the article
                 Intent i = new Intent(getContext(), PostActivity.class);
                 // get the article to display
-                Entry entry = mEntries.get(position);
-                String entryId = entry.getObjectId();
+                Post post = mPosts.get(position);
+                String entryId = post.getObjectId();
                 // pass objects to the target activity
                 i.putExtra(Constants.ENTRY_KEY, entryId);
                 // launch the activity
                 startActivity(i);
             }
         });
+        mPostsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                showHideEmptyView();
+            }
+        });
         // Attach the adapter to the RecyclerView to populate items
-        rvEntries.setAdapter(mEntriesAdapter);
+        rvEntries.setAdapter(mPostsAdapter);
         // add ItemDecoration
         rvEntries.addItemDecoration(new SpaceItemDecoration(ITEM_SPACE));
         /********************** end of RecyclerView **********************/
@@ -102,12 +108,24 @@ public abstract class PageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void addEntry(Entry question) {
-        if (mEntries == null) {
-            mEntries = new ArrayList<>();
-            mEntriesAdapter.setEntriesList(mEntries);
+    public void addPost(Post post) {
+        if (mPosts == null) {
+            mPosts = new ArrayList<>();
+            mPostsAdapter.setPostsList(mPosts);
         }
-        mEntriesAdapter.add(question);
+        mPostsAdapter.add(post);
+    }
+
+    private void showHideEmptyView() {
+        // show emptyView message if answersList is empty
+        if (mPostsAdapter.getItemCount() == 0) {
+            tvEmptyRvEntries.setText(getString(R.string.say_something_label));
+            tvEmptyRvEntries.setVisibility(View.VISIBLE);
+            swipeContainer.setVisibility(View.GONE);
+        } else {
+            tvEmptyRvEntries.setVisibility(View.GONE);
+            swipeContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     protected abstract void refreshEntries();

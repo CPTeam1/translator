@@ -6,22 +6,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
-import com.parse.ParseException;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by kimhy08 on 3/15/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/15/2016.
  */
 public class AnswersAdapter extends EntriesAdapter {
 
@@ -34,10 +29,10 @@ public class AnswersAdapter extends EntriesAdapter {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.item_answer, parent, false);
+//        View view = inflater.inflate(R.layout.item_answer, parent, false);
 
         // Return a new holder instance
-        return new AnswersViewHolder(view);
+        return new AnswersViewHolder(null);
     }
 
     @Override
@@ -48,11 +43,11 @@ public class AnswersAdapter extends EntriesAdapter {
     }
 
     private void populateAnswers(AnswersViewHolder holder, Entry answer) {
-        try {
-            holder.tvAnswerUser.setText(answer.getUser().fetchIfNeeded().getUsername().substring(0, 3));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            holder.tvAnswerUser.setText(answer.getUser().fetchIfNeeded().getUsername().substring(0, 3));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         // type of the answer
         Drawable typeDrawble = ContextCompat.getDrawable(context, R.drawable.shape_qs_txt);
@@ -75,10 +70,10 @@ public class AnswersAdapter extends EntriesAdapter {
                 typeDrawble = ContextCompat.getDrawable(context, R.drawable.shape_qs_video);
                 break;
         }
-        holder.ivAnswerType.setBackground(typeDrawble);
+//        holder.ivAnswerType.setBackground(typeDrawble);
 
         // answer title (=text)
-        holder.tvAnswerTitle.setText(answer.getText());
+//        holder.tvAnswerTitle.setText(answer.getText());
 
         // TODO
         // set likes count
@@ -86,26 +81,26 @@ public class AnswersAdapter extends EntriesAdapter {
 
     public class AnswersViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.llAnswerContainer) LinearLayout llAnswerContainer;
-        @Bind(R.id.ivAnswerType) ImageView ivAnswerType;
-        @Bind(R.id.ivAnswerLike) ImageView ivAnswerLike;
-        @Bind(R.id.tvAnswerUser) TextView tvAnswerUser;
-        @Bind(R.id.tvAnswerTitle) TextView tvAnswerTitle;
-        @Bind(R.id.tvAnswerLikesCnt) TextView tvAnswerLikesCnt;
+//        @Bind(R.id.llAnswerContainer) LinearLayout llAnswerContainer;
+//        @Bind(R.id.ivAnswerType) ImageView ivAnswerType;
+//        @Bind(R.id.ivAnswerLike) ImageView ivAnswerLike;
+//        @Bind(R.id.tvAnswerUser) TextView tvAnswerUser;
+//        @Bind(R.id.tvAnswerTitle) TextView tvAnswerTitle;
+//        @Bind(R.id.tvAnswerLikesCnt) TextView tvAnswerLikesCnt;
 
         public AnswersViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             // Setup the click listener
-            llAnswerContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-                    if (listener != null)
-                        listener.onClickItem(itemView, getLayoutPosition());
-                }
-            });
+//            llAnswerContainer.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    // Triggers click upwards to the adapter on click
+//                    if (listener != null)
+//                        listener.onClickItem(itemView, getLayoutPosition());
+//                }
+//            });
         }
     }
 }

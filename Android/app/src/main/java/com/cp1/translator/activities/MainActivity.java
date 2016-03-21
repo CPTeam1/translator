@@ -24,11 +24,12 @@ import com.cp1.translator.fragments.PageFragment;
 import com.cp1.translator.fragments.UsersFragment;
 import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.login.LoginUtils;
-import com.cp1.translator.models.Entry;
+import com.cp1.translator.models.Post;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -124,34 +125,32 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK && requestCode ==  Constants.ASK_QS_REQ_CODE){
-            Log.d(APP_TAG, "On Activity result called");
-            //Entry qsEntry = (Entry) Parcels.unwrap(data.getParcelableExtra("question"));
-            Entry qsEntry = data.getParcelableExtra("question");
-            qsEntry.fetchIfNeededInBackground(new GetCallback<Entry>() {
-                @Override
-                public void done(Entry entry, ParseException e) {
-                    Log.d(APP_TAG,"Callback from fetchIfNeeded complete!");
-                    if(e!=null){
-                        Log.e(APP_TAG,"Error in fetching entry from backend!");
-                    }
-                    else{
-                        Log.d(APP_TAG,"Adding qs to adapter");
+        if (resultCode == RESULT_OK && requestCode ==  Constants.ASK_QS_REQ_CODE) {
+            String newPostObjectId = data.getStringExtra(Constants.POST_KEY);
+            ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+            // First try to find from the cache and only then go to network
+//            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
+            // Execute the query to find the object with ID
+            query.getInBackground(newPostObjectId, new GetCallback<Post>() {
+                public void done(Post post, ParseException e) {
+                    if (e != null) {
+                        Log.e(APP_TAG, "in MainActivity: Error in fetching Post from backend!");
+                    } else {
+                        Log.d(APP_TAG, "in MainActivity: Found Post");
                         // Only add the entry once the object has been completely fetched!
                         int index = viewPager.getCurrentItem();
                         FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
                         PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
-                        if(fragment!=null){
-                            Log.d(APP_TAG, "Fragment reference is here");
-                            User currUser = (User) User.getCurrentUser();
-                            // Set it to current user in case of ASK_QS_REQ_CODE
-                            entry.setUser(currUser);
-                            fragment.addEntry(entry);
+                        if (fragment != null) {
+                            fragment.addPost(post);
                             fragment.getRvEntries().getLayoutManager().scrollToPosition(0);
                         }
                     }
                 }
             });
+        }
+        else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, data.getStringExtra(Constants.POST_KEY), Toast.LENGTH_SHORT).show();
         }
     }
 

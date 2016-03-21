@@ -71,6 +71,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void populatePosts(final PostViewHolder holder, Post post) {
 
+        // set original and target languages
+        TextView tvFromLang = (TextView) holder.includeQsLang.findViewById(R.id.tvLabel);
+        tvFromLang.setText(post.getFromLang());
+        TextView tvToLang = (TextView) holder.includeAsLang.findViewById(R.id.tvLabel);
+        tvToLang.setText(post.getToLang());
+
         Entry question = post.getQuestion();
         // load answers to choose the top one
         post.getAnswers(new Entry.EntriesListener() {
@@ -80,33 +86,35 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     Entry answer = answersList.get(0);
                     bindView(holder, answer);
                 }
+                else {
+                    // no answer yet
+                    setEntryText(holder.includeAs, "No Answer");
+                }
             }
 
             @Override
             public void onError(ParseException e) {
                 e.printStackTrace();
+                // failed to load answers
+                setEntryText(holder.includeAs, "Failed to load answers");
             }
         });
 
-        // show TextView(tvLangWrittenBy) ONLY IF the question is written by others!
-        String askedBy = question.getUserID();
-        if (!mMyUserName.equals(askedBy)) {
-            askedBy = "From: " + askedBy;
-            holder.tvLangWrittenBy.setText(askedBy);
+        // show TextView(tvLabel in item_label.xml) ONLY IF the question is written by others!
+        TextView tvAskedBy = (TextView) holder.includeAskedBy.findViewById(R.id.tvLabel);
+        if (!mMyUserName.equals(question.getUser().getUsername())) {
+            // get User's nickname
+            String askedBy = "From: " + question.getUser().getNickname();
+            tvAskedBy.setText(askedBy);
         }
+        else
+            tvAskedBy.setVisibility(View.GONE);
 
         bindView(holder, question);
     }
 
     private void bindView(PostViewHolder holder, Entry entry) {
-
-        String fromLang = "";
-        if (fromLang == null || fromLang.trim().isEmpty())
-            fromLang = "UNKNOWN";
-        TextView tvLabelLang = (TextView) holder.includeQs.findViewById(R.id.tvLabelLang);
-        tvLabelLang.setText(fromLang);
-
-        View included = null;
+        View included;
         if (entry.isQuestion())
             included = holder.includeQs;
         else
@@ -120,26 +128,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 type = entry.getTypeLocally();
             switch (type) {
                 case Types.TEXT:
-                    View vsTextAfterInflated = null;
-
-                    ViewStub vsText = (ViewStub) included.findViewById(R.id.vsText);
-                    if (vsText != null) {
-                        vsTextAfterInflated = ((ViewStub) included.findViewById(R.id.vsText)).inflate();
-                    }
-                    else {
-                        /*
-                        Once visible/inflated, the ViewStub element is no longer part of the view hierarchy.
-                        It is replaced by the inflated layout and the ID for the root view of that layout is the one
-                        specified by the android:inflatedId attribute of the ViewStub.
-                         */
-                        vsTextAfterInflated = included.findViewById(R.id.vsTextAfter);
-                    }
-
-                    // find TextView
-                    TextView tvEntryText = (TextView) vsTextAfterInflated.findViewById(R.id.tvEntryText);
-
-                    // set question text
-                    tvEntryText.setText(entry.getText());
+                    setEntryText(included, entry.getText());
 
                     break;
 
@@ -171,6 +160,29 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+    private void setEntryText(View included, String text) {
+        View vsTextAfterInflated;
+
+        ViewStub vsText = (ViewStub) included.findViewById(R.id.vsText);
+        if (vsText != null) {
+            vsTextAfterInflated = ((ViewStub) included.findViewById(R.id.vsText)).inflate();
+        }
+        else {
+            /*
+            Once visible/inflated, the ViewStub element is no longer part of the view hierarchy.
+            It is replaced by the inflated layout and the ID for the root view of that layout is the one
+            specified by the android:inflatedId attribute of the ViewStub.
+             */
+            vsTextAfterInflated = included.findViewById(R.id.vsTextAfter);
+        }
+
+        // find TextView
+        TextView tvEntryText = (TextView) vsTextAfterInflated.findViewById(R.id.tvEntryText);
+
+        // set question text
+        tvEntryText.setText(text);
+    }
+
     // Add a list of questions
     public void addAll(List<Post> postsList) {
 //        int sizeOfListBeforeAdding = mQuestionList.size();
@@ -199,9 +211,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         @Bind(R.id.llPostContainer) LinearLayout llPostContainer;
 
-        @Bind(R.id.tvLangWrittenBy) TextView tvLangWrittenBy;
-
+        @Bind(R.id.includeAskedBy) View includeAskedBy;
+        @Bind(R.id.includeQsLang) View includeQsLang;
         @Bind(R.id.includeQs) View includeQs;
+        @Bind(R.id.includeAsLang) View includeAsLang;
         @Bind(R.id.includeAs) View includeAs;
 
         public PostViewHolder(final View itemView) {

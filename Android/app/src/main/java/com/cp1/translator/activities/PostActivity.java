@@ -167,7 +167,7 @@ public class PostActivity extends AppCompatActivity {
             answer.setUser(currUser);
             // add answer to Post
             ((AnswerFragment) fragment).addAnswerToPost(answer);
-            ((AnswerFragment) fragment).addEntry(answer);
+//            ((AnswerFragment) fragment).addEntry(answer);
             ((AnswerFragment) fragment).getRvEntries().getLayoutManager().scrollToPosition(0);
         }
     }

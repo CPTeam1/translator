@@ -7,26 +7,45 @@
     android:orientation="vertical">
 
     <!-- only if questions of others(friends) -->
-    <TextView
-        android:id="@+id/tvLangWrittenBy"
+    <include
+        android:id="@+id/includeAskedBy"
+        layout="@layout/item_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:visibility="gone" />
+        android:layout_marginBottom="5dp" />
+
+    <!-- Question Language -->
+    <include
+        android:id="@+id/includeQsLang"
+        layout="@layout/item_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp" />
 
     <!-- Question -->
     <include
         android:id="@+id/includeQs"
         layout="@layout/item_entry"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Top Answer Language -->
+    <include
+        android:id="@+id/includeAsLang"
+        layout="@layout/item_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp" />
 
     <!-- Top Answer -->
     <include
         android:id="@+id/includeAs"
         layout="@layout/item_entry"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" />
 
 </LinearLayout>
