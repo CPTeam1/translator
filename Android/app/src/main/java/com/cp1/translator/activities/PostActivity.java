@@ -31,7 +31,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
-import static com.cp1.translator.utils.Constants.ENTRY_KEY;
+import static com.cp1.translator.utils.Constants.POST_KEY;
 
 /**
  * Created by erioness1125(Hyunji Kim) on 3/13/2016.
@@ -64,55 +64,49 @@ public class PostActivity extends AppCompatActivity {
         });
 
         // query Post object
-        String entryId = getIntent().getStringExtra(ENTRY_KEY);
-        ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class).include(Entry.USER_KEY);
-        query.getInBackground(entryId, new GetCallback<Entry>() {
+        String postObjectId = getIntent().getStringExtra(POST_KEY);
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.QUESTION_KEY);
+        query.include(Post.QUESTION_KEY + "." + Entry.USER_KEY);
+        query.getInBackground(postObjectId, new GetCallback<Post>() {
             @Override
-            public void done(Entry object, ParseException e) {
+            public void done(Post post, ParseException e) {
                 if (e != null) {
-                    Log.e(APP_TAG, "in PostActivity: Error in fetching ParseObject<Entry> from backend!");
+                    Log.e(APP_TAG, "in PostActivity: Error in fetching ParseObject<Post> from backend!");
                 } else {
-                    List<Post> postList = queryPost(object);
-                    Post post = null;
-                    if (postList != null && !postList.isEmpty()) {
-                        post = postList.get(0);
-                    } else {
-                        // if post is null, create new one and save it
-                        post = new Post();
-                        post.setQuestion(object);
-                        post.saveInBackground();
-                    }
+                    Log.d(APP_TAG, "in PostActivity: Got Post!");
 
                     fm = getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
 
+                    Entry question = post.getQuestion();
                     String imgUrl = null;
-                    String qsType = object.getType();
+                    String qsType = question.getType();
                     if (qsType == null || qsType.trim().isEmpty())
                         qsType = Types.TEXT;
                     switch (qsType) {
                         case Types.AUDIO:
                             // AudioPlayerFragment
-                            String audioUrl = object.getAudioUrl().getUrl();
+                            String audioUrl = question.getAudioUrl().getUrl();
                             ft.replace(R.id.flMediaContainer, AudioPlayerFragment.newInstance(audioUrl));
 
                             break;
                         case Types.VIDEO:
                             // VideoPlayerFragment
-                            String videoUrl = object.getVideoUrl().getUrl();
+                            String videoUrl = question.getVideoUrl().getUrl();
                             ft.replace(R.id.flMediaContainer, VideoPlayerFragment.newInstance(videoUrl));
 
                             break;
                         case Types.PICTURE:
-                            imgUrl = object.getImageUrl().getUrl();
+                            imgUrl = question.getImageUrl().getUrl();
                             break;
                     }
 
-                    User qsUser = object.getUser();
+                    User qsUser = question.getUser();
                     tvQuestionUser.setText(qsUser.getNickname());
 
                     // question content
-                    ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(imgUrl, object.getText()));
+                    ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(imgUrl, question.getText()));
                     // answers list
                     ft.replace(R.id.flAsContainer, AnswerFragment.newInstance(post));
                     ft.commit();
@@ -145,19 +139,6 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AskQuestion.class);
         intent.putExtra(Constants.IS_ANSWER_KEY, true);
         startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
-    }
-
-    private List<Post> queryPost(Entry question) {
-        List<Post> postList = null;
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.whereEqualTo(Post.QUESTION_KEY, question);
-        try {
-            postList = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return postList;
     }
 
     private void updateAnswerFragment(Entry answer) {

@@ -20,7 +20,7 @@ import com.parse.ParseRelation;
 import java.util.List;
 
 /**
- * Created by kimhy08 on 3/12/2016.
+ * Created by erioness1125(Hyunji Kim) on 3/12/2016.
  */
 public class OthersPageFragment extends PageFragment {
 

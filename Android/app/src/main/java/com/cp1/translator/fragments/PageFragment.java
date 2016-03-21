@@ -72,9 +72,9 @@ public abstract class PageFragment extends Fragment {
                 Intent i = new Intent(getContext(), PostActivity.class);
                 // get the article to display
                 Post post = mPosts.get(position);
-                String entryId = post.getObjectId();
+                String postObjectId = post.getObjectId();
                 // pass objects to the target activity
-                i.putExtra(Constants.ENTRY_KEY, entryId);
+                i.putExtra(Constants.POST_KEY, postObjectId);
                 // launch the activity
                 startActivity(i);
             }
