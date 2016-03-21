@@ -3,12 +3,14 @@ package com.cp1.translator.fragments;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cp1.translator.listeners.EndlessRecyclerViewScrollListener;
 import com.cp1.translator.models.Entry;
+import com.cp1.translator.models.Post;
 import com.cp1.translator.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -71,27 +73,32 @@ public class OthersPageFragment extends PageFragment {
 
     private void loadBuddyQuestions() {
         User me = (User) User.getCurrentUser();
-        // All questions
-        ParseQuery<Entry> buddyQsQuery = new ParseQuery<>(Entry.class);
-        buddyQsQuery.whereEqualTo(Entry.IS_QUESTION_KEY, true);
+        // All Posts with questions by friends
+        ParseQuery<Post> buddyQsQuery = ParseQuery.getQuery(Post.class);
 
+        /*
+        equivalent SQL query (to help you to understand):
+
+        select * from Post
+        where Post.question in (select * from Entry where Entry.user in (me.getFriendsRelation) )
+         */
         // filter by questions from current user's friends
         ParseRelation<User> friendsRelation = me.getFriendsRelation();
         ParseQuery<User> friendsQuery = friendsRelation.getQuery();
-        buddyQsQuery.whereMatchesQuery(Entry.USER_KEY, friendsQuery);
-
-        // Order in descending order of creation.
-        buddyQsQuery.orderByDescending(Entry.CREATED_AT_KEY);
-
-        buddyQsQuery.findInBackground(new FindCallback<Entry>() {
+        ParseQuery<Entry> innerQuery = ParseQuery.getQuery(Entry.class);
+        innerQuery.whereMatchesQuery(Entry.USER_KEY, friendsQuery);
+        buddyQsQuery.whereMatchesQuery(Post.QUESTION_KEY, innerQuery);
+        buddyQsQuery.include(Post.QUESTION_KEY);
+        buddyQsQuery.include(Post.QUESTION_KEY + "." + Entry.USER_KEY);
+        buddyQsQuery.findInBackground(new FindCallback<Post>() {
             @Override
-            public void done(List<Entry> questions, ParseException e) {
-                if (e == null) {
-//                    mEntriesAdapter.clear();
-//                    mEntriesAdapter.addAll(questions);
-                    swipeContainer.setRefreshing(false);
-                } else {
+            public void done(List<Post> postsList, ParseException e) {
+                if (e != null) {
+                    Log.e("err", "in OthersPageFragment: failed to load Post!");
                     e.printStackTrace();
+                } else {
+                    mPostsAdapter.addAll(postsList);
+                    swipeContainer.setRefreshing(false);
                 }
             }
         });

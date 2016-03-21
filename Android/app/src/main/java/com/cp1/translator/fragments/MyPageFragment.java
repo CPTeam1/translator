@@ -89,6 +89,7 @@ public class MyPageFragment extends PageFragment {
                     e.printStackTrace();
                 } else {
                     mPostsAdapter.addAll(postsList);
+                    swipeContainer.setRefreshing(false);
                 }
             }
         });
