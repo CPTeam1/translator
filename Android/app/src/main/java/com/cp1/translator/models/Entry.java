@@ -7,8 +7,6 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
-import org.parceler.Parcel;
-
 import java.util.List;
 
 /**
@@ -29,8 +27,6 @@ public class Entry extends ParseObject implements Parcelable {
     public static final String VIDEO_URL_KEY    = "video";
     public static final String IS_QUESTION_KEY  = "isQuestion";
     public static final String USER_KEY         = "user";
-    public static final String FROM_LANG_KEY    = "fromLang";
-    public static final String TO_LANG_KEY      = "toLang";
     public static final String QS_TYPE_KEY      = "type";
     public static final String CREATED_AT_KEY   = "createdAt";
 
@@ -39,12 +35,8 @@ public class Entry extends ParseObject implements Parcelable {
     private String videoURL;
     private String audioURL;
     private String userID;
-    private String fromLang;
-    private String toLang;
     private String type;
     private String isQuestion = "false";
-
-
 
     @Override
     public int describeContents() {
@@ -56,8 +48,6 @@ public class Entry extends ParseObject implements Parcelable {
         this.imgURL = in.readString();
         this.videoURL = in.readString();
         this.audioURL = in.readString();
-        this.fromLang = in.readString();
-        this.toLang = in.readString();
         this.type = in.readString();
         this.isQuestion = in.readString();
         this.userID = in.readString();
@@ -73,13 +63,10 @@ public class Entry extends ParseObject implements Parcelable {
         dest.writeString(this.imgURL);
         dest.writeString(this.videoURL);
         dest.writeString(this.audioURL);
-        dest.writeString(this.fromLang);
-        dest.writeString(this.toLang);
         dest.writeString(this.type);
         dest.writeString(this.isQuestion);
         dest.writeString(this.userID);
     }
-
 
     public String getImgURL() {
         return imgURL;
@@ -137,24 +124,6 @@ public class Entry extends ParseObject implements Parcelable {
     public void setText(String text) {
         this.text = text;
         put(TEXT_KEY, text);
-    }
-
-    public void setFromLang(String fromLang){
-        this.fromLang = fromLang;
-        put(FROM_LANG_KEY,fromLang);
-    }
-
-    public void setToLang(String toLang){
-        this.toLang = toLang;
-        put(TO_LANG_KEY,toLang);
-    }
-
-    public String getFromLang(){
-        return getString(FROM_LANG_KEY);
-    }
-
-    public String getToLang(){
-        return getString(TO_LANG_KEY);
     }
 
     public ParseFile getImageUrl() {

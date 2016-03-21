@@ -463,9 +463,6 @@ public class AskQuestion extends AppCompatActivity  {
 
         qsEntry.setType(question.getType());
 
-        qsEntry.setFromLang(question.getFromLang());
-        qsEntry.setToLang(question.getToLang());
-
         if(multiMediaMap!=null && multiMediaMap.size()>0) {
             if(multiMediaMap.containsKey(IMAGE))
                 qsEntry.setImageUrl(multiMediaMap.get(IMAGE));
@@ -492,6 +489,8 @@ public class AskQuestion extends AppCompatActivity  {
         Post qsPost = new Post();
         if (!isAnswer) {
             qsPost.setQuestion(qsEntry);
+            qsPost.setFromLang(question.getFromLang());
+            qsPost.setToLang(question.getToLang());
             qsPost.saveInBackground();
         }
 

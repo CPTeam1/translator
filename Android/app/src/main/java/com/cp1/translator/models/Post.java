@@ -20,6 +20,11 @@ import java.util.List;
 public class Post extends ParseObject{
     public static final String QUESTION_KEY = "question";
     public static final String ANSWERS_KEY = "answers";
+    public static final String FROM_LANG_KEY = "fromLang";
+    public static final String TO_LANG_KEY = "toLang";
+
+    String fromLang;
+    String toLang;
 
     public Entry getQuestion() {
         return (Entry) getParseObject(QUESTION_KEY);
@@ -52,6 +57,24 @@ public class Post extends ParseObject{
     public void removeAnswer(Entry answer) {
         ParseRelation<Entry> answers = getRelation(ANSWERS_KEY);
         answers.remove(answer);
+    }
+
+    public void setFromLang(String fromLang) {
+        this.fromLang = fromLang;
+        put(FROM_LANG_KEY,fromLang);
+    }
+
+    public void setToLang(String toLang) {
+        this.toLang = toLang;
+        put(TO_LANG_KEY, toLang);
+    }
+
+    public String getFromLang() {
+        return getString(FROM_LANG_KEY);
+    }
+
+    public String getToLang(){
+        return getString(TO_LANG_KEY);
     }
 
     @Override

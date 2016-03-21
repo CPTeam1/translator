@@ -100,7 +100,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void bindView(PostViewHolder holder, Entry entry) {
 
-        String fromLang = entry.getFromLang();
+        String fromLang = "";
         if (fromLang == null || fromLang.trim().isEmpty())
             fromLang = "UNKNOWN";
         TextView tvLabelLang = (TextView) holder.includeQs.findViewById(R.id.tvLabelLang);
