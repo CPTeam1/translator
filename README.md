@@ -26,35 +26,35 @@ Here's a walkthrough of implemented user stories:
 
 ### Asking a Question
 
-![Ask a question](AskQuestion_1.gif)
+![Ask a question](imgs/AskQuestion_1.gif)
 
-![Ask a multimedia question](AskQuestion_2.gif)
+![Ask a multimedia question](imgs/AskQuestion_2.gif)
 
 ### Answer a Question
 
-![Answer a question](AnswerQuestion.gif)
+![Answer a question](imgs/AnswerQuestion.gif)
 
 ### Push Notifications
 
 Sending Phone:
 
-![Elanelango Sending](elanelango_asking.gif)
+![Elanelango Sending](imgs/elanelango_asking.gif)
 
 Receiving Phone:
 
-![Random123 Recieving](random123_rec.gif)
+![Random123 Recieving](imgs/random123_rec.gif)
 
 ### Add Friends
 
-![Adding a friends](Friends.gif)
+![Adding a friends](imgs/Friends.gif)
 
 ### Answer to a question from my friend
 
-![Friend's questions](Friends_Questions.gif)
+![Friend's questions](imgs/Friends_Questions.gif)
 
 ### Add Skills
 
-![Adding a language as skill](Skills.gif)
+![Adding a language as skill](imgs/Skills.gif)
 
 
 
