@@ -35,7 +35,7 @@ import static com.cp1.translator.utils.Constants.POST_KEY;
 
 /**
  * Created by erioness1125(Hyunji Kim) on 3/13/2016.
- *
+ * <p/>
  * PostActivity is for showing the details of a 'Post', which is the model that represents one question and multiple answers.
  * This is created after clicking an item in RecyclerView(the list of questions)
  */
@@ -117,7 +117,7 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode ==  Constants.ASK_QS_REQ_CODE){
+        if (resultCode == RESULT_OK && requestCode == Constants.ASK_QS_REQ_CODE) {
             Entry answer = data.getParcelableExtra("question");
             ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
             query.whereEqualTo(Entry.TEXT_KEY, answer.getQuestionText());

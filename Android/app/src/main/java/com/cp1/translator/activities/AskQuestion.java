@@ -69,31 +69,54 @@ import static com.cp1.translator.utils.Constants.VIDEO;
 import static com.cp1.translator.utils.Constants.VIDEO_CAPTURE;
 import static com.cp1.translator.utils.Constants.photoFileName;
 
-public class AskQuestion extends AppCompatActivity  {
+public class AskQuestion extends AppCompatActivity {
     // Question views
-    @Bind(R.id.btAskQs) Button btAskQs;
-    @Bind(R.id.etQs) EditText etQs;
-    @Bind(R.id.tvChars) TextView tvCharsLeft;
+    @Bind(R.id.btAskQs)
+    Button btAskQs;
+    @Bind(R.id.etQs)
+    EditText etQs;
+    @Bind(R.id.tvChars)
+    TextView tvCharsLeft;
 
     // Media recording buttons
-    @Bind(R.id.ibClickPic) ImageButton ibClickPic;
-    @Bind(R.id.ibRecAudio) ImageButton ibRecAudio;
-    @Bind(R.id.ibRelAudio) ImageButton ibRelAudio;
-    @Bind(R.id.ibRecVideo) ImageButton ibRecVideo;
+    @Bind(R.id.ibClickPic)
+    ImageButton ibClickPic;
+    @Bind(R.id.ibRecAudio)
+    ImageButton ibRecAudio;
+    @Bind(R.id.ibRelAudio)
+    ImageButton ibRelAudio;
+    @Bind(R.id.ibRecVideo)
+    ImageButton ibRecVideo;
 
-    @Nullable @Bind(R.id.pbRecording) ProgressBar pbRecording;
-    @Nullable @Bind(R.id.ibPlayAudio) ImageButton ibPlayAudio;
-    @Nullable @Bind(R.id.ibStopAudio) ImageButton ibStopAudio;
+    @Nullable
+    @Bind(R.id.pbRecording)
+    ProgressBar pbRecording;
+    @Nullable
+    @Bind(R.id.ibPlayAudio)
+    ImageButton ibPlayAudio;
+    @Nullable
+    @Bind(R.id.ibStopAudio)
+    ImageButton ibStopAudio;
 
     // Media Views
-    @Nullable @Bind(R.id.rvMediaView) RelativeLayout rvMediaView;
-    @Nullable @Bind(R.id.vvQsVideo) VideoView vvQsVideo;
-    @Nullable @Bind(R.id.ivQsPic) ImageView ivQsPic;
-    @Nullable @Bind(R.id.fabCancel) FloatingActionButton fabCancel;
+    @Nullable
+    @Bind(R.id.rvMediaView)
+    RelativeLayout rvMediaView;
+    @Nullable
+    @Bind(R.id.vvQsVideo)
+    VideoView vvQsVideo;
+    @Nullable
+    @Bind(R.id.ivQsPic)
+    ImageView ivQsPic;
+    @Nullable
+    @Bind(R.id.fabCancel)
+    FloatingActionButton fabCancel;
 
     // Spinners
-    @Bind(R.id.fromLang) Spinner spinFromLang;
-    @Bind(R.id.toLang) Spinner spinToLang;
+    @Bind(R.id.fromLang)
+    Spinner spinFromLang;
+    @Bind(R.id.toLang)
+    Spinner spinToLang;
 
     private int textColor;
 
@@ -104,7 +127,7 @@ public class AskQuestion extends AppCompatActivity  {
     private Uri videoURI;
     private String mAudioFileName;
     private MediaRecorder mediaRecorder;
-    private MediaPlayer   mediaPlayer = null;
+    private MediaPlayer mediaPlayer = null;
     private String fromLang = null;
     private String toLang = null;
 
@@ -131,10 +154,9 @@ public class AskQuestion extends AppCompatActivity  {
 
         etQs.addTextChangedListener(textWatcher);
 
-        if(isAnswer){
+        if (isAnswer) {
             etQs.setHint(ANS_HINT);
-        }
-        else{
+        } else {
             etQs.setHint(QS_HINT);
         }
 
@@ -187,33 +209,33 @@ public class AskQuestion extends AppCompatActivity  {
     @Override
     protected void onPause() {
         super.onPause();
-        if(mediaRecorder!=null && !isRecReleased){
-            Log.d(APP_TAG,"On Pause called. Stopping recording..");
+        if (mediaRecorder != null && !isRecReleased) {
+            Log.d(APP_TAG, "On Pause called. Stopping recording..");
             stopRecording();
         }
 
-        if(mediaPlayer!=null){
+        if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
     }
 
     private void stopRecording() {
-        if(mediaRecorder!=null) {
+        if (mediaRecorder != null) {
             try {
                 mediaRecorder.stop();
                 mediaRecorder.reset();
                 mediaRecorder.release();
                 isRecReleased = true;
                 Toast.makeText(getApplicationContext(), "Stopping recording..", Toast.LENGTH_SHORT).show();
-            }catch(Exception e){
-                Log.e(APP_TAG,"exception in stopping recording: "+e.getMessage());
+            } catch (Exception e) {
+                Log.e(APP_TAG, "exception in stopping recording: " + e.getMessage());
             }
         }
     }
 
-    public void onReleaseRecorder(View v){
-        if(mediaRecorder!=null){
+    public void onReleaseRecorder(View v) {
+        if (mediaRecorder != null) {
             ibRelAudio.setVisibility(View.GONE);
             pbRecording.setVisibility(ProgressBar.INVISIBLE);
             Log.d(APP_TAG, "Stopping recording..");
@@ -229,14 +251,14 @@ public class AskQuestion extends AppCompatActivity  {
     }
 
     public void stopPlaying(View v) {
-        if(mediaPlayer!=null) {
+        if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
     }
 
-    public void onPlay(View view){
-        if(mediaRecorder!=null){
+    public void onPlay(View view) {
+        if (mediaRecorder != null) {
             try {
                 mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -244,16 +266,15 @@ public class AskQuestion extends AppCompatActivity  {
                 mediaPlayer.setDataSource(mAudioFileName);
                 mediaPlayer.prepare(); // must call prepare first
                 mediaPlayer.start(); // then start
-            }catch(IOException e){
-                Log.e(APP_TAG,"Exception in playing media "+e.getMessage());
+            } catch (IOException e) {
+                Log.e(APP_TAG, "Exception in playing media " + e.getMessage());
             }
-        }
-        else{
+        } else {
             Toast.makeText(this, "No playable media found!", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void onLaunchVideoRecorder(View view){
+    public void onLaunchVideoRecorder(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             rvMediaView.setVisibility(View.VISIBLE);
             vvQsVideo.setVisibility(View.VISIBLE);
@@ -268,13 +289,13 @@ public class AskQuestion extends AppCompatActivity  {
         }
     }
 
-    public void onCancelMedia(View view){
+    public void onCancelMedia(View view) {
         showMediaRecButtons();
         rvMediaView.setVisibility(View.GONE);
     }
 
 
-    public void onLaunchAudioRecorder(View v){
+    public void onLaunchAudioRecorder(View v) {
 
         try {
             // Verify that the device has a mic first
@@ -285,8 +306,8 @@ public class AskQuestion extends AppCompatActivity  {
                 pbRecording.setVisibility(ProgressBar.VISIBLE);
                 // Set the file location for the audio
                 mAudioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-                mAudioFileName += "/audiorecordtest"+SEPARATOR + Long.toString(System.currentTimeMillis())+AUDIO_EXT;
-                Log.d(APP_TAG,"Audio file for question: "+mAudioFileName);
+                mAudioFileName += "/audiorecordtest" + SEPARATOR + Long.toString(System.currentTimeMillis()) + AUDIO_EXT;
+                Log.d(APP_TAG, "Audio file for question: " + mAudioFileName);
                 isRecReleased = false;
 
                 // Create the recorder
@@ -305,25 +326,23 @@ public class AskQuestion extends AppCompatActivity  {
             } else { // no mic on device
                 Toast.makeText(this, "This device doesn't have a mic!", Toast.LENGTH_LONG).show();
             }
-        }catch (Exception e){
-            Log.e(APP_TAG,"Exception in recording media"+e.getMessage());
+        } catch (Exception e) {
+            Log.e(APP_TAG, "Exception in recording media" + e.getMessage());
             Toast.makeText(this, "Error in recording audio", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void hideMediaRecButtons(){
+    public void hideMediaRecButtons() {
         ibClickPic.setVisibility(View.GONE);
         ibRecAudio.setVisibility(View.GONE);
         ibRecVideo.setVisibility(View.GONE);
     }
 
-    public void showMediaRecButtons(){
+    public void showMediaRecButtons() {
         ibClickPic.setVisibility(View.VISIBLE);
         ibRecAudio.setVisibility(View.VISIBLE);
         ibRecVideo.setVisibility(View.VISIBLE);
     }
-
-
 
 
     @Override
@@ -334,7 +353,7 @@ public class AskQuestion extends AppCompatActivity  {
                 rvMediaView.setVisibility(View.VISIBLE);
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName + PIC_EXT);
                 imageURI = takenPhotoUri.getPath();
-                Log.d(APP_TAG,"qs image uri = " + imageURI + "Bitmap: "+takenPhotoUri.getPath());
+                Log.d(APP_TAG, "qs image uri = " + imageURI + "Bitmap: " + takenPhotoUri.getPath());
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
 
@@ -347,29 +366,29 @@ public class AskQuestion extends AppCompatActivity  {
             }
         }
 
-        if(requestCode == VIDEO_CAPTURE){
+        if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 hideMediaRecButtons();
 
                 rvMediaView.setVisibility(View.VISIBLE);
                 vvQsVideo.setVisibility(View.VISIBLE);
-                Log.d(APP_TAG,"Video saved at: "+data.getData().toString());
+                Log.d(APP_TAG, "Video saved at: " + data.getData().toString());
 
                 Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
                 playbackRecordedVideo();
             } else if (resultCode == RESULT_CANCELED) {
                 showMediaRecButtons();
-                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Video recording cancelled.", Toast.LENGTH_SHORT).show();
             } else {
                 showMediaRecButtons();
-                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to record video", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void playbackRecordedVideo() {
-        Log.d(APP_TAG,"Video should play now!");
-        Toast.makeText(this, "Video should play now",  Toast.LENGTH_SHORT).show();
+        Log.d(APP_TAG, "Video should play now!");
+        Toast.makeText(this, "Video should play now", Toast.LENGTH_SHORT).show();
         vvQsVideo.setVideoURI(videoURI);
         // TODO: remove this, its just a test video
 //        vvQsVideo.setVideoURI(Uri.parse("android.resource://" + getPackageName() +"/"+R.raw.small_video));
@@ -391,7 +410,7 @@ public class AskQuestion extends AppCompatActivity  {
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
 
             // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
                 Log.d(APP_TAG, "failed to create directory");
             }
 
@@ -408,32 +427,31 @@ public class AskQuestion extends AppCompatActivity  {
     }
 
 
-
     private Question saveLocally(String question, String userName) {
         Question q = Question.toQuestion(question, userName);
 
-        if(q!=null) {
+        if (q != null) {
             q.setType(Types.TEXT);
 
             if (imageURI != null) {
                 q.setImageURI(imageURI);
                 q.setType(Types.PICTURE);
             }
-            if (audioURI!=null) {
+            if (audioURI != null) {
                 q.setAudioURI(audioURI);
                 q.setType(Types.AUDIO);
             }
 
-            Log.d(APP_TAG,"Translate from: "+fromLang +" to: "+toLang);
+            Log.d(APP_TAG, "Translate from: " + fromLang + " to: " + toLang);
 
-            if(fromLang!=null)
+            if (fromLang != null)
                 q.setFromLang(fromLang);
-            if(toLang!=null)
+            if (toLang != null)
                 q.setToLang(toLang);
 
-            if(videoURI!=null) {
-                Log.d(APP_TAG,"URI: "+videoURI);
-                Log.d(APP_TAG,"Path: "+videoURI.getPath());
+            if (videoURI != null) {
+                Log.d(APP_TAG, "URI: " + videoURI);
+                Log.d(APP_TAG, "Path: " + videoURI.getPath());
                 q.setVideoURI(videoURI.getPath());
                 q.setType(Types.VIDEO);
             }
@@ -445,7 +463,7 @@ public class AskQuestion extends AppCompatActivity  {
 
     private void saveToParse(final Question question) {
         //1. Save the multimedia as file objects to Parse
-        Map<String,ParseFile> multiMediaMap = saveMultimedia(question);
+        Map<String, ParseFile> multiMediaMap = saveMultimedia(question);
         User currUser = (User) User.getCurrentUser();
 
         final Entry qsEntry = new Entry();
@@ -456,12 +474,12 @@ public class AskQuestion extends AppCompatActivity  {
 
         qsEntry.setType(question.getType());
 
-        if(multiMediaMap!=null && multiMediaMap.size()>0) {
-            if(multiMediaMap.containsKey(IMAGE))
+        if (multiMediaMap != null && multiMediaMap.size() > 0) {
+            if (multiMediaMap.containsKey(IMAGE))
                 qsEntry.setImageUrl(multiMediaMap.get(IMAGE));
-            if(multiMediaMap.containsKey(VIDEO))
+            if (multiMediaMap.containsKey(VIDEO))
                 qsEntry.setVideoUrl(multiMediaMap.get(VIDEO));
-            if(multiMediaMap.containsKey(AUDIO))
+            if (multiMediaMap.containsKey(AUDIO))
                 qsEntry.setAudioUrl(multiMediaMap.get(AUDIO));
         }
 
@@ -484,8 +502,7 @@ public class AskQuestion extends AppCompatActivity  {
                             public void done(ParseException e) {
                                 if (e == null) {
                                     setResultAndFinishActivity(true, qsPost.getObjectId());
-                                }
-                                else {
+                                } else {
                                     setResultAndFinishActivity(false, "Failed to save a question... Try it again.");
                                 }
                             }
@@ -497,43 +514,42 @@ public class AskQuestion extends AppCompatActivity  {
         EntryPusher.pushEntryToFriends(qsEntry.getText());
     }
 
-    private ParseFile convertURIToParseFile(String path){
-        ParseFile file = null   ;
-        if(path!=null){
-           try {
-               FileInputStream fis = new FileInputStream(new File(path));
-               byte[] byteArray   = IOUtils.toByteArray(fis);
-               String fileName  = "question_"+Long.toString(System.currentTimeMillis());
-               file = new ParseFile(fileName,byteArray);
-           }catch (FileNotFoundException e) {
-               Log.e(APP_TAG,"Exception while opening file "+ e.getMessage());
-           } catch (IOException e) {
-               Log.e(APP_TAG,"Exception while opening file "+ e.getMessage());
-           }
+    private ParseFile convertURIToParseFile(String path) {
+        ParseFile file = null;
+        if (path != null) {
+            try {
+                FileInputStream fis = new FileInputStream(new File(path));
+                byte[] byteArray = IOUtils.toByteArray(fis);
+                String fileName = "question_" + Long.toString(System.currentTimeMillis());
+                file = new ParseFile(fileName, byteArray);
+            } catch (FileNotFoundException e) {
+                Log.e(APP_TAG, "Exception while opening file " + e.getMessage());
+            } catch (IOException e) {
+                Log.e(APP_TAG, "Exception while opening file " + e.getMessage());
+            }
         }
         return file;
     }
 
-    private void saveFileInBackground(final ParseFile pfile){
-        if(pfile!=null){
+    private void saveFileInBackground(final ParseFile pfile) {
+        if (pfile != null) {
             // Upload the image into Parse Cloud
             pfile.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    if(e!=null){
-                        Log.e(APP_TAG,"Problem in saving File to parse backend: "+pfile.getName());
-                    }
-                    else
-                        Log.d(APP_TAG,"File upload successful: "+pfile.getName());
+                    if (e != null) {
+                        Log.e(APP_TAG, "Problem in saving File to parse backend: " + pfile.getName());
+                    } else
+                        Log.d(APP_TAG, "File upload successful: " + pfile.getName());
                 }
             });
         }
     }
 
-    private Map<String,ParseFile> saveMultimedia(Question question) {
-        Map<String,ParseFile> multiMediaMap = new HashMap<>();
-        if(question!=null){
-            if(question.getImageURI()!=null){
+    private Map<String, ParseFile> saveMultimedia(Question question) {
+        Map<String, ParseFile> multiMediaMap = new HashMap<>();
+        if (question != null) {
+            if (question.getImageURI() != null) {
                 ParseFile file = null;
 
                 Bitmap bitmap = BitmapFactory.decodeFile(question.getImageURI());
@@ -543,26 +559,26 @@ public class AskQuestion extends AppCompatActivity  {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] image = stream.toByteArray();
                 // Create the ParseFile
-                String picName = "question_"+Long.toString(System.currentTimeMillis());
-                file = new ParseFile(picName,image);
-                Log.d(APP_TAG,"Saving image question: "+file.getName());
+                String picName = "question_" + Long.toString(System.currentTimeMillis());
+                file = new ParseFile(picName, image);
+                Log.d(APP_TAG, "Saving image question: " + file.getName());
                 saveFileInBackground(file);
-                if(file!=null)
-                    multiMediaMap.put(IMAGE,file);
+                if (file != null)
+                    multiMediaMap.put(IMAGE, file);
             }
-            if(question.getVideoURI()!=null){
+            if (question.getVideoURI() != null) {
                 ParseFile file = convertURIToParseFile(question.getVideoURI());
-                Log.d(APP_TAG,"Saving video question: "+file.getName());
+                Log.d(APP_TAG, "Saving video question: " + file.getName());
                 saveFileInBackground(file);
-                if(file!=null)
-                    multiMediaMap.put(VIDEO,file);
+                if (file != null)
+                    multiMediaMap.put(VIDEO, file);
             }
-            if(question.getAudioURI()!=null){
+            if (question.getAudioURI() != null) {
                 ParseFile file = convertURIToParseFile(question.getAudioURI());
-                Log.d(APP_TAG,"Saving audio question: "+file.getName());
+                Log.d(APP_TAG, "Saving audio question: " + file.getName());
                 saveFileInBackground(file);
-                if(file!=null)
-                    multiMediaMap.put(AUDIO,file);
+                if (file != null)
+                    multiMediaMap.put(AUDIO, file);
             }
         }
         return multiMediaMap;
