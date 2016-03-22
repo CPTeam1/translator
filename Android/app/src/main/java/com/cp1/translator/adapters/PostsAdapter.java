@@ -2,7 +2,6 @@ package com.cp1.translator.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,6 +212,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setPostsList(List<Post> postsList) {
         mPostsList = postsList;
+    }
+
+    public List<Post> getPostsList() {
+        return mPostsList;
     }
 
     public class PostViewHolder extends RecyclerView.ViewHolder {

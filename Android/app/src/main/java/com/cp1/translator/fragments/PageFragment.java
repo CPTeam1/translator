@@ -19,7 +19,6 @@ import com.cp1.translator.utils.Constants;
 import com.cp1.translator.utils.SpaceItemDecoration;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,7 +33,6 @@ public abstract class PageFragment extends Fragment {
     private String mMyUserName;
 
     protected PostsAdapter mPostsAdapter;
-    protected List<Post> mPosts;
     protected View mFragmentView;
 
     @Bind(R.id.rvEntries) RecyclerView rvEntries;
@@ -48,8 +46,6 @@ public abstract class PageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        mTitle = getArguments().getString(ARG_PAGE);
     }
 
     // Inflate the fragment layout we defined above for this fragment
@@ -62,8 +58,7 @@ public abstract class PageFragment extends Fragment {
         mMyUserName = getArguments().getString(MY_USER_NAME);
 
         /********************** RecyclerView **********************/
-        mPosts = new ArrayList<>();
-        mPostsAdapter = new PostsAdapter(mPosts, mMyUserName);
+        mPostsAdapter = new PostsAdapter(new ArrayList<Post>(), mMyUserName);
         // listener for the event of clicking an item in RecyclerView
         mPostsAdapter.setOnClickItemListener(new PostsAdapter.OnClickItemListener() {
 
@@ -72,7 +67,7 @@ public abstract class PageFragment extends Fragment {
                 // create an intent to display the article
                 Intent i = new Intent(getContext(), PostActivity.class);
                 // get the article to display
-                Post post = mPosts.get(position);
+                Post post = mPostsAdapter.getPostsList().get(position);
                 String postObjectId = post.getObjectId();
                 // pass objects to the target activity
                 i.putExtra(Constants.POST_KEY, postObjectId);
@@ -110,9 +105,8 @@ public abstract class PageFragment extends Fragment {
     }
 
     public void addPost(Post post) {
-        if (mPosts == null) {
-            mPosts = new ArrayList<>();
-            mPostsAdapter.setPostsList(mPosts);
+        if (mPostsAdapter.getPostsList() == null) {
+            mPostsAdapter.setPostsList(new ArrayList<Post>());
         }
         mPostsAdapter.add(post);
     }
