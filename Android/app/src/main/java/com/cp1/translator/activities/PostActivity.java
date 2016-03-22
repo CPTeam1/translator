@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
@@ -47,6 +48,10 @@ public class PostActivity extends AppCompatActivity {
     @Bind(R.id.tvQuestionUser)
     TextView tvQuestionUser;
 
+    @Bind(R.id.pbLoadingAns)
+    ProgressBar pbLoadingAns;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,17 +71,22 @@ public class PostActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra(Constants.HIDE_FAB_KEY, false))
             fab.hide();
 
+        pbLoadingAns.setVisibility(View.VISIBLE);
+
         // query Post object
         String postObjectId = getIntent().getStringExtra(POST_KEY);
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.QUESTION_KEY);
         query.include(Post.QUESTION_KEY + "." + Entry.USER_KEY);
+
         query.getInBackground(postObjectId, new GetCallback<Post>() {
             @Override
             public void done(Post post, ParseException e) {
                 if (e != null) {
                     Log.e(APP_TAG, "in PostActivity: Error in fetching ParseObject<Post> from backend!");
+                    pbLoadingAns.setVisibility(View.INVISIBLE);
                 } else {
+                    pbLoadingAns.setVisibility(View.INVISIBLE);
                     Log.d(APP_TAG, "in PostActivity: Got Post!");
 
                     mPost = post; // keep the loaded Post so that we can add a new answer to it later.

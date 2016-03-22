@@ -61,8 +61,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
+            <ProgressBar
+                android:id="@+id/pbLoadingAns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_gravity="center_horizontal|center_vertical" />
+        </FrameLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
