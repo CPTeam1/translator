@@ -21,16 +21,16 @@ import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Types;
 import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
+import com.cp1.translator.utils.ParseErrorConverter;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
+import static com.cp1.translator.utils.Constants.ENTRY_KEY;
 import static com.cp1.translator.utils.Constants.POST_KEY;
 
 /**
@@ -42,6 +42,7 @@ import static com.cp1.translator.utils.Constants.POST_KEY;
 public class PostActivity extends AppCompatActivity {
 
     private FragmentManager fm;
+    private Post mPost;
 
     @Bind(R.id.tvQuestionUser)
     TextView tvQuestionUser;
@@ -75,6 +76,8 @@ public class PostActivity extends AppCompatActivity {
                     Log.e(APP_TAG, "in PostActivity: Error in fetching ParseObject<Post> from backend!");
                 } else {
                     Log.d(APP_TAG, "in PostActivity: Got Post!");
+
+                    mPost = post; // keep the loaded Post so that we can add a new answer to it later.
 
                     fm = getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
@@ -118,19 +121,25 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == Constants.ASK_QS_REQ_CODE) {
-            Entry answer = data.getParcelableExtra("question");
+            String answerObjectId = data.getStringExtra(ENTRY_KEY);
             ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
-            query.whereEqualTo(Entry.TEXT_KEY, answer.getQuestionText());
-            query.whereEqualTo(Entry.USER_KEY, (User) User.getCurrentUser());
-            try {
-                List<Entry> entriesList = query.find();
-                if (entriesList != null && !entriesList.isEmpty()) {
-                    answer = entriesList.get(0);
+            // First try to find from the cache and only then go to network
+//            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
+            // Execute the query to find the object with ID
+            query.getInBackground(answerObjectId, new GetCallback<Entry>() {
+                public void done(Entry answer, ParseException e) {
+                    if (e != null) {
+                        Log.e(APP_TAG, "in PostActivity: " + ParseErrorConverter.getErrMsg(e.getCode()));
+                    } else {
+                        Log.d(APP_TAG, "in PostActivity: Found Entry(answer)");
+                        // add Entry(answer) to mPost(Post object)
+                        mPost.addAnswer(answer);
+                        mPost.saveInBackground();
+
+                        updateAnswerFragment(answer);
+                    }
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            updateAnswerFragment(answer);
+            });
         }
     }
 

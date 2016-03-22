@@ -41,6 +41,7 @@ import com.cp1.translator.push.EntryPusher;
 import com.cp1.translator.utils.BitmapScaler;
 import com.cp1.translator.utils.Constants;
 import com.cp1.translator.utils.DeviceDimensionsHelper;
+import com.cp1.translator.utils.ParseErrorConverter;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
@@ -63,8 +64,10 @@ import static com.cp1.translator.utils.Constants.APP_TAG;
 import static com.cp1.translator.utils.Constants.AUDIO;
 import static com.cp1.translator.utils.Constants.AUDIO_EXT;
 import static com.cp1.translator.utils.Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
+import static com.cp1.translator.utils.Constants.ENTRY_KEY;
 import static com.cp1.translator.utils.Constants.IMAGE;
 import static com.cp1.translator.utils.Constants.PIC_EXT;
+import static com.cp1.translator.utils.Constants.POST_KEY;
 import static com.cp1.translator.utils.Constants.QS_HINT;
 import static com.cp1.translator.utils.Constants.SEPARATOR;
 import static com.cp1.translator.utils.Constants.VIDEO;
@@ -494,12 +497,14 @@ public class AskQuestion extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(APP_TAG, "Error in saving to parse backend" + e.getMessage());
+                    setResultAndFinishActivity(false,
+                            Constants.ENTRY_KEY, ParseErrorConverter.getErrMsg(e.getCode()));
                 } else {
                     Log.d(APP_TAG, "Saved successfully");
 
-                    // create a new Post ONLY IF the Entry is a "question"
-                    final Post qsPost = new Post();
                     if (!isAnswer) {
+                        // create a new Post ONLY IF the Entry is a "question"
+                        final Post qsPost = new Post();
                         qsPost.setQuestion(qsEntry);
                         qsPost.setFromLang(question.getFromLang());
                         qsPost.setToLang(question.getToLang());
@@ -508,12 +513,16 @@ public class AskQuestion extends AppCompatActivity {
                             public void done(ParseException e) {
                                 if (e == null) {
                                     EntryPusher.pushEntryToFriends(qsPost.getObjectId());
-                                    setResultAndFinishActivity(true, qsPost.getObjectId());
+                                    setResultAndFinishActivity(true, Constants.POST_KEY, qsPost.getObjectId());
                                 } else {
-                                    setResultAndFinishActivity(false, "Failed to save a question... Try it again.");
+                                    setResultAndFinishActivity(false, POST_KEY, ParseErrorConverter.getErrMsg(e.getCode()));
                                 }
                             }
                         });
+                    }
+                    else {
+                        // this is an answer to be added to the existing Post object (in PostActivity)
+                        setResultAndFinishActivity(true, ENTRY_KEY, qsEntry.getObjectId());
                     }
                 }
             }
@@ -590,15 +599,15 @@ public class AskQuestion extends AppCompatActivity {
         return multiMediaMap;
     }
 
-    private void setResultAndFinishActivity(boolean isPostSaved, String postObjectId) {
+    private void setResultAndFinishActivity(boolean isSuccess, String key, String objectId) {
         // pass the object ID of qsPost to MainActivity
         // This is the simplest way to pass a ParseObject between activities.
         // While we could implement parceling ourselves, this is not ideal as it's pretty complex to manage the state of Parse objects.
         // We could also use a Proxy object to pass the data as well but this can be brittle.
         // from CodePath Android Cliffnotes: https://github.com/codepath/android_guides/wiki/Building-Data-driven-Apps-with-Parse
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        i.putExtra(Constants.POST_KEY, postObjectId);
-        if (isPostSaved)
+        i.putExtra(key, objectId);
+        if (isSuccess)
             setResult(RESULT_OK, i);
         else
             setResult(RESULT_CANCELED, i);
