@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 // start AskQuestion Activity
                 Intent intent = new Intent(MainActivity.this, AskQuestion.class);
                 startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -132,11 +133,13 @@ public class MainActivity extends AppCompatActivity {
         // launch Settings View
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public void onFriendsClick(MenuItem item) {
         Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public void onLogoutClick(MenuItem item) {
@@ -145,32 +148,33 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode ==  Constants.ASK_QS_REQ_CODE) {
-            String newPostObjectId = data.getStringExtra(Constants.POST_KEY);
-            ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-            // First try to find from the cache and only then go to network
+        if (data != null) {
+            if (resultCode == RESULT_OK && requestCode == Constants.ASK_QS_REQ_CODE) {
+                String newPostObjectId = data.getStringExtra(Constants.POST_KEY);
+                ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+                // First try to find from the cache and only then go to network
 //            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
-            // Execute the query to find the object with ID
-            query.getInBackground(newPostObjectId, new GetCallback<Post>() {
-                public void done(Post post, ParseException e) {
-                    if (e != null) {
-                        Log.e(APP_TAG, "in MainActivity: Error in fetching Post from backend!");
-                    } else {
-                        Log.d(APP_TAG, "in MainActivity: Found Post");
-                        // Only add the entry once the object has been completely fetched!
-                        int index = viewPager.getCurrentItem();
-                        FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
-                        PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
-                        if (fragment != null) {
-                            fragment.addPost(post);
-                            fragment.getRvEntries().getLayoutManager().scrollToPosition(0);
+                // Execute the query to find the object with ID
+                query.getInBackground(newPostObjectId, new GetCallback<Post>() {
+                    public void done(Post post, ParseException e) {
+                        if (e != null) {
+                            Log.e(APP_TAG, "in MainActivity: Error in fetching Post from backend!");
+                        } else {
+                            Log.d(APP_TAG, "in MainActivity: Found Post");
+                            // Only add the entry once the object has been completely fetched!
+                            int index = viewPager.getCurrentItem();
+                            FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
+                            PageFragment fragment = (PageFragment) adapter.getRegisteredFragment(index);
+                            if (fragment != null) {
+                                fragment.addPost(post);
+                                fragment.getRvEntries().getLayoutManager().scrollToPosition(0);
+                            }
                         }
                     }
-                }
-            });
-        }
-        else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(this, data.getStringExtra(Constants.POST_KEY), Toast.LENGTH_SHORT).show();
+                });
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, data.getStringExtra(Constants.POST_KEY), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -61,6 +61,7 @@ public abstract class PageFragment extends BaseFragment {
 
                 // launch the activity
                 startActivity(i);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         mPostsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

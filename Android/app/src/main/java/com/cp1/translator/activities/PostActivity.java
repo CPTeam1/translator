@@ -132,24 +132,32 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == Constants.ASK_QS_REQ_CODE) {
-            String answerObjectId = data.getStringExtra(ENTRY_KEY);
-            ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
-            // First try to find from the cache and only then go to network
+        if (data != null) {
+            if (resultCode == RESULT_OK && requestCode == Constants.ASK_QS_REQ_CODE) {
+                String answerObjectId = data.getStringExtra(ENTRY_KEY);
+                ParseQuery<Entry> query = ParseQuery.getQuery(Entry.class);
+                // First try to find from the cache and only then go to network
 //            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
-            // Execute the query to find the object with ID
-            query.getInBackground(answerObjectId, new GetCallback<Entry>() {
-                public void done(Entry answer, ParseException e) {
-                    if (e != null) {
-                        Log.e(APP_TAG, "in PostActivity: " + ParseErrorConverter.getErrMsg(e.getCode()));
-                    } else {
-                        Log.d(APP_TAG, "in PostActivity: Found Entry(answer)");
+                // Execute the query to find the object with ID
+                query.getInBackground(answerObjectId, new GetCallback<Entry>() {
+                    public void done(Entry answer, ParseException e) {
+                        if (e != null) {
+                            Log.e(APP_TAG, "in PostActivity: " + ParseErrorConverter.getErrMsg(e.getCode()));
+                        } else {
+                            Log.d(APP_TAG, "in PostActivity: Found Entry(answer)");
 
-                        updateAnswerFragment(answer);
+                            updateAnswerFragment(answer);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     private void showAnswerDialog() {
@@ -157,6 +165,7 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AskQuestion.class);
         intent.putExtra(Constants.IS_ANSWER_KEY, true);
         startActivityForResult(intent, Constants.ASK_QS_REQ_CODE);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void updateAnswerFragment(Entry answer) {

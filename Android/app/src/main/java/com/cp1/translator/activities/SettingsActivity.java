@@ -84,6 +84,12 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
     private void loadUserSettings() {
         me = (User) User.getCurrentUser();
         tvUserEmail.setText(me.getEmail());
