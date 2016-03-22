@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Social Translator</string>
+    <string name="app_name">1ST</string>
     <string name="login_label">Log in</string>
     <string name="new_qs">New Question</string>
     <string name="answered_label">Answered:</string>
