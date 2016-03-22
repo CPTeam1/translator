@@ -74,6 +74,27 @@ public class MainActivity extends AppCompatActivity {
 
         // from Hyunji: commented below as AppTheme color is set
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55acee")));
+
+        // add a listener to viewPager in order to show/hide fab according to its state
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) // MY QUESTIONS tab
+                    fabNewQuestion.show();
+                else if (position == 1) // BUDDY QUESTIONS tab
+                    fabNewQuestion.hide();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
