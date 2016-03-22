@@ -132,9 +132,6 @@ public class PostActivity extends AppCompatActivity {
                         Log.e(APP_TAG, "in PostActivity: " + ParseErrorConverter.getErrMsg(e.getCode()));
                     } else {
                         Log.d(APP_TAG, "in PostActivity: Found Entry(answer)");
-                        // add Entry(answer) to mPost(Post object)
-                        mPost.addAnswer(answer);
-                        mPost.saveInBackground();
 
                         updateAnswerFragment(answer);
                     }
@@ -153,8 +150,8 @@ public class PostActivity extends AppCompatActivity {
     private void updateAnswerFragment(Entry answer) {
         Fragment fragment = fm.findFragmentById(R.id.flAsContainer);
         if (fragment instanceof AnswerFragment) {
-            User currUser = (User) User.getCurrentUser();
-            answer.setUser(currUser);
+//            User currUser = (User) User.getCurrentUser();
+//            answer.setUser(currUser);
             // add answer to Post
             ((AnswerFragment) fragment).addAnswerToPost(answer);
 //            ((AnswerFragment) fragment).addEntry(answer);

@@ -65,6 +65,12 @@ public class AnswerFragment extends BaseFragment {
                 super.onChanged();
                 showHideEmptyView();
             }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                showHideEmptyView();
+            }
         });
         // Attach the adapter to the RecyclerView to populate items
         rvEntries.setAdapter(mAnswersAdapter);
@@ -115,7 +121,7 @@ public class AnswerFragment extends BaseFragment {
         }
     }
 
-    public void addAnswerToPost(Entry answer) {
+    public void addAnswerToPost(final Entry answer) {
         mPost.addAnswer(answer);
         mPost.saveInBackground(new SaveCallback() {
             @Override
@@ -125,6 +131,8 @@ public class AnswerFragment extends BaseFragment {
                 }
                 else {
                     Log.i("info", "in AnswerFragment: Successfully added the Parcelable<Entry>(answer) to the Post!");
+
+                    mAnswersAdapter.add(answer);
                 }
             }
         });

@@ -13,7 +13,9 @@ import android.widget.TextView;
 import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Types;
+import com.cp1.translator.models.User;
 import com.cp1.translator.utils.Constants;
+import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,24 +47,24 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mAnswersList = answersList;
     }
 
-    // Add a list of questions
-    public void addAll(List<Entry> entriesList) {
+    // Add a list of answers
+    public void addAll(List<Entry> answersList) {
 //        int sizeOfListBeforeAdding = mQuestionList.size();
-        mAnswersList.addAll(entriesList);
+        mAnswersList.addAll(answersList);
         notifyDataSetChanged();
 //        notifyItemRangeInserted(sizeOfListBeforeAdding, questionList.size());
     }
 
-    // Add a question to the list
-    public void add(Entry entry) {
-        add(0, entry);
+    // Add an answer to the list
+    public void add(Entry answer) {
+        add(0, answer);
     }
 
-    // Add a question to the list at specific position
-    public void add(int idx, Entry question) {
-        mAnswersList.add(idx, question);
-        //notifyItemInserted(idx);
-        notifyDataSetChanged();
+    // Add an answer to the list at specific position
+    public void add(int idx, Entry answer) {
+        mAnswersList.add(idx, answer);
+        notifyItemInserted(idx);
+//        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -106,12 +108,19 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         // answered by
         TextView tvAnsweredBy = (TextView) holder.includeAnsweredBy.findViewById(R.id.tvLabel);
         // get User's nickname
-        String askedBy = "From: " + answer.getUser().getNickname();
+        String nickname = "";
+        try {
+            User answerer = (User) answer.getUser().fetchIfNeeded();
+            nickname = answerer.getNickname();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String askedBy = "From: " + nickname;
         tvAnsweredBy.setText(askedBy);
 
         View included = holder.includeAs;
 
-        // Assume its a Text Question by default
+        // Assume type=TEXT by default
         // As we don't want the switch case to crash :)
         String type = Types.TEXT;
         if (answer.getTypeLocally() != null)
@@ -169,7 +178,7 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         // find TextView
         TextView tvEntryText = (TextView) vsTextAfterInflated.findViewById(R.id.tvEntryText);
 
-        // set question text
+        // set answer text
         tvEntryText.setText(text);
     }
 
