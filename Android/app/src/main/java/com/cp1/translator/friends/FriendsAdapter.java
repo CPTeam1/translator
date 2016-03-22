@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cp1.translator.R;
 import com.cp1.translator.models.User;
@@ -152,7 +153,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return new ViewHolder(tweetView);
     }
 
-    public void loadFriendsInContacts(ArrayList<String> emails) {
+    public boolean loadFriendsInContacts(ArrayList<String> emails) {
         mUsers.clear();
 
         ArrayList<ParseQuery<User>> userQueries = new ArrayList<>();
@@ -192,6 +193,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     });
                 }
             });
+
+            return true;
         }
+        else
+            return false;
     }
 }
