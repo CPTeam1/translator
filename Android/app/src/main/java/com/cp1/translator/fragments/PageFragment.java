@@ -52,6 +52,13 @@ public abstract class PageFragment extends BaseFragment {
                 String postObjectId = post.getObjectId();
                 // pass objects to the target activity
                 i.putExtra(Constants.POST_KEY, postObjectId);
+
+                // this is read by PostActivity to determine whether hiding fab or not
+                if (getClassName().equals("com.cp1.translator.fragments.MyPageFragment"))
+                    i.putExtra(Constants.HIDE_FAB_KEY, true);
+                else if (getClassName().equals("com.cp1.translator.fragments.OthersPageFragment"))
+                    i.putExtra(Constants.HIDE_FAB_KEY, false);
+
                 // launch the activity
                 startActivity(i);
             }
@@ -94,4 +101,5 @@ public abstract class PageFragment extends BaseFragment {
         }
     }
 
+    protected abstract String getClassName();
 }

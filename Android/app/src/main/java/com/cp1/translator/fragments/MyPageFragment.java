@@ -117,4 +117,9 @@ public class MyPageFragment extends PageFragment {
             }
         }, 1000);
     }
+
+    @Override
+    protected String getClassName() {
+        return MyPageFragment.class.getName();
+    }
 }

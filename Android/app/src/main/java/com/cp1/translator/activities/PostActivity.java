@@ -63,6 +63,8 @@ public class PostActivity extends AppCompatActivity {
                 showAnswerDialog();
             }
         });
+        if (getIntent().getBooleanExtra(Constants.HIDE_FAB_KEY, false))
+            fab.hide();
 
         // query Post object
         String postObjectId = getIntent().getStringExtra(POST_KEY);

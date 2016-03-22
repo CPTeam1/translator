@@ -121,4 +121,9 @@ public class OthersPageFragment extends PageFragment {
             }
         });
     }
+
+    @Override
+    protected String getClassName() {
+        return OthersPageFragment.class.getName();
+    }
 }
