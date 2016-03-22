@@ -100,6 +100,7 @@ public class OthersPageFragment extends PageFragment {
         buddyQsQuery.whereMatchesQuery(Post.QUESTION_KEY, innerQuery);
         buddyQsQuery.include(Post.QUESTION_KEY);
         buddyQsQuery.include(Post.QUESTION_KEY + "." + Entry.USER_KEY);
+        buddyQsQuery.orderByDescending(Post.CREATED_AT);
         buddyQsQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> postsList, ParseException e) {

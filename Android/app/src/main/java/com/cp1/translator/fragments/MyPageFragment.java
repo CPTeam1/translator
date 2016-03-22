@@ -86,6 +86,7 @@ public class MyPageFragment extends PageFragment {
         query.whereMatchesQuery(Post.QUESTION_KEY, innerQuery);
         query.include(Post.QUESTION_KEY);
         query.include(Post.QUESTION_KEY + "." + Entry.USER_KEY);
+        query.orderByDescending(Post.CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> postsList, ParseException e) {

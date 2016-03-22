@@ -22,6 +22,7 @@ public class Post extends ParseObject{
     public static final String ANSWERS_KEY = "answers";
     public static final String FROM_LANG_KEY = "fromLang";
     public static final String TO_LANG_KEY = "toLang";
+    public static final String CREATED_AT = "createdAt";
 
     String fromLang;
     String toLang;
