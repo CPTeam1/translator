@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class FragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
-        private String tabTitles[] = new String[] { "My Questions", "Buddy Questions","Asked Questions" };
+        private String tabTitles[] = new String[] { "My Questions", "For You", "All" };
 
         public FragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -200,10 +200,10 @@ public class MainActivity extends AppCompatActivity {
                     return MyPageFragment.newInstance(tabTitles[0], myUserName);
                 }
                 case 1: {
-                    return OthersPageFragment.newInstance(tabTitles[1], myUserName);
+                    return AskedQuestionsFragment.newInstance(tabTitles[1], myUserName);
                 }
                 case 2: {
-                    return AskedQuestionsFragment.newInstance(tabTitles[2], myUserName);
+                    return OthersPageFragment.newInstance(tabTitles[2], myUserName);
                 }
                 default: return null;
             }
