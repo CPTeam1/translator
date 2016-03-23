@@ -91,15 +91,18 @@ public class AnswerFragment extends BaseFragment {
         /********************** end of SwipeRefreshLayout **********************/
 
         // load answers
+        pbLoadingEntries.setVisibility(View.VISIBLE);
         mPost.getAnswers(new Entry.EntriesListener() {
             @Override
             public void onEntries(List<Entry> answersList) {
                 loadAnswers(answersList);
+                pbLoadingEntries.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(ParseException e) {
                 e.printStackTrace();
+                pbLoadingEntries.setVisibility(View.GONE);
             }
         });
 
@@ -123,6 +126,7 @@ public class AnswerFragment extends BaseFragment {
     }
 
     public void addAnswerToPost(final Entry answer) {
+        pbLoadingEntries.setVisibility(View.VISIBLE);
         mPost.addAnswer(answer);
         mPost.saveInBackground(new SaveCallback() {
             @Override
@@ -135,6 +139,7 @@ public class AnswerFragment extends BaseFragment {
 
                     mAnswersAdapter.add(answer);
                 }
+                pbLoadingEntries.setVisibility(View.GONE);
             }
         });
     }
