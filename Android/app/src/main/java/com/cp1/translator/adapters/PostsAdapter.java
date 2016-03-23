@@ -15,6 +15,7 @@ import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
 import com.cp1.translator.models.Types;
 import com.cp1.translator.utils.Constants;
+import com.cp1.translator.utils.DeviceDimensionsHelper;
 import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 
@@ -128,6 +129,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             included = holder.includeAs;
 
         if (included != null) {
+            setEntryText(included, entry.getText());
+
             // Assume its a Text Question by default
             // As we don't want the switch case to crash :)
             String type = Types.TEXT;
@@ -135,8 +138,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 type = entry.getType();
             switch (type) {
                 case Types.TEXT:
-                    setEntryText(included, entry.getText());
-
+                    
                     break;
 
                 case Types.PICTURE:
@@ -157,6 +159,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     // load img onto ivEntryPic
                     Picasso.with(mContext)
                             .load(imgUrl)
+                            .resize(DeviceDimensionsHelper.getDisplayWidth(mContext), 0)
                             .into(ivEntryPic);
 
                     break;
