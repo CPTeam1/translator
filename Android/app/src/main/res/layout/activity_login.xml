@@ -27,6 +27,17 @@
         android:hint="Password"
         android:password="true"/>
 
+    <ImageView
+        android:id="@+id/ivAppIcon"
+        android:layout_marginBottom="20dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_above="@+id/etEmail"
+        android:src="@mipmap/ic_launcher"
+        android:transitionName="appIcon" />
+
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="wrap_content"

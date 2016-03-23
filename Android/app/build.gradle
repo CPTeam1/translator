@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.cp1.translator"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 21
     }
 

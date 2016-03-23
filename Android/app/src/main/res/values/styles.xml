@@ -20,6 +20,8 @@
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#727272</item>
         <item name="background">@color/bg_gray</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- our custom styles -->
