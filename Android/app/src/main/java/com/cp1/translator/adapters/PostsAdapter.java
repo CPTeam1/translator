@@ -79,11 +79,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView tvToLang = (TextView) holder.includeAsLang.findViewById(R.id.tvLabel);
         tvToLang.setText(post.getToLang());
 
+        // set Post created time
         TextView tvTimeAsked = (TextView) holder.includeTimeAsked.findViewById(R.id.tvLabel);
         String relativeTimeStamp = Constants.getRelativeTimeAgo(post.getCreatedAt());
         tvTimeAsked.setText(relativeTimeStamp);
-
-
 
         Entry question = post.getQuestion();
         // load answers to choose the top one
@@ -129,6 +128,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             included = holder.includeAs;
 
         if (included != null) {
+            // clear ImageView(findMediaView)
+            ImageView ivEntryMediaIcon = findMediaView(included);
+            ivEntryMediaIcon.setImageResource(0);
+
             // clear ImageView(ivEntryPic)
             ImageView ivEntryPic = findImageView(included);
             ivEntryPic.setImageResource(0);
@@ -154,14 +157,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     break;
 
                 case Types.AUDIO:
+                    ivEntryMediaIcon.setImageResource(R.drawable.shape_qs_voice);
+
+                    break;
+
                 case Types.VIDEO:
-                    View vsMedia = ((ViewStub) included.findViewById(R.id.vsMedia)).inflate();
-                    // find ImageView
-                    ImageView ivEntryMediaIcon = (ImageView) vsMedia.findViewById(R.id.ivEntryMediaIcon);
-                    // load img onto ivEntryMediaIcon
-//                Picasso.with(context)
-//                        .load(imgUrl)
-//                        .into(ivEntryPic);
+                    ivEntryMediaIcon.setImageResource(R.drawable.shape_qs_video);
 
                     break;
             }
@@ -204,6 +205,21 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // find ImageView
         ImageView ivEntryPic = (ImageView) vsPicAfterInflated.findViewById(R.id.ivEntryPic);
         return ivEntryPic;
+    }
+
+    private ImageView findMediaView(View included) {
+        View vsMediaAfterInflated;
+        ViewStub vsMedia = (ViewStub) included.findViewById(R.id.vsMedia);
+        if (vsMedia != null) {
+            vsMediaAfterInflated = vsMedia.inflate();
+        }
+        else {
+            vsMediaAfterInflated = included.findViewById(R.id.vsMediaAfter);
+        }
+
+        // find ImageView(ivEntryMediaIcon)
+        ImageView ivEntryMediaIcon = (ImageView) vsMediaAfterInflated.findViewById(R.id.ivEntryMediaIcon);
+        return ivEntryMediaIcon;
     }
 
     // Add a list of questions

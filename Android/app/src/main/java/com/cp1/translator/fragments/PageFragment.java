@@ -58,7 +58,7 @@ public abstract class PageFragment extends BaseFragment {
                     i.putExtra(Constants.EMPTY_VIEW_KEY, getString(R.string.ask_buddy_to_answer_label));
                     i.putExtra(Constants.HIDE_FAB_KEY, true);
                 }
-                else if (getClassName().equals("com.cp1.translator.fragments.OthersPageFragment")) {
+                else {
                     i.putExtra(Constants.EMPTY_VIEW_KEY, getString(R.string.add_first_answer_label));
                     i.putExtra(Constants.HIDE_FAB_KEY, false);
                 }

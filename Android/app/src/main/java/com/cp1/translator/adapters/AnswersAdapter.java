@@ -120,39 +120,41 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         View included = holder.includeAs;
 
+        // clear ImageView(findMediaView)
+        ImageView ivEntryMediaIcon = findMediaView(included);
+        ivEntryMediaIcon.setImageResource(0);
+
+        // clear ImageView(ivEntryPic)
+        ImageView ivEntryPic = findImageView(included);
+        ivEntryPic.setImageResource(0);
+
+        // set TextView(tvEntryText)
+        setEntryText(included, answer.getText());
+
         // Assume type=TEXT by default
         // As we don't want the switch case to crash :)
         String type = Types.TEXT;
-        if (answer.getTypeLocally() != null)
-            type = answer.getTypeLocally();
+        if (answer.getType() != null)
+            type = answer.getType();
         switch (type) {
-            case Types.TEXT:
-                setEntryText(included, answer.getText());
-
-                break;
-
             case Types.PICTURE:
                 String imgUrl = answer.getImageUrl().getUrl();
 
-                View vsPic = ((ViewStub) included.findViewById(R.id.vsPic)).inflate();
-                // find ImageView
-                ImageView ivEntryPic = (ImageView) vsPic.findViewById(R.id.ivEntryPic);
                 // load img onto ivEntryPic
                 Picasso.with(mContext)
                         .load(imgUrl)
+                        .resize(600, 0)
                         .into(ivEntryPic);
 
                 break;
 
             case Types.AUDIO:
+                ivEntryMediaIcon.setImageResource(R.drawable.shape_qs_voice);
+
+                break;
+
             case Types.VIDEO:
-                View vsMedia = ((ViewStub) included.findViewById(R.id.vsMedia)).inflate();
-                // find ImageView
-                ImageView ivEntryMediaIcon = (ImageView) vsMedia.findViewById(R.id.ivEntryMediaIcon);
-                // load img onto ivEntryMediaIcon
-//                Picasso.with(context)
-//                        .load(imgUrl)
-//                        .into(ivEntryPic);
+                ivEntryMediaIcon.setImageResource(R.drawable.shape_qs_video);
 
                 break;
         }
@@ -180,6 +182,36 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // set answer text
         tvEntryText.setText(text);
+    }
+
+    private ImageView findImageView(View included) {
+        View vsPicAfterInflated;
+        ViewStub vsPic = (ViewStub) included.findViewById(R.id.vsPic);
+        if (vsPic != null) {
+            vsPicAfterInflated = vsPic.inflate();
+        }
+        else {
+            vsPicAfterInflated = included.findViewById(R.id.vsPicAfter);
+        }
+
+        // find ImageView
+        ImageView ivEntryPic = (ImageView) vsPicAfterInflated.findViewById(R.id.ivEntryPic);
+        return ivEntryPic;
+    }
+
+    private ImageView findMediaView(View included) {
+        View vsMediaAfterInflated;
+        ViewStub vsMedia = (ViewStub) included.findViewById(R.id.vsMedia);
+        if (vsMedia != null) {
+            vsMediaAfterInflated = vsMedia.inflate();
+        }
+        else {
+            vsMediaAfterInflated = included.findViewById(R.id.vsMediaAfter);
+        }
+
+        // find ImageView(ivEntryMediaIcon)
+        ImageView ivEntryMediaIcon = (ImageView) vsMediaAfterInflated.findViewById(R.id.ivEntryMediaIcon);
+        return ivEntryMediaIcon;
     }
 
     public List<Entry> getAnswersList() {

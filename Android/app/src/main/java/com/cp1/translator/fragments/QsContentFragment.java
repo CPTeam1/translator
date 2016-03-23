@@ -42,6 +42,7 @@ public class QsContentFragment extends Fragment {
             // load img onto ivQsMediaImg
             Picasso.with(getContext())
                     .load(imgUrl)
+                    .resize(600, 0)
                     .into(ivQsMediaImg);
             ivQsMediaImg.setVisibility(View.VISIBLE);
         }
