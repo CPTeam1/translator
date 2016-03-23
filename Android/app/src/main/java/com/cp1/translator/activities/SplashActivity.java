@@ -38,10 +38,10 @@ public class SplashActivity extends AppCompatActivity {
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(SplashActivity.this, (View)ivAppIcon, "appIcon");
-                startActivity(intent);
+                startActivity(intent, options.toBundle());
 
                 // close this Activity
-                finish();
+//                finish();
             }
         }, SPLASH_TIME_OUT);
     }
