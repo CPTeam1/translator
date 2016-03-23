@@ -129,6 +129,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             included = holder.includeAs;
 
         if (included != null) {
+            // clear ImageView(ivEntryPic)
+            ImageView ivEntryPic = findImageView(included);
+            ivEntryPic.setImageResource(0);
+
+            // set TextView(tvEntryText)
             setEntryText(included, entry.getText());
 
             // Assume its a Text Question by default
@@ -137,24 +142,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (entry.getType() != null)
                 type = entry.getType();
             switch (type) {
-                case Types.TEXT:
-                    
-                    break;
-
                 case Types.PICTURE:
                     String imgUrl = entry.getImageUrl().getUrl();
-
-                    View vsPicAfterInflated;
-                    ViewStub vsPic = (ViewStub) included.findViewById(R.id.vsPic);
-                    if (vsPic != null) {
-                        vsPicAfterInflated = vsPic.inflate();
-                    }
-                    else {
-                        vsPicAfterInflated = included.findViewById(R.id.vsPicAfter);
-                    }
-
-                    // find ImageView
-                    ImageView ivEntryPic = (ImageView) vsPicAfterInflated.findViewById(R.id.ivEntryPic);
 
                     // load img onto ivEntryPic
                     Picasso.with(mContext)
@@ -200,6 +189,21 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         // set question text
         tvEntryText.setText(text);
+    }
+
+    private ImageView findImageView(View included) {
+        View vsPicAfterInflated;
+        ViewStub vsPic = (ViewStub) included.findViewById(R.id.vsPic);
+        if (vsPic != null) {
+            vsPicAfterInflated = vsPic.inflate();
+        }
+        else {
+            vsPicAfterInflated = included.findViewById(R.id.vsPicAfter);
+        }
+
+        // find ImageView
+        ImageView ivEntryPic = (ImageView) vsPicAfterInflated.findViewById(R.id.ivEntryPic);
+        return ivEntryPic;
     }
 
     // Add a list of questions
