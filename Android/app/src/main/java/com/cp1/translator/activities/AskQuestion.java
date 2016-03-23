@@ -209,6 +209,10 @@ public class AskQuestion extends AppCompatActivity {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
+
+        spinFromLang.setVisibility(View.INVISIBLE);
+        spinToLang.setVisibility(View.INVISIBLE);
+        vvQsVideo.setVisibility(View.GONE);
     }
 
     @Override
@@ -289,6 +293,11 @@ public class AskQuestion extends AppCompatActivity {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             rvMediaView.setVisibility(View.VISIBLE);
             vvQsVideo.setVisibility(View.VISIBLE);
+
+            spinFromLang.setVisibility(View.INVISIBLE);
+            spinToLang.setVisibility(View.INVISIBLE);
+            ivQsPic.setVisibility(View.GONE);
+
             Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             File mediaFile = new File(
                     Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
@@ -312,6 +321,10 @@ public class AskQuestion extends AppCompatActivity {
             // Verify that the device has a mic first
             PackageManager pmanager = this.getPackageManager();
             if (pmanager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+
+                spinFromLang.setVisibility(View.INVISIBLE);
+                spinToLang.setVisibility(View.INVISIBLE);
+
                 ibRecAudio.setVisibility(View.INVISIBLE);
                 ibRelAudio.setVisibility(View.VISIBLE);
                 pbRecording.setVisibility(ProgressBar.VISIBLE);
