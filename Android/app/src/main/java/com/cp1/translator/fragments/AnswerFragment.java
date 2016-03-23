@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import com.cp1.translator.R;
 import com.cp1.translator.activities.AnswerActivity;
 import com.cp1.translator.adapters.AnswersAdapter;
 import com.cp1.translator.models.Entry;
@@ -32,6 +34,8 @@ public class AnswerFragment extends BaseFragment {
     private Post mPost;
     private String emptyViewStr;
 
+    private ProgressBar pbLoadingEntries;
+
     public static AnswerFragment newInstance(Post post, String emptyViewStr) {
         AnswerFragment fragment = new AnswerFragment();
         fragment.mPost = post;
@@ -42,6 +46,9 @@ public class AnswerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        // find ProgressBar from parent Activity(=PostActivity)
+        pbLoadingEntries = (ProgressBar) getActivity().findViewById(R.id.pbLoadingEntries);
 
         /********************** RecyclerView **********************/
         mAnswersAdapter = new AnswersAdapter(new ArrayList<Entry>());
@@ -139,6 +146,7 @@ public class AnswerFragment extends BaseFragment {
 
                     mAnswersAdapter.add(answer);
                 }
+
                 pbLoadingEntries.setVisibility(View.GONE);
             }
         });

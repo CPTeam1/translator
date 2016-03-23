@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cp1.translator.R;
@@ -26,7 +25,6 @@ public abstract class BaseFragment extends Fragment {
     @Bind(R.id.rvEntries) RecyclerView rvEntries;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
     @Bind(R.id.tvEmptyRvEntries) TextView tvEmptyRvEntries;
-    @Bind(R.id.pbLoadingEntries) ProgressBar pbLoadingEntries;
 
     public RecyclerView getRvEntries() {
         return rvEntries;
