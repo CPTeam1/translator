@@ -1,6 +1,5 @@
 package com.cp1.translator.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,15 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.cp1.translator.R;
-import com.cp1.translator.activities.AnswerActivity;
 import com.cp1.translator.adapters.AnswersAdapter;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Post;
-import com.cp1.translator.utils.Constants;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,20 +48,20 @@ public class AnswerFragment extends BaseFragment {
         /********************** RecyclerView **********************/
         mAnswersAdapter = new AnswersAdapter(new ArrayList<Entry>());
         // listener for the event of clicking an item in RecyclerView
-        mAnswersAdapter.setOnClickItemListener(new AnswersAdapter.OnClickItemListener() {
-
-            @Override
-            public void onClickItem(View itemView, int position) {
-                // create an intent to display the article
-                Intent i = new Intent(getContext(), AnswerActivity.class);
-                // get the article to display
-                Entry answer = mAnswersAdapter.getAnswersList().get(position);
-                // pass objects to the target activity
-                i.putExtra(Constants.ENTRY_KEY, Parcels.wrap(answer));
-                // launch the activity
-                startActivity(i);
-            }
-        });
+//        mAnswersAdapter.setOnClickItemListener(new AnswersAdapter.OnClickItemListener() {
+//
+//            @Override
+//            public void onClickItem(View itemView, int position) {
+//                // create an intent to display the article
+//                Intent i = new Intent(getContext(), AnswerActivity.class);
+//                // get the article to display
+//                Entry answer = mAnswersAdapter.getAnswersList().get(position);
+//                // pass objects to the target activity
+//                i.putExtra(Constants.ENTRY_KEY, Parcels.wrap(answer));
+//                // launch the activity
+//                startActivity(i);
+//            }
+//        });
         mAnswersAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
