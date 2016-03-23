@@ -44,6 +44,11 @@ public class Lang extends ParseObject {
         return lang;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     public String getName() {
         return getString(NAME_KEY);
     }

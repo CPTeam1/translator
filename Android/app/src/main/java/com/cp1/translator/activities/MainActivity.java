@@ -19,6 +19,7 @@ import com.cp1.translator.adapters.SmartFragmentStatePagerAdapter;
 import com.cp1.translator.fragments.MyPageFragment;
 import com.cp1.translator.fragments.OthersPageFragment;
 import com.cp1.translator.fragments.PageFragment;
+import com.cp1.translator.fragments.AskedQuestionsFragment;
 import com.cp1.translator.friends.FriendsActivity;
 import com.cp1.translator.login.LoginUtils;
 import com.cp1.translator.models.Post;
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class FragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
-        private String tabTitles[] = new String[] { "My Questions", "Buddy Questions" };
+        private String tabTitles[] = new String[] { "My Questions", "Buddy Questions","Asked Questions" };
 
         public FragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -201,9 +202,9 @@ public class MainActivity extends AppCompatActivity {
                 case 1: {
                     return OthersPageFragment.newInstance(tabTitles[1], myUserName);
                 }
-//                case 2: {
-//                    return UsersFragment.newInstance(tabTitles[2]);
-//                }
+                case 2: {
+                    return AskedQuestionsFragment.newInstance(tabTitles[2], myUserName);
+                }
                 default: return null;
             }
         }
