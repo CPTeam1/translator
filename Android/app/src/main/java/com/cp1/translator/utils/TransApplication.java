@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.activeandroid.ActiveAndroid;
+import com.cp1.translator.R;
 import com.cp1.translator.models.Entry;
 import com.cp1.translator.models.Lang;
 import com.cp1.translator.models.Post;
@@ -12,6 +13,8 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /*
  * This is the Android application itself and is used to configure various settings
@@ -36,6 +39,12 @@ public class TransApplication extends Application {
         ParseObject.registerSubclass(User.class);
 
         ActiveAndroid.initialize(this);
+
+		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Quicksand-Bold.otf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 
 		// set applicationId and server based on the values in the Heroku settings.
 		// any network interceptors must be added with the Configuration Builder given this syntax

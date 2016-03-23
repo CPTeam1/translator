@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,11 +24,19 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import static com.cp1.translator.utils.Constants.*;
 
 public class TestActivity extends AppCompatActivity {
     TextView tv;
     ImageView imageView;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

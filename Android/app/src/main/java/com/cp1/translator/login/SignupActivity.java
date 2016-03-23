@@ -1,5 +1,6 @@
 package com.cp1.translator.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.parse.SignUpCallback;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String LOG_TAG = "SignupActivity";
@@ -29,6 +31,12 @@ public class SignupActivity extends AppCompatActivity {
 
     @Bind(R.id.etConfirm)
     EditText etConfirm;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

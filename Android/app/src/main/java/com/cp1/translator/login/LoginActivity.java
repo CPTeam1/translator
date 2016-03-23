@@ -1,5 +1,6 @@
 package com.cp1.translator.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.parse.SaveCallback;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity{
     public static final String LOG_TAG = "LoginActivity";
@@ -38,7 +40,13 @@ public class LoginActivity extends AppCompatActivity{
     @Bind(R.id.pbLoggingIn)
     ProgressBar pbLoggingIn;
 
-	@Override
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);

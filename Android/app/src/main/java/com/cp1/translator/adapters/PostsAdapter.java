@@ -2,6 +2,7 @@ package com.cp1.translator.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.cp1.translator.utils.Constants.*;
 
 /**
  * Created by erioness1125(Hyunji Kim) on 3/20/2016.
@@ -76,13 +79,16 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         // set original and target languages
         TextView tvFromLang = (TextView) holder.includeQsLang.findViewById(R.id.tvLabel);
-        tvFromLang.setText(post.getFromLang());
+        tvFromLang.setText("From: " + post.getFromLang());
+        tvFromLang.setTextColor(Color.parseColor(FROM_LANG_COLOR));
         TextView tvToLang = (TextView) holder.includeAsLang.findViewById(R.id.tvLabel);
-        tvToLang.setText(post.getToLang());
+        tvToLang.setText("To: " + post.getToLang());
+        tvToLang.setTextColor(Color.parseColor(TO_LANG_COLOR));
+
 
         // set Post created time
         TextView tvTimeAsked = (TextView) holder.includeTimeAsked.findViewById(R.id.tvLabel);
-        String relativeTimeStamp = Constants.getRelativeTimeAgo(post.getCreatedAt());
+        String relativeTimeStamp = getRelativeTimeAgo(post.getCreatedAt());
         tvTimeAsked.setText(relativeTimeStamp);
 
         Entry question = post.getQuestion();
@@ -96,7 +102,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
                 else {
                     // no answer yet
-                    setEntryText(holder.includeAs, "No Answer");
+                    setEntryText(holder.includeAs, NO_ANS);
                 }
             }
 
@@ -191,9 +197,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         // set question text
         tvEntryText.setText(text);
+        // Create the TypeFace from the TTF asset
+        Typeface postFont = Typeface.createFromAsset(mContext.getAssets(),"fonts/Quicksand-Regular.otf");
 
-        if (included.getId() == R.id.includeQs)
-            tvEntryText.setTextColor(Color.parseColor("#727272"));
+        tvEntryText.setTypeface(postFont);
+
+        if (included.getId() == R.id.includeQs) {
+            tvEntryText.setTextColor(Color.parseColor(FROM_LANG_COLOR));
+        }
+        else {
+            tvEntryText.setTextColor(Color.parseColor(TO_LANG_COLOR));
+        }
+
     }
 
     private ImageView findImageView(View included) {

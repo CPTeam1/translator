@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LanguagesActivity extends AppCompatActivity {
 
@@ -42,6 +44,12 @@ public class LanguagesActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         populateLanguages();
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

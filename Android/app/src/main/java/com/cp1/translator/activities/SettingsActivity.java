@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends AppCompatActivity implements NicknameDialogFragment.NicknameDialogListener {
 
@@ -48,6 +50,12 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
     private User me;
 
     private static final int LANG_REQ_CODE = 10;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

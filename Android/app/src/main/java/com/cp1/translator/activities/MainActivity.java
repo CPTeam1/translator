@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,7 @@ import com.parse.ParseQuery;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
 
@@ -41,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.fabNewQuestion)
     FloatingActionButton fabNewQuestion;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

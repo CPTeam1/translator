@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -58,6 +59,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.cp1.translator.utils.Constants.ANS_HINT;
 import static com.cp1.translator.utils.Constants.APP_TAG;
@@ -144,6 +146,12 @@ public class AskQuestion extends AppCompatActivity {
     public interface AskQuestionDialogListener {
         void onFinishAsking(Entry newQuestion);
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package com.cp1.translator.friends;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FriendsActivity extends AppCompatActivity {
 
@@ -25,6 +27,12 @@ public class FriendsActivity extends AppCompatActivity {
 
     private FriendsAdapter friendsAdapter;
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

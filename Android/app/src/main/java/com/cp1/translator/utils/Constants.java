@@ -30,6 +30,9 @@ public class Constants {
 
     public static final String ANS_HINT = "Please type in your answer..";
     public static final String QS_HINT = "What's your question?";
+    public static final String NO_ANS = "No Answer";
+    public static final String FROM_LANG_COLOR = "#009688";
+    public static final String TO_LANG_COLOR = "#f44336";
 
     /*********************** req codes *********************/
     public static final int ASK_QS_REQ_CODE = 500;

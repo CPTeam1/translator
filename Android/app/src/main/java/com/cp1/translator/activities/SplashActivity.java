@@ -1,5 +1,6 @@
 package com.cp1.translator.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +12,17 @@ import android.widget.ImageView;
 import com.cp1.translator.R;
 import com.cp1.translator.login.LoginActivity;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_TIME_OUT = 3000;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
