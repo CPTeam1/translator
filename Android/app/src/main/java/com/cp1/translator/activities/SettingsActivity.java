@@ -159,6 +159,7 @@ public class SettingsActivity extends AppCompatActivity implements NicknameDialo
         // launch Languages View
         Intent intent = new Intent(this, LanguagesActivity.class);
         startActivityForResult(intent, LANG_REQ_CODE);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @OnClick(R.id.tvUserNickname)

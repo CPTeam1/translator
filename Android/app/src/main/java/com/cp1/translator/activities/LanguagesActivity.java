@@ -76,6 +76,12 @@ public class LanguagesActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
     private void populateLanguages() {
         languagesList = Languages.getLanguages();
 
