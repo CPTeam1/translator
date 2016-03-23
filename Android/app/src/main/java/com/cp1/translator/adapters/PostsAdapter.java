@@ -1,6 +1,7 @@
 package com.cp1.translator.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -190,6 +191,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         // set question text
         tvEntryText.setText(text);
+
+        if (included.getId() == R.id.includeQs)
+            tvEntryText.setTextColor(Color.parseColor("#727272"));
     }
 
     private ImageView findImageView(View included) {

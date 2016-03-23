@@ -31,6 +31,8 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     protected Context mContext;
     protected List<Entry> mAnswersList;
 
+    private User me;
+
     // Define listener member variable
     protected OnClickItemListener listener;
 
@@ -45,6 +47,8 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public AnswersAdapter(List<Entry> answersList) {
         mAnswersList = answersList;
+
+        me = (User) User.getCurrentUser();
     }
 
     // Add a list of answers
@@ -105,6 +109,8 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         String relativeTimeStamp = Constants.getRelativeTimeAgo(answer.getCreatedAt());
         tvTimeAnswered.setText(relativeTimeStamp);
 
+        boolean isMyAnswer = false;
+
         // answered by
         TextView tvAnsweredBy = (TextView) holder.includeAnsweredBy.findViewById(R.id.tvLabel);
         // get User's nickname
@@ -112,9 +118,15 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         try {
             User answerer = (User) answer.getUser().fetchIfNeeded();
             nickname = answerer.getNickname();
+            if (nickname.equals(me.getNickname()))
+                isMyAnswer = true;
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        if (isMyAnswer)
+            holder.llAnswerContainer.setBackground(mContext.getDrawable(R.drawable.shape_qs_container_lb));
+
         String askedBy = "From: " + nickname;
         tvAnsweredBy.setText(askedBy);
 
