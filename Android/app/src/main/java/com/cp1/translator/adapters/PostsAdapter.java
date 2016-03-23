@@ -198,16 +198,19 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // set question text
         tvEntryText.setText(text);
         // Create the TypeFace from the TTF asset
-        Typeface postFont = Typeface.createFromAsset(mContext.getAssets(),"fonts/Quicksand-Regular.otf");
+        Typeface postFont = null;
 
-        tvEntryText.setTypeface(postFont);
+
 
         if (included.getId() == R.id.includeQs) {
             tvEntryText.setTextColor(Color.parseColor(FROM_LANG_COLOR));
+            postFont = Typeface.createFromAsset(mContext.getAssets(), "fonts/Quicksand-Regular.otf");
         }
         else {
             tvEntryText.setTextColor(Color.parseColor(TO_LANG_COLOR));
+            postFont = Typeface.createFromAsset(mContext.getAssets(), "fonts/Quicksand-Italic.otf");
         }
+        tvEntryText.setTypeface(postFont);
 
     }
 

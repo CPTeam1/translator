@@ -130,6 +130,7 @@ public class PostActivity extends AppCompatActivity {
 
                     User qsUser = question.getUser();
                     String title = qsUser.getNickname() + " asks: ";
+
                     tvQuestionUser.setText(title);
 
                     // question content

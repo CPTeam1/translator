@@ -41,7 +41,7 @@ public class TransApplication extends Application {
         ActiveAndroid.initialize(this);
 
 		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/Quicksand-Bold.otf")
+                        .setDefaultFontPath("fonts/Quicksand-Regular.otf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );

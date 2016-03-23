@@ -1,6 +1,7 @@
 package com.cp1.translator.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -129,6 +130,7 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             holder.llAnswerContainer.setBackground(mContext.getDrawable(R.drawable.shape_qs_container_lb));
 
         String askedBy = "From: " + nickname;
+        tvAnsweredBy.setTextColor(Color.parseColor(Constants.TO_LANG_COLOR));
         tvAnsweredBy.setText(askedBy);
 
         View included = holder.includeAs;
@@ -192,8 +194,9 @@ public class AnswersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // find TextView
         TextView tvEntryText = (TextView) vsTextAfterInflated.findViewById(R.id.tvEntryText);
-        Typeface ansFont = Typeface.createFromAsset(mContext.getAssets(),"fonts/Quicksand-BoldItalic.otf");
+        Typeface ansFont = Typeface.createFromAsset(mContext.getAssets(),"fonts/Quicksand-Italic.otf");
         tvEntryText.setTypeface(ansFont);
+        tvEntryText.setTextColor(Color.parseColor(Constants.TO_LANG_COLOR));
 
         // set answer text
         tvEntryText.setText(text);

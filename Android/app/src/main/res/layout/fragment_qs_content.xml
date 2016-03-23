@@ -21,6 +21,7 @@
         android:maxLines="5"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:paddingBottom="@dimen/custom_qs_margin"
-        android:paddingTop="@dimen/custom_qs_margin" />
+        android:paddingTop="@dimen/custom_qs_margin"
+        android:textColor="#009688"/>
 
 </LinearLayout>
