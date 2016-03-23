@@ -26,6 +26,7 @@ public class Constants {
     public static final String POST_KEY = "post_key";
     public static final String IS_ANSWER_KEY = "is_answer_key";
     public static final String HIDE_FAB_KEY = "hide_fab_key";
+    public static final String EMPTY_VIEW_KEY = "empty_view_key";
 
     public static final String ANS_HINT = "Please type in your answer..";
     public static final String QS_HINT = "What's your question?";

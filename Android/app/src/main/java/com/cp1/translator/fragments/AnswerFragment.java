@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cp1.translator.R;
 import com.cp1.translator.activities.AnswerActivity;
 import com.cp1.translator.adapters.AnswersAdapter;
 import com.cp1.translator.models.Entry;
@@ -31,10 +30,12 @@ public class AnswerFragment extends BaseFragment {
 
     private AnswersAdapter mAnswersAdapter;
     private Post mPost;
+    private String emptyViewStr;
 
-    public static AnswerFragment newInstance(Post post) {
+    public static AnswerFragment newInstance(Post post, String emptyViewStr) {
         AnswerFragment fragment = new AnswerFragment();
         fragment.mPost = post;
+        fragment.emptyViewStr = emptyViewStr;
         return fragment;
     }
 
@@ -112,7 +113,7 @@ public class AnswerFragment extends BaseFragment {
     private void showHideEmptyView() {
         // show emptyView message if answersList is empty
         if (mAnswersAdapter.getItemCount() == 0) {
-            tvEmptyRvEntries.setText(getString(R.string.add_first_answer_label));
+            tvEmptyRvEntries.setText(emptyViewStr);
             tvEmptyRvEntries.setVisibility(View.VISIBLE);
             swipeContainer.setVisibility(View.GONE);
         } else {

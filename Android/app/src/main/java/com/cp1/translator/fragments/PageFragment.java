@@ -54,10 +54,14 @@ public abstract class PageFragment extends BaseFragment {
                 i.putExtra(Constants.POST_KEY, postObjectId);
 
                 // this is read by PostActivity to determine whether hiding fab or not
-                if (getClassName().equals("com.cp1.translator.fragments.MyPageFragment"))
+                if (getClassName().equals("com.cp1.translator.fragments.MyPageFragment")) {
+                    i.putExtra(Constants.EMPTY_VIEW_KEY, getString(R.string.ask_buddy_to_answer_label));
                     i.putExtra(Constants.HIDE_FAB_KEY, true);
-                else if (getClassName().equals("com.cp1.translator.fragments.OthersPageFragment"))
+                }
+                else if (getClassName().equals("com.cp1.translator.fragments.OthersPageFragment")) {
+                    i.putExtra(Constants.EMPTY_VIEW_KEY, getString(R.string.add_first_answer_label));
                     i.putExtra(Constants.HIDE_FAB_KEY, false);
+                }
 
                 // launch the activity
                 startActivity(i);
@@ -93,7 +97,10 @@ public abstract class PageFragment extends BaseFragment {
     private void showHideEmptyView() {
         // show emptyView message if answersList is empty
         if (mPostsAdapter.getItemCount() == 0) {
-            tvEmptyRvEntries.setText(getString(R.string.say_something_label));
+            if (getClassName().equals("com.cp1.translator.fragments.MyPageFragment"))
+                tvEmptyRvEntries.setText(getString(R.string.say_something_label));
+            else if (getClassName().equals("com.cp1.translator.fragments.OthersPageFragment"))
+                tvEmptyRvEntries.setText(getString(R.string.no_buddy_question_label));
             tvEmptyRvEntries.setVisibility(View.VISIBLE);
             swipeContainer.setVisibility(View.GONE);
         } else {

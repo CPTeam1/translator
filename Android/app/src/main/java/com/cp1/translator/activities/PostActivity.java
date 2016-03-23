@@ -31,6 +31,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.cp1.translator.utils.Constants.APP_TAG;
+import static com.cp1.translator.utils.Constants.EMPTY_VIEW_KEY;
 import static com.cp1.translator.utils.Constants.ENTRY_KEY;
 import static com.cp1.translator.utils.Constants.POST_KEY;
 
@@ -50,7 +51,6 @@ public class PostActivity extends AppCompatActivity {
 
     @Bind(R.id.pbLoadingAns)
     ProgressBar pbLoadingAns;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,9 @@ public class PostActivity extends AppCompatActivity {
             fab.hide();
 
         pbLoadingAns.setVisibility(View.VISIBLE);
+
+        // emptyview string to be passed to AnswerFragment
+        final String emptyViewStr = getIntent().getStringExtra(EMPTY_VIEW_KEY);
 
         // query Post object
         String postObjectId = getIntent().getStringExtra(POST_KEY);
@@ -118,12 +121,13 @@ public class PostActivity extends AppCompatActivity {
                     }
 
                     User qsUser = question.getUser();
-                    tvQuestionUser.setText(qsUser.getNickname());
+                    String title = qsUser.getNickname() + " asks: ";
+                    tvQuestionUser.setText(title);
 
                     // question content
                     ft.replace(R.id.flQsContainer, QsContentFragment.newInstance(imgUrl, question.getText()));
                     // answers list
-                    ft.replace(R.id.flAsContainer, AnswerFragment.newInstance(post));
+                    ft.replace(R.id.flAsContainer, AnswerFragment.newInstance(post, emptyViewStr));
                     ft.commit();
                 }
             }

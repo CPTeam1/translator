@@ -8,6 +8,8 @@
     <string name="no_question_label">No Questions</string>
     <string name="say_something_label">Say something in your language, \nGet it translated into other language!</string>
     <string name="add_first_answer_label">Somebody is waiting for your answer.\nBe the first translator!</string>
+    <string name="no_buddy_question_label">Your buddies are happy with no question!</string>
+    <string name="ask_buddy_to_answer_label">Ask your buddy to give you answer(s)!</string>
     <string name="me">Me</string>
     <string name="languages">Languages</string>
     <string name="settings">Settings</string>
