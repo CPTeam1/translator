@@ -131,8 +131,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Assume its a Text Question by default
             // As we don't want the switch case to crash :)
             String type = Types.TEXT;
-            if (entry.getTypeLocally() != null)
-                type = entry.getTypeLocally();
+            if (entry.getType() != null)
+                type = entry.getType();
             switch (type) {
                 case Types.TEXT:
                     setEntryText(included, entry.getText());
@@ -142,9 +142,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 case Types.PICTURE:
                     String imgUrl = entry.getImageUrl().getUrl();
 
-                    View vsPic = ((ViewStub) included.findViewById(R.id.vsPic)).inflate();
+                    View vsPicAfterInflated;
+                    ViewStub vsPic = (ViewStub) included.findViewById(R.id.vsPic);
+                    if (vsPic != null) {
+                        vsPicAfterInflated = vsPic.inflate();
+                    }
+                    else {
+                        vsPicAfterInflated = included.findViewById(R.id.vsPicAfter);
+                    }
+
                     // find ImageView
-                    ImageView ivEntryPic = (ImageView) vsPic.findViewById(R.id.ivEntryPic);
+                    ImageView ivEntryPic = (ImageView) vsPicAfterInflated.findViewById(R.id.ivEntryPic);
+
                     // load img onto ivEntryPic
                     Picasso.with(mContext)
                             .load(imgUrl)
