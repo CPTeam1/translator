@@ -116,7 +116,7 @@ public class LanguagesActivity extends AppCompatActivity {
             "Danish", "Dutch", "English", "Finnish", "French", "German", "Greek", "Hebrew",
             "Hindi", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Malay",
             "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Spanish", "Swedish",
-            "Thai", "Turkish", "Ukrainian", "Vietnamese" };
+            "Tamil", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
 
             languagesList = new ArrayList(Arrays.asList(arr));
         }
